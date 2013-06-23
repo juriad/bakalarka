@@ -1,0 +1,114 @@
+\chapter{Analýza}
+
+V této kapitole nejprve identifikujeme vlastní problémy čteček, jímiž se budeme dále zabývat a popíšeme požadavky na aplikaci, která bude dané problémy řešit.
+
+\section{Identifikace problému}
+
+Naší snahou je pokrýt jednou aplikací několik příbuzných problémů, kterým čelí náročný uživatel.
+
+Náročný uživatel má především potřebu:
+% TODO linky
+\begin{enumerate}
+    \item mít přístup k seznamu článků odkudkoli.
+        Hledáme webovou službu, která bude zajišťovat synchronizaci a dostupnost bez ohledu na zařízení, které uživatel aktuálně používá.
+    \item sledovat několik webových stránek, které poskytují kanál RSS nebo Atom.
+        Tomuto bodu vyhovuje téměř každá čtečka ve formě webové služby, kterou jsme popsali v minulé kapitole.
+    \item sledovat takové webové stránky, které neposkytují kanál RSS ani Atom.
+        Toto splňuje jen několik málo speciálních služeb typu http://www.changedetection.com/, které většinou informují uživatele o změnách e-mailem.
+    \item uložit si informaci o zajímavých článcích.
+        Tomuto požadavku by mohly vyhovovat záložky v prohlížeči, jenže ty zase nesplňují možnost přístupu odkudkoli.
+        To se snažila změnit služba https://delicious.com/, ale ta zase nespňuje předchozí dva body.
+        Čtečky z bodu č. 2 tuto problematiku také částečně řeší, umožňují ke svým položkám přidávat hvězdičky a štítky; nicméně, obvykle není možné přidat štítek k článku, který ve čtečce není.
+    \item uložit si informaci o článcích, které si chce přečíst později.
+        Tento bod je velice podobný předchozímu, jen mění sémantiku toho, které články jsou takto označeny; služby, které to umožňují jsou třeba http://getpocket.com/ nebo http://www.instapaper.com/.
+    \item najít a přečíst článek, který si dříve označil.
+        Tento bod řeší všechny aplikace, které řeší předchozí body.
+    \item ovládat aplikaci efektivně.
+        Tento bod vyloženě vyžaduje maximální efektivitu a rychlost práce s aplikací, což v našem kontexu znamená existenci klávesových zkratek.
+\end{enumerate}
+
+Uvedeme ještě dvě další potřeby, které nejsou tak důležité jako výše zmíněné, nicméně jsou jejich přirozeným rozšířením.
+Mezi tyto potřeby patří:
+
+\begin{enumerate}
+	\setcounter{enumi}{7}
+	\item zálohovat článek.
+		Uživatel by měl mít možnost zazálohovat aktuální podobu článku pro případ, že originál nebude dostupný.
+		Opět existují služby, které toto umožňují, mezi nejznámější patří http://archive.org/ a cache vyhledávače Google.
+	\item sdílet své položky.
+		Aplikací, které umožňují sdílet položky (odkazy na zajímavé články) s jinými uživateli existuje mnoho; sociální síť Twitter je na tomto principu prakticky založená.
+\end{enumerate}
+
+\begin{leftbar}
+	Nenašel jsem žádnou existující aplikaci, která by řešila celou výše zmíněnou problematiku.
+\end{leftbar}
+
+\section{Zavedení pojmů}
+
+Před samotným rozborem problému zavedeme několi pojmů, které budeme používat ve zbytku dokumentu.
+Jednotlivým termínům bude později odpovídat jedna entita.
+
+\begin{description}
+    \item[Uživatel] Osoba, která používá naši aplikaci.
+    \item[Zdroj] Zdroj je reprezentací jednoho dokumentu (HTML či XML) v síti internet, který naše aplikace používá k získávání položek.
+    \item[Položka] Položka reprezentuje odkaz na jeden článek nebo stránku v síti internet.
+    \item[Štítek] Nejmenší informace, kterou může uživatel přidat k položce.
+\end{description}
+
+\section{Analýza požadavků}
+
+Identifikované problémy popíšeme z různých pohledů vlastními požadavky, které bude naše aplikace splňovat.
+
+\subsection{Funkční požadavky}
+
+Mezi požadavky na funkcionalitu, které musí aplikace splňovat patří následující:
+
+\begin{itemize}
+    \item Každý uživatel aplikace si může zaregistrovat své zdroje, které bude sledovat.
+    \item Existuje několik typů zdrojů: Zdroje, které přebírají položky z kanálu RSS/Atom, zdroje, které parsují informace o novinkách přímo z webových stránek a manuální zdroje.
+    \item Každý uživatel bude mít vlastní manuální zdroj, který nebude sám o sobě poskytovat nové položky, ale bude obsahovat takové položky, které si uživatel vloží manuálně.
+    \item Seznam všech položek bude možné filtrovat podle několika kritérií.
+	\item Uživatel může zazálohovat jakoukoli webovou stránku.
+	\item Uživatel má možnost sdílet své články.
+\end{itemize}
+
+\subsection{Požadavky na použitelnost}
+
+Požadavky na použitelnost popisují, jak má aplikace vypadat a jak se má chovat, aby se pohodlně používala a ovládala.
+
+\begin{itemize}
+    \item Aplikace musí být ovladatelená klávesovými zkratkami.
+    \item Největší část aplikace bude zaujímat seznam položek.
+    \item Každá položka obsahuje odkaz na originální webovou stránku.
+    \item Aplikace bude fungovat ve všech běžných prohlížečích.
+\end{itemize}
+
+\subsection{Výkonostní požadavky}
+
+Výkonostní požadavky určují parametry zátěže, na kterou má být aplikace navrhnuta.
+
+\begin{itemize}
+    \item Každý uživatel může mít desítky až stovky zdrojů.
+	\item Zdroj může poskytovat desítky položek denně.
+    \item Každý zdroj se kontroluje rozumně často.
+    \item Aplikace bude dobře škálovatelná.
+\end{itemize}
+
+\section{Důsledky požadavků na architekturu aplikace}
+
+Z požadavků vyplývají důsledky na volbu architektury aplikace.
+Aplikce se bude skládat ze tří částí, které spolu komunikují.
+
+\subsection{Server}
+
+Server je část aplikace zodpovědná za získávání nových položek z jednotlivých zdrojů, uložení všech dat včetně uživatelského nastavení a poskytování těchto dat klientských částem.
+
+\subsection{Klient}
+
+Klient je část aplikace, která zobrazuje data získaná ze serveru a komunikuje s uživatelem, který skrze ni aplikaci ovládá.
+
+\subsection{Klientské rozšíření prohlížeče}
+
+Nepovinné rozšíření do nejběžnějších prohlížečů, které má za cíl zjednodušit práci s aplikací.
+Toto rozšíření neposkytuje žádnou vyšší funkcionalitu, které by nešlo docílit klientskou částí, avšak umožňuje uživateli přidat movou položku do vého manuálního zdroje dvěma kliknutími myší.
+
