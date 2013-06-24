@@ -45,10 +45,59 @@ Pro naši aplikaci jsou důležité především:
 		My toto API použijeme k uložení a následné prezentaci zazálohovaných webových stránek článků.
 \end{itemize}
 
+\subsubsection{Úloha serverové části}
+
+Serverová část bude mít v aplikaci následující úlohy:
+\begin{itemize}
+	\item uložení všech dat,
+	\item poskytování dat klientům,
+	\item periodický sběr nových položek kontrolou zdrojů,
+	\item výpočet doporučení zdrojů klientům na základě podobnosti.
+\end{itemize}
+
+\subsubsection{Použité knihovny}
+
+Abychom znovu nevynalézali kolo a neřešili problémy, které již jiní řešili před námi, použijeme několik knihoven, které nám zjednodušší implementaci vlatní aplikace.
+
+\paragraph{Slim3}
 % TODO link Slim3
-Pro obalení nízkoúrovňového API pro přístup k databázi jsme použili framework Slim3.
+Pro obalení nízkoúrovňového API pro přístup k databázi použijeme framework Slim3.
 Slim3 zajišťuje mapování databázových bezschématických entit na reálné javové objekty.
 Tento framework zároveň poskytuje objektově konzistentní rozhraní ke skládání databázových dotazů.
+Tato knihovna je vyvinutá jen a pouze pro platformu AppEngine, neboť je silně závislá na Datastore API.
+
+\paragraph{ROME}
+%TODO link ROME
+ROME je knihovna, která poskytuje sadu parserů a generátorů pro různé typy formátů zpravujících o novinkách na webovém zdroji.
+My tuto knihovnu použijeme pro oba směry konverze, využijeme parsery při kontrole jednoho typu zdrojů a generátory při sdílení (exportu) položek.
+ROME je starší knihovna, nezdá se, že by její vývoj pokračoval, nicméně je dostatečně robustní a stabilní pro naše potřeby.
+
+\paragraph{Apache HttpComponents}
+% TODO apache http components
+% definice http
+Apache HttpComponents je široce rozšířená knihovna uřcená pro zajištění komunikace přes HTTP.
+My ji použijeme pro stahování webových dokumentů při kontrole zdrojů všech typů (kromě manuálního).
+
+\paragraph{jsoup}
+% TODO vysvětlit DOM
+% TODO link jsoup
+Knihovna jsoup umožňuje rozparsovat HTML stránku do DOM struktury a poskytuje metody na procházení a manipulaci se stromem elementů.
+Knihovna zvládá zpracování i takových stránek, které nevyhovující standardům.
+My knihovnu využijeme ve dvou situacích:
+\begin{itemize}
+	\item pro parsování webové stránky při kontrole některých typů zdrojů,
+	\item pro úpravu relativních odkazů při zálohování webové stránky.
+\end{itemize}
+
+\paragraph{JScience}
+% TODO link JScience
+Knihovna JScience poskytuje implementaci nejrůznějších výpočetních algoritmů určených pro matematiku a fyziku.
+Nás z této knihovny bude zajímat jen malá část: implementace vektorových a maticových operací, které použijeme při výpočtech doporučených zdrojů pro jednotlivé uživatele.
+
+\paragraph{Diff Match Patch}
+% TODO link diff match patch
+Diff match patch je malá knihovna, která nabízí robustní algoritmy pro operace nutné při synchronizaci textu.
+My využijeme jen jednu ze tří částí: porovnání dvou textů, které nám vrátí seznam rozdílů.
 
 \subsection{Klientská část}
 
@@ -64,6 +113,44 @@ Takovým nástrojem je Google Web Toolkit -- GWT; mezi jeho základní vlastnost
 	\item stará se o minifikaci kódu odeslaného klientovi,
 	\item poskytuje hotové základní komponenty pro tvorbu uživatelského rozhraní.
 \end{itemize}
+
+\subsubsection{Úloha klientské části}
+
+Klientská část je ta část aplikace, kterou uživatel ovládá pomocí prvků grafické prostředí webové stránky.
+Skrze ní manipuluje se svými daty uloženými na serverové části aplikace.
+Mezi nejdůležitější úkony prováděné uživatelem patří:
+\begin{itemize}
+	\item správa zdrojů: přidání a úprava zdroje, zatavení a obnovení sledování zdroje
+	\item procházení seznamu položek, zobrazení originálu položky, přidání/odebrání štítku, zazálohování položky
+	\item filtrování seznamu položek, změna kritérií filtru, správa filtrů
+	\item nastavení ostatních vlastností aplikace
+\end{itemize}
+
+\subsubsection{Použité knihovny}
+
+V klientské části aplikace použijeme jedinou knihovnu: GWT Eye Candy.
+Tato knihovna nabízí kolekci ovládacich prvků do uživatelského prostředí aplikace.
+My využijeme jen jediný prvek: ColorPicker pro výběr barvy štítků.
+
+\subsection{Doplněk do prohlížeče}
+
+% TODO link na crossrider
+Využijeme služeb platformy Crossrider, která umožňuje vytvořit jeden doplněk, který bude fungovat stejně v nejrozšířenějších prohlížečích.
+Podporované prohlížeče jsou:
+% TODO link na FAQ 
+\begin{itemize}
+	\item Internet Explorer 7 a vyšší
+	\item Chrome -- všechny verze
+	\item Firefox -- 3.6 a vyšší
+\end{itemize}
+
+\subsubsection{Funkce doplňku}
+% XXX Moc podrobně?
+
+Doplněk slouží k přidání nové manuální položky do aplikace.
+Doplněk bude mít podobu tlačítka na liště v prohlížeči; kliknutím na tlačítko se objeví vyskakovací okno s předvyplněnou adresou a titulkem aktuální stránky.
+V připadě, že uživatel vybral kus textu na stránce, bude jím předvyplněn popis.
+Kliknutím na tlačítko \uv{Odeslat} se vytvoří v aplikaci nová manuální položka podle vyplěných údajů.
 
 \section{Entity}
 
@@ -91,6 +178,7 @@ Jedna konfigurační položka definuje jeden parametr, jak má aplikace vypadat 
 \subsection{Oblast zdrojů}
 
 Tato část seskupuje všechny entity, které jsou souvisí se zdroji položek, jejich reprezentací a zpracováním.
+Nejdůležitější dvojicí entit je zdroj a uživatelský zdroj: první má význam pouze pro pravidelné kontroly exitence nových položek, druhá popisuje zdroj z pohledu uživatele.
 
 \subsubsection{Zdroj}
 
@@ -130,8 +218,73 @@ Motivací k pozitivnímu a negativnímu přístupu k jednotlivým částem je fa
 Entita zdroj slouží výhradně pro účely periodické kontroly, proto zavedeme entitu uživatelský zdroj, jež realizuje vztah mezi uživateli a zdroji.
 Několik uživatelů může sledovat ten samý zdroj a každý uživatel většinou sleduje více zdrojů.
 Zároveň tato entita uchovává vlastní nastavení každého zdroje zvlášť pro každého uživatele.
+Počet aktivních uživatelských zdrojů určuje, zda o zdroj je zájem a jestli má probíhat jeho kontrola.
+Pokud je v uživatelském rozhraní zmíněn pojem zdroj, je jím myšlena tato entita; entita zdroje nemá pro uživatele praktický význam.
 
+\subsection{Oblast položek}
 
+\subsubsection{Položka}
+
+Položkou v aplikaci myslíme jednu adresu webové stránky, která pochází z některého ze zdrojů nebo byla přidána uživatelem manuálně.
+Položka je závislá jen na zdroji, ze kterého pochází, vlastní personalizaci (přizpůsobení jednotlivým uživatelům) má na starosti entita uživatelská položka.
+Každý typ zdroje poskytuje položky jiného typu:
+
+\paragraph{Manuální položka}
+
+Manuální položka formálně patří k manuálnímu zdroji; jediným důvodem je zajištění konzistence rozhraní všech typů položek.
+Manuální položka reprezentuje libovolnou internetovou adresu spolu s titulkem a popisem.
+Manuální položka vzniká jen a pouze činností uživatele, který si ji sám přidá do aplikace.
+Motivací zavést manuální položku je umožnění uživateli:
+\begin{itemize}
+	\item přidat informaci k libovolné stránce,
+	\item zazálohovat libovolnou stránku,
+	\item označit si libovolnou stránku k pozdějšímu přečtení.
+\end{itemize}
+
+\paragraph{Položka typu článek}
+
+Položka typu článek je produkována zdrojem RSS/Atom.
+Každému záznamu v XML dokumentu odpovídá jedna položka vytvořená v aplikaci při kontrole zdroje.
+Titulek a popis přebíráme spolu s dalšími informacemi přímo z RSS/Atom dokumentu.
+Položek typu článek může poskytovat více informací než jiné typy položek: jedná se především o jméno autora článku a datum publikace.
+Tyto informace není obecně možné jednoduše zjistit v případě položek jiných typů.
+
+\paragraph{Položka typu odkaz}
+
+Položka typu odkaz pochází ze zdroje typu webový rozcestník.
+Každému nalezenému odkazu na webové stránce (uvnitř regionem omezené oblasti) odpovídá přavě jediná položka.
+Titulek resp. popis přebíráme z textu odkazu reps. textu nejbližšího okolí odkazu.
+
+\paragraph{Položka typu změna stránky}
+
+Položka typu změna stránky pochází ze zdroje typu změna stránky.
+Při kontroly stránky (na kterou se odkázuje zdroj) se porovnává její textový obsah s verzí, kterou jsme si uložili při předchozí kontrole.
+Pokud je nalezena změna, aplikace vytvoří novou položku, která bude obsahovat popis změn stránky.
+
+\bigskip{}
+
+Položka je závislá jen na zdroji, ze kterého pochází; stejně jako v oblasti zdrojů existuje dvojice: zdroj -- uživatelský zdroj, existuje i entita uživatelská položka.
+
+\subsubsection{Uživatelská položka}
+
+Entita položka obsahuje jen obecné --- na uživateli nezávislé atributy, které jsou sdíleny všemi uživateli.
+Jsou jimi například: titulek, obsah, zdroj, ze kterého pochází, datum a čas přidání.
+Aby mohl každý uživatel mít položku ve vlastním stavu, s vlastními štítky, zavedeme entitu uživatelská položka.
+Tato entita uchovává vlastní nastavení zvlášť pro každého uživatele.
+Pokud je v uživatelském rozhraní zmíněn pojem položka, je jím myšlena tato entita; entita položka nemá pro uživatele praktický význam.
+
+\bigskip{}
+
+Na obrázku \ref{fig:source-item} je zobrazen vztah nejdůležitějších entit z oblastí zdrojů a položek.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=12cm]{img/zdroje-polozky.eps}
+    \caption{Vztahy mezi uživatelem, zdroji a položkami}
+    \label{fig:source-item}
+\end{figure}
+
+\subsection{Oblast štítků}
 
 \section{Rozhraní pro komunikaci klienta se serverem}
 
