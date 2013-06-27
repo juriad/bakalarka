@@ -14,7 +14,8 @@ Náročný uživatel má především potřebu:
     \item sledovat několik webových stránek, které poskytují kanál RSS nebo Atom.
         Tomuto bodu vyhovuje téměř každá čtečka ve formě webové služby, kterou jsme popsali v minulé kapitole.
     \item sledovat takové webové stránky, které neposkytují kanál RSS ani Atom.
-        Toto splňuje jen několik málo speciálních služeb typu http://www.changedetection.com/, které většinou informují uživatele o změnách e-mailem.
+        Toto splňuje jen několik málo speciálních služeb, které většinou neposkytují uživateli komfort jednotného prostředí --- informují uživatele o změnách jen e-mailem.
+		Takovou službou je například http://www.changedetection.com/.
     \item uložit si informaci o zajímavých článcích.
         Tomuto požadavku by mohly vyhovovat záložky v prohlížeči, jenže ty zase nesplňují možnost přístupu odkudkoli.
         To se snažila změnit služba https://delicious.com/, ale ta zase nespňuje předchozí dva body.
@@ -65,7 +66,7 @@ Mezi požadavky na funkcionalitu, které musí aplikace splňovat patří násle
 
 \begin{itemize}
     \item Každý uživatel aplikace si může zaregistrovat své zdroje, které bude sledovat.
-    \item Existuje několik typů zdrojů: Zdroje, které přebírají položky z kanálu RSS/Atom, zdroje, které parsují informace o novinkách přímo z webových stránek a manuální zdroje.
+    \item Existuje několik typů zdrojů: Zdroje, které přebírají položky z kanálu RSS nebo Atom, zdroje, které parsují informace o novinkách přímo z webových stránek a manuální zdroje.
     \item Každý uživatel bude mít vlastní manuální zdroj, který nebude sám o sobě poskytovat nové položky, ale bude obsahovat takové položky, které si uživatel vloží manuálně.
     \item Seznam všech položek bude možné filtrovat podle několika kritérií.
 	\item Uživatel může zazálohovat jakoukoli webovou stránku.
@@ -94,7 +95,7 @@ Výkonostní požadavky určují parametry zátěže, na kterou má být aplikac
     \item Aplikace bude dobře škálovatelná.
 \end{itemize}
 
-\section{Důsledky požadavků na architekturu aplikace}
+\section{Důsledky požadavků na architekturu}
 
 Z požadavků vyplývají důsledky na volbu architektury aplikace.
 Aplikce se bude skládat ze tří částí, které spolu komunikují.
@@ -111,4 +112,10 @@ Klientská část zobrazuje data získaná ze serveru a komunikuje s uživatelem
 
 Nepovinné rozšíření do nejběžnějších prohlížečů, které má za cíl zjednodušit práci s aplikací.
 Toto rozšíření neposkytuje žádnou vyšší funkcionalitu, které by nešlo docílit klientskou částí, avšak umožňuje uživateli přidat movou položku do vého manuálního zdroje dvěma kliknutími myší.
+
+\section{Systém doporučování zdrojů}
+
+Abychom uživatelům nabídli možnost objevovat nové zdroje, které jsou podobné těm, jež sledují, bude aplikace obsahovat systém doporučování zdrojů na základě podobnosti.
+Na tomto místě bychom chtěli popsat a rozebrat různé způsoby doporučování.
+
 

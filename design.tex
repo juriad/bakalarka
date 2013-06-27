@@ -75,7 +75,7 @@ ROME je starší knihovna, nezdá se, že by její vývoj pokračoval, nicméně
 \paragraph{Apache HttpComponents}
 % TODO apache http components
 % definice http
-Apache HttpComponents je široce rozšířená knihovna uřcená pro zajištění komunikace přes HTTP.
+Apache HttpComponents je široce rozšířená kni\-hov\-na uřcená pro zajištění komunikace přes HTTP.
 My ji použijeme pro stahování webových dokumentů při kontrole zdrojů všech typů (kromě manuálního).
 
 \paragraph{jsoup}
@@ -102,8 +102,8 @@ My využijeme jen jednu ze tří částí: porovnání dvou textů, které nám 
 \subsection{Klientská část}
 
 % TODO vysvětlit html, css, js
-Klientská část apliakce je ta část, kterou si každý uživatel stáhne při návštěvě webové stránky aplikace.
-Jelikož se aplikace spouští v internetovém prohlížeči, je omezená tamním prostředím: grafická část je tvořena jazykem HTML a CSS, výkonná část je napsána v jazyce JavaScript.
+Klientská část naší apliakce je ta část, kterou si každý uživatel stáhne při návštěvě webové stránky aplikace.
+Jelikož se aplikace spouští v internetovém prohlížeči, je omezená tímto prostředím: grafická část je tvořena jazykem HTML a CSS, výkonná část je napsána v jazyce JavaScript.
 Jelikož serverová část aplikace je vytvořena v jazyce Java, zvolili jsme pro klientskou část nástroj, který umožňuje zkompilovat kód v jazyce Java do jazyku JavaScript, který je určen pro běh v prohlížeči.
 Takovým nástrojem je Google Web Toolkit -- GWT; mezi jeho základní vlastnosti patří:
 \begin{itemize}
@@ -116,11 +116,11 @@ Takovým nástrojem je Google Web Toolkit -- GWT; mezi jeho základní vlastnost
 
 \subsubsection{Úloha klientské části}
 
-Klientská část je ta část aplikace, kterou uživatel ovládá pomocí prvků grafické prostředí webové stránky.
-Skrze ní manipuluje se svými daty uloženými na serverové části aplikace.
+Klientská část je část aplikace, kterou uživatel ovládá pomocí prvků grafického prostředí webové stránky.
+Skrze ní manipuluje se svými daty uloženými v serverové části aplikace.
 Mezi nejdůležitější úkony prováděné uživatelem patří:
 \begin{itemize}
-	\item správa zdrojů: přidání a úprava zdroje, zatavení a obnovení sledování zdroje
+	\item správa zdrojů: přidání a úprava zdroje, zastavení a obnovení sledování zdroje
 	\item procházení seznamu položek, zobrazení originálu položky, přidání/odebrání štítku, zazálohování položky
 	\item filtrování seznamu položek, změna kritérií filtru, správa filtrů
 	\item nastavení ostatních vlastností aplikace
@@ -135,7 +135,7 @@ My využijeme jen jediný prvek: ColorPicker pro výběr barvy štítků.
 \subsection{Doplněk do prohlížeče}
 
 % TODO link na crossrider
-Využijeme služeb platformy Crossrider, která umožňuje vytvořit jeden doplněk, který bude fungovat stejně v nejrozšířenějších prohlížečích.
+Využijeme služeb platformy Crossrider, která umožňuje vytvořit jediný doplněk, který bude fungovat shodně v nejrozšířenějších prohlížečích.
 Podporované prohlížeče jsou:
 % TODO link na FAQ 
 \begin{itemize}
@@ -149,7 +149,7 @@ Podporované prohlížeče jsou:
 
 Doplněk slouží k přidání nové manuální položky do aplikace.
 Doplněk bude mít podobu tlačítka na liště v prohlížeči; kliknutím na tlačítko se objeví vyskakovací okno s předvyplněnou adresou a titulkem aktuální stránky.
-V připadě, že uživatel vybral kus textu na stránce, bude jím předvyplněn popis.
+V připadě, že uživatel vybere část textu na stránce, bude jím předvyplněn popis.
 Kliknutím na tlačítko \uv{Odeslat} se vytvoří v aplikaci nová manuální položka podle vyplěných údajů.
 
 \section{Entity}
@@ -166,9 +166,9 @@ Entitu uživatele přebíráme od poskytovatele serveru pomocí Users API.
 
 \subsubsection{Konfigurační položka}
 
-Konfigurační položka nemá nic společného s termínem \textit{položka} and entitou položka.
+Konfigurační položka nemá nic společného s termínem \textit{položka} ani entitou položka.
 
-Jedna konfigurační položka definuje jeden parametr, jak má aplikace vypadat nebo jak se má chovat; lze rozlišit dva typy konfiguračních položek:
+Jedna konfigurační položka definuje jeden parametr, který má vliv na vzhled nebo chování aplikace; lze rozlišit dva typy konfiguračních položek:
 \begin{itemize}
 	\item konfigurace serverové části --- závisí na ní chování serverové části,
 	\item konfigurace klientské části --- závisí na ní vzhled nebo chování klientské části.
@@ -177,18 +177,18 @@ Jedna konfigurační položka definuje jeden parametr, jak má aplikace vypadat 
 
 \subsection{Oblast zdrojů}
 
-Tato část seskupuje všechny entity, které jsou souvisí se zdroji položek, jejich reprezentací a zpracováním.
+Tato část seskupuje všechny entity, které jsou souvisejí se zdroji položek, jejich reprezentací a zpracováním.
 Nejdůležitější dvojicí entit je zdroj a uživatelský zdroj: první má význam pouze pro pravidelné kontroly exitence nových položek, druhá popisuje zdroj z pohledu uživatele.
 
 \subsubsection{Zdroj}
 
 Zdroj reprezentuje každou webovou stránku nebo službu, kterou aplikace používá k získávání nových položek.
-Aplikace pravidelně kontroluje změny na zdrojích; pokud ke změně dojde, aplikace přidá odpovídající položky.
+Aplikace pravidelně kontroluje změny na zdrojích; pokud zaregistruje změnu, aplikace přidá odpovídající položky.
 Zdroj je abstraktní entita, od které jsou odvozeny jednotlivé typy zdrojů; obsahuje všechny informace nutné k tomu, aby zdroj mohl být periodicky kontrolován.
 
 \paragraph{Manuální zdroj}
 
-Manuální zdroj patří vždy jednomu uživateli.
+Manuální zdroj patří vždy jednomu konkrétnímu uživateli.
 Nereprezentuje žádnou internetovou adresu a sám o sobě neposkytuje žádné položky.
 Všechny položky, které tomuto zdroji patří, přidal sám uživatel skrze jednu ze služeb k tomu určených.
 
@@ -200,33 +200,36 @@ Tento zdroj typicky obsahuje odkazy na články, které byly publikovány v ned�
 \paragraph{Webový rozcestník}
 
 Nahrazuje funkcionalitu RSS či Atom pro webové portály, které tyto kanály neposkytují.
-Vychází z jednoduchého pozorování, že úvodní stránka takového portálu obsahuje seznam nedávných článků a že položky převzaté z RSS či Atomu by odpovídaly odkazům na této stránce.
+Vychází z jednoduchého pozorování, že úvodní stránka takového portálu obsahuje seznam nejnovějších článků a že položky převzaté z RSS či Atomu by odpovídaly odkazům na této stránce.
 
 \paragraph{Změna stránky}
 
-Reprezentuje webovu stránku o jejíž změně obsahu chce uživatel být informován.
+Reprezentuje webovu stránku o jejíž změně obsahu chce být uživatel být informován.
 Každá změna stránky způsobí vytvoření položky informující o změně.
 
 \subsubsection{Region}
 
-Pro typ zdroje Webový rozcestník a Změna stránky definuje oblast stránky, jež je z pohledu uživatele zajímavá.
+Region definuje pro typ zdroje Webový rozcestník a Změna stránky oblast stránky, která je z pohledu uživatele zajímavá.
 Oblast na stránce je určena výběrem oblastí stránky, které se mají kontrolovat a oblastí, které se mají při kontrole ignorovat.
 Motivací k pozitivnímu a negativnímu přístupu k jednotlivým částem je fakt, že stránky obsahují obsah, který se mění při každém dotazu (reklamy, informace o času generování stránky) nebo není zajímavý (hlavička a patička stránky, menu).
 
 \subsubsection{Uživatelský zdroj}
 
 Entita zdroj slouží výhradně pro účely periodické kontroly, proto zavedeme entitu uživatelský zdroj, jež realizuje vztah mezi uživateli a zdroji.
-Několik uživatelů může sledovat ten samý zdroj a každý uživatel většinou sleduje více zdrojů.
-Zároveň tato entita uchovává vlastní nastavení každého zdroje zvlášť pro každého uživatele.
-Počet aktivních uživatelských zdrojů určuje, zda o zdroj je zájem a jestli má probíhat jeho kontrola.
+Několik uživatelů může sledovat stejný zdroj a každý uživatel většinou sleduje více zdrojů.
+Tato entita uchovává vlastní nastavení každého zdroje zvlášť pro každého uživatele.
+Počet aktivních uživatelských zdrojů určuje, politiku podle které bude probíhat jeho kontrola.
 Pokud je v uživatelském rozhraní zmíněn pojem zdroj, je jím myšlena tato entita; entita zdroje nemá pro uživatele praktický význam.
+
+Uživatelský zdroj obsahuje entitu štítek, která reprezentuje informaci o příslušnosti položky ke zdroji.
+Více o tomto štítku a jeho funkci popíšeme v kapitole \ref{entity-label}.
 
 \subsection{Oblast položek}
 
 \subsubsection{Položka}
 
 Položkou v aplikaci myslíme jednu adresu webové stránky, která pochází z některého ze zdrojů nebo byla přidána uživatelem manuálně.
-Položka je závislá jen na zdroji, ze kterého pochází, vlastní personalizaci (přizpůsobení jednotlivým uživatelům) má na starosti entita uživatelská položka.
+Položka je závislá jen na zdroji, ze kterého pochází, vlastní personalizaci (přizpůsobení jednotlivým uživatelům) se zabývá entita uživatelská položka.
 Každý typ zdroje poskytuje položky jiného typu:
 
 \paragraph{Manuální položka}
@@ -236,18 +239,18 @@ Manuální položka reprezentuje libovolnou internetovou adresu spolu s titulkem
 Manuální položka vzniká jen a pouze činností uživatele, který si ji sám přidá do aplikace.
 Motivací zavést manuální položku je umožnění uživateli:
 \begin{itemize}
-	\item přidat informaci k libovolné stránce,
+	\item přidat vlastní informaci k libovolné stránce,
 	\item zazálohovat libovolnou stránku,
 	\item označit si libovolnou stránku k pozdějšímu přečtení.
 \end{itemize}
 
 \paragraph{Položka typu článek}
 
-Položka typu článek je produkována zdrojem RSS/Atom.
+Položka typu článek je produkována při kontrole zdrojem typu RSS/Atom.
 Každému záznamu v XML dokumentu odpovídá jedna položka vytvořená v aplikaci při kontrole zdroje.
 Titulek a popis přebíráme spolu s dalšími informacemi přímo z RSS/Atom dokumentu.
-Položek typu článek může poskytovat více informací než jiné typy položek: jedná se především o jméno autora článku a datum publikace.
-Tyto informace není obecně možné jednoduše zjistit v případě položek jiných typů.
+Položka typu článek může poskytovat více informací než jiné typy položek: jedná se především o jméno autora článku a datum publikace.
+Obecně tyto informace nejsou jednoduše zjistitelné v případě položek jiných typů.
 
 \paragraph{Položka typu odkaz}
 
@@ -258,7 +261,7 @@ Titulek resp. popis přebíráme z textu odkazu reps. textu nejbližšího okol�
 \paragraph{Položka typu změna stránky}
 
 Položka typu změna stránky pochází ze zdroje typu změna stránky.
-Při kontroly stránky (na kterou se odkázuje zdroj) se porovnává její textový obsah s verzí, kterou jsme si uložili při předchozí kontrole.
+Při kontrole stránky (na kterou se odkázuje zdroj) se porovnává její textový obsah s verzí, kterou jsme si uložili při předchozí kontrole.
 Pokud je nalezena změna, aplikace vytvoří novou položku, která bude obsahovat popis změn stránky.
 
 \bigskip{}
@@ -270,7 +273,8 @@ Položka je závislá jen na zdroji, ze kterého pochází; stejně jako v oblas
 Entita položka obsahuje jen obecné --- na uživateli nezávislé atributy, které jsou sdíleny všemi uživateli.
 Jsou jimi například: titulek, obsah, zdroj, ze kterého pochází, datum a čas přidání.
 Aby mohl každý uživatel mít položku ve vlastním stavu, s vlastními štítky, zavedeme entitu uživatelská položka.
-Tato entita uchovává vlastní nastavení zvlášť pro každého uživatele.
+Tato entita uchovává nastavení vlastní každému uživateli, včetně zálohy, pokud byla vytvořena.
+
 Pokud je v uživatelském rozhraní zmíněn pojem položka, je jím myšlena tato entita; entita položka nemá pro uživatele praktický význam.
 
 \bigskip{}
@@ -286,10 +290,102 @@ Na obrázku \ref{fig:source-item} je zobrazen vztah nejdůležitějších entit 
 
 \subsection{Oblast štítků}
 
-\section{Rozhraní pro komunikaci klienta se serverem}
+% TODO oblast štítků
 
-\section{Procesy}
+\subsubsection{Seznam položek}
+Než zavedeme entity této oblasti, zadefinujeme pojem seznam položek.
 
-\section{Sběr položek}
+Seznam (uživatelských) položek je podle času vzestupně či sestupně uspořádaný seznam všech uživatelských položek, které vyhovují všem kritériům, které jsou na seznam kladeny.
+Seznam položek je výsledkem dotazu, neexistuje dokud není dotaz proveden.
 
-\section{Doporučování}
+Seznam položek je také komponenta grafického prostředí, která zobrazuje uživatelké položky, které jsou součástí seznamu položek, výsledku dotazu.
+
+\subsubsection{Štítek}\label{entity-label}
+
+Štítek reprezentuje informaci, kterou může uživatel přidat ke své uživatelské položce.
+Štítek má svého vlastníka, uživatele, který jej vytvořil; tento štítek není dostupný jiným uživatelům.
+Štítek má několik úloh:
+\begin{itemize}
+	\item tvoří poznámku u uživatelské položky,
+	\item lze filtrovat uživatelské položky mající přiřazený konkrétní štítek,
+	\item přiřazením vhodného štítku k uživatelské položkce se provede záloha webové stránky položky.
+\end{itemize}
+
+Abychom zajistili jednoduché používání štítků, zavedli jsme následující dvě omezení:
+\begin{itemize}
+	\item Název štítku nesmí obsahovat bílé znaky a znak \$.
+		Bílé znaky na okrajích názvu se oříznou, bílé znaky uvnitř a znak \$ způsobí chybu při vytváření/přiřazování štítku.
+		Toto omezení vynucuje výstižná jednoslovná pojmenování štítků.
+	\item Název štítku nelze později změnit.
+		Toto omezení umožňuje využít název štítku jako část jeho klíče.
+\end{itemize}
+
+V aplikaci existují dva typy štítků:
+\begin{enumerate}
+	\item uživatelský štítek --- štítek, který vytvořil uživatel, je přiřazovaný uživatelem a je zobrazovaný v seznamu položek,
+	\item štítek reprezentující uživatelský zdroj --- tento typ štítku není spravován uživatelem, nemůže jej ani vytvořit ani přiřadit, nezobrazuje se v seznamu položek.
+\end{enumerate}
+
+\paragraph{Seznam štítků u uživatelských zdrojů}
+Uživatel má možnost u uživatelského zdroje uvést seznam štítků, které mají být automaticky přidány ke každé uživatelské položce patřící danému uživatelskému zdroji.
+V případě, že zdroj je typu manuální zdroj, nebudou štítky přidány k uživatelské položce, ale budou uživateli nabídnuty přednostně.
+
+Každý uživatelský zdroj obsahuje právě jeden štítek druhého typu; tento štítek zároveň patří právě jednomu uživatelskému zdroji a je vždy součástí seznamu štítků.
+
+Všechny štítky, které jsou součástí seznam štítků u uživatelského zdroje budou automaticky přiřazeny všem uživatelským položkám, které patří danému uživatelskému zdroji.
+Můžeme říct, že existuje dvojí vazba mezi uživatelským zdrojem a jeho uživatelskými položkami:
+\begin{enumerate}
+	\item přímá vazba uživatelské položky na uživatelský zdroj;
+	\item nepřímá vazba přes společný štítek druhého typu.
+		Tuto vazbu využijeme dále při popisu entity seznamový filtr.
+\end{enumerate}
+
+\subsubsection{Seznamový filtr}
+
+Seznamový filtr popisuje kritéria a způsob řazení seznamu položek.
+Řazení je vždy buď sestupně či vzestupně podle času přidání uživatelské položky.
+Možná kritéria jsou následujících typů:
+\begin{itemize}
+	\item přečtená/nepřečtená uživatelská položka,
+	\item nejstarší/nejnovější datum přídání uživatelské položky,
+	\item filtr tvořený predikáty: \uv{Uživatelská položka $X$ má přiřazený štítek $Y$}
+\end{itemize}
+
+Poslední uvedené kritérium je zásadní pro funkčnost celé aplikace a všech seznamů položek:
+\begin{itemize}
+	\item seznam všech položek --- filtr je prázdný
+	\item položky nějakého uživatelského zdroje --- filtr obsahuje štítek patřící uživatelskému zdroji
+	\item složitější filtry, například seznam položek ze zdroje $X$ nebo položek obsahující zároveň štítek $a$ a $b$:
+		\verb~lsrc$X OR lusr$a AND lusr$b~
+\end{itemize}
+
+\paragraph{Typy filtrů}
+V rámci aplikace rozjišujeme tři typy seznamových filtrů.
+\begin{itemize}
+	\item obyčejný seznamový filtr --- seznamový filtr, který si uživatel uložil a kdykoli si může zobrazit seznam položek, které mu vyhovují,
+	\item exportovaný seznamový filtr --- chová se shodně jako obyčejný seznamový filtr; umožňuje navíc zobrazit seznam položek jako RSS či Atom dokument komukoli mimo naši aplikaci,
+	\item ad-hoc seznamový filtr --- slouží pro okamžitou navigaci mezi různými seznamy položek v aplikaci, a proto není trvale uložený.
+		Ad-hoc seznamovým filtrem je například realizován seznam položek zobrazený po kliknutí na nějaký štítek.
+\end{itemize}
+
+\subsection{Oblast klávesových zkratek}
+
+V aplikaci existuje jediná entita, která popisuje klávesové zkratky.
+
+\subsubsection{Klávesová zkratka}
+
+Klávesová zkratka definuje chování aplikace, které nastane při stisku klávesy či kláves.
+Rozlišujeme tři různé typy klávesových zkratek:
+\begin{itemize}
+	\item zkratky, které přiřazují či odebírají štítky uživatelským položkám.
+		Klávesová zkratka má vazbu na štítek, který se má k uživatelské položce přidat, pokud přiřiřazen není, či odebrat, pokud přiřazen je.
+	\item zkratky, které zobrazují seznam položek.
+		Klávesová zkratka má vazbu na seznamový filtr, který se má použít pro zobrazení seznamu položek.
+	\item zkratky, které vykonávají jednu z mnoha podporovaných akcí.
+		Takovou akcí může být přechod na následující položku, zrušení aktuálního filtru či zobrazení originální stránky položky.
+\end{itemize}
+
+\section{Splnění požadavků}
+
+Tady popíšu, jak jsou jednotlivé požadavky realizovány pomocí entit.
+
