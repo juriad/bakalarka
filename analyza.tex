@@ -52,6 +52,7 @@ Jednotlivým termínům bude později odpovídat jedna entita.
 \begin{description}
     \item[Uživatel] Osoba, která používá naši aplikaci.
     \item[Zdroj] Zdroj je reprezentací jednoho dokumentu (HTML či XML) v síti internet, který naše aplikace používá k získávání položek.
+	\item[Kontrola zdroje] Úkon provedený k zjištění, zda zdroj obsahuje nové položky.
     \item[Položka] Položka reprezentuje odkaz na jeden článek nebo stránku v síti internet.
     \item[Štítek] Nejmenší informace, kterou může uživatel přidat k položce.
 \end{description}
@@ -89,6 +90,7 @@ Požadavky na použitelnost popisují, jak má aplikace vypadat a jak se má cho
 Výkonostní požadavky určují parametry zátěže, na kterou má být aplikace navrhnuta.
 
 \begin{itemize}
+	\item Aplikaci může používat několik stovek uživatelů.
     \item Každý uživatel může mít desítky až stovky zdrojů.
 	\item Zdroj může poskytovat desítky položek denně.
     \item Každý zdroj se kontroluje rozumně často.
@@ -114,8 +116,101 @@ Nepovinné rozšíření do nejběžnějších prohlížečů, které má za cí
 Toto rozšíření neposkytuje žádnou vyšší funkcionalitu, které by nešlo docílit klientskou částí, avšak umožňuje uživateli přidat movou položku do vého manuálního zdroje dvěma kliknutími myší.
 
 \section{Systém doporučování zdrojů}
+% TODO ozdrojovat
 
 Abychom uživatelům nabídli možnost objevovat nové zdroje, které jsou podobné těm, jež sledují, bude aplikace obsahovat systém doporučování zdrojů na základě podobnosti.
-Na tomto místě bychom chtěli popsat a rozebrat různé způsoby doporučování.
+Na tomto místě popíšeme a rozebereme různé způsoby doporučování.
+Ve formulaci problematiky budeme používat pojmy uživatel -- osoba, která interaguje se systémem a položka -- objekt, který nabízíme a chceme doporučovat; v našem případě je položkou ve formulaci problematiky jakýkoli zdroj, který uživatelé sledují.
 
+\subsection{Globální doporučování}
 
+Nejjednoduším způsobem doporučování je využití globálních statistik o všech položkách.
+Vychází z předpokladu, že existují položky, které jsou objektivně dobré a vhodné pro většinu uživatelů.
+Kritérii, podle kterých jsou produkty seřazeny, mohou být:
+\begin{itemize}
+	\item počet uživatelů, kteří si zakoupili položku,
+	\item počet zhlédnutí položky,
+	\item hodnocení všech uživatelů,
+	\item \ldots
+\end{itemize}
+Tento způsob používají menší internetové obchody z důvodu snadné implementace a nenáročnosti výpočtu.
+
+Globální doporučování je v našem případě nevhodné, naším cílem není doporučovat velkém zpravodajské servery, které zná každý uživatel.
+Naším cílem je nabídnout uživateli především menší zdroje, které nejsou uživateli známé a přesto jsou často vysoce kvalitní.
+
+\subsection{Doporučování na základě podobnosti}
+
+Všechny systému doporučování vyžadují prvotní znalost o uživateli -- modelu, který popisuje preference uživatele.
+Model uživatele může obsahovat nejrůznější informace:
+\begin{itemize}
+	\item údaje, které si o sobě vyplní sám uživatel: oblíbený žánr (u hudby), oblíbený autor (u knih),
+	\item hodnocení, které sám vyplnil: klikl na tlačítko \uv{Líbí/nelíbí}, ohodnotil položku na stupnici 1--10,
+	\item záznam dosavadní interakce: které písníčky si uživatel poslechl, které knihy zakoupil.
+\end{itemize}
+
+Existují dva přístupy k nabízení položek na základě podobnosti:
+\begin{itemize}
+	\item podobnost obsahu -- za využití detailní znalosti atributů všech položek vyhledává takové, které jsou podobné těm, které se uživateli líbily,
+	\item podobnost uživatelů -- vychází z předpokladu, že podobní uživatelé mají zájem o podobné položky.
+\end{itemize}
+
+\subsubsection{Doporučování založené na podobnosti obsahu}
+
+V případě, že položky v systému jsou takové povahy, že jsou známé jejich podrobné informace, může systém nabízet položky, které jsou podle nějakých kritérií blízké těm, které se uživateli dříve líbili.
+Potřebnými podrobnými informacemi mohou být například:
+\begin{itemize}
+	\item zvukové charakteristiky hudební nahrávky, její tempo, melodie apod.,
+	\item text jako vektor ve vektorovém prostoru nad slovy.
+\end{itemize}
+
+Tento přístup není v našem případě použitelný, nemáme dostatečné informace o jednotlivých zdrojích; jediné, co známe je typ zdroje a jeho internetová adresa.
+
+\subsubsection{Doporučení na základě podobnosti uživatelů}
+
+Tento systém doporučuje uživateli položky, které se líbí jiným uživatelům, kteří jsou danému uživateli podobní.
+Všechny algoritmy této skupiny pracují s maticí uživatelů a položek; v jedné dimenzi jsou všichni uživatelé, v druhé dimenzi jsou všechny položky.
+Prvek matice vyjadřuje hodnocení $i$-té položky $j$-tým uživatelem.
+Pro nalezení vhodných položek k doporučení můžeme porovnávat vektory:
+\begin{itemize}
+	\item uživatelů pro všechny položky: pokud jsou si dva vektory blízké, líbí se položka stejné skupině uživatelů,
+	\item položek pro všechny uživatele: pokud jsou si dva vektory blízké, hodnotí uživatelé položky podobně -- mají stejný vkus.
+		Na základě omezené skupiny podobných uživatelů se v druhém kroku dopočítají konkrétní položky k doporučení.
+\end{itemize}
+Podobnost vektorů je možné porovnávat několika způsoby, například jejich mírou korelace či skalárním součinem.
+
+\subsection{Volba systému doporučování}
+
+Chování dat v naší aplikaci se liší od běžných modelů doporučování; mezi specifické vlastnosti patří:
+
+\begin{itemize}
+	\item Uživatelů bude relativně málo; doporučení se vypočítává pouze uživatelům, kteří aplikaci používají (sledují alespoň jeden zdroj).
+	\item Změna hodnocení položek (v našem případě: 0 -- uživatel zdroj nesleduje, 1 -- uživatel zdroj sleduje) neprobíhá často.
+		Vycházíme z pozorování, že uživatel stále sleduje stejné zdroje.
+		Bude nám tedy stačit přepočítávat doporučení offline -- například jednou za den, místo na prostředky náročného výpočtu při každém doatzu.
+	\item Matice uživatelů a zdrojů je řídká; mohou sice existovat zdroje, které sleduje většina uživatelů, ale žádný uživatel nebude sledovat většinu zdojů.
+		Mnoho zdrojů bude sledováno právě jedním uživatelem, půjde nejčastěji o různé tématicky zaměřené blogy.
+	\item Neznáme téměř žádné informace o zdrojích, jen jejich typ a adresu.
+\end{itemize}
+
+Z výše uvedených předpokladů vyplývá, že nejvhodnější algoritmu volbou bude některá z variant doporučování na základě podobnosti uživatelů.
+Jako největší problém při návrhu doporučování v naší aplikaci považujeme řídkost dat: uživatelé nebudou sdílet stejné zdroje dost na to, aby doporučení dávalo relevantní nabídky.
+
+% TODO zdroj
+Zvolili jsme algoritmus, který navrhli Z. Huang, D. Zeng, H. Chen ve svém článku A link analysis approach to recommendation under sparse data.
+Tento algoritmus je do velké míry inspirovaný algoritmy známými z prostředí internetových vyhledávačů jako je například algoritmus PageRank.
+
+Princip algoritmu je následující:
+\begin{enumerate}
+	\item algoritmus začíná se seznamem zdrojů, které uživatel sleduje; všechny zdoje mají stejnou váhu
+	\item najde všechny uživatele, kteří sledují některý ze zdrojů, které sleduje původní uživatel: nazveme je sousedy
+	\item vypočítá, jak jsou si uživatel a soused blízcí, přidělí sousedovi váhu
+	\item přidá všechny zdroje všech sousedů mezi sledované zdroje uživatele a přiřadí jim váhy podle toho, kteří sousedé je sledují
+	\item iteruje několikrát kroky 2--4
+	\item vrátí nový seznam zdrojů, které uživatel sleduje seřazený podle jejich váhy
+\end{enumerate}
+
+Kouzlo toho algoritmu spočívá v tom, že:
+\begin{itemize}
+	\item umožňuje vypočítat doporučení pro všechny uživatele najednou,
+	\item všechny operace lze implementovat nad maticemi; kroky 2--4 jsou realizovatelné jen jako násobení matic.
+\end{itemize}

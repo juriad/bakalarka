@@ -78,7 +78,7 @@ ROME je starší knihovna, nezdá se, že by její vývoj pokračoval, nicméně
 Apache HttpComponents je široce rozšířená kni\-hov\-na uřcená pro zajištění komunikace přes HTTP.
 My ji použijeme pro stahování webových dokumentů při kontrole zdrojů všech typů (kromě manuálního).
 
-\paragraph{jsoup}
+\paragraph{JSOUP}
 % TODO vysvětlit DOM
 % TODO link jsoup
 Knihovna jsoup umožňuje rozparsovat HTML stránku do DOM struktury a poskytuje metody na procházení a manipulaci se stromem elementů.
@@ -166,7 +166,7 @@ Entitu uživatele přebíráme od poskytovatele serveru pomocí Users API.
 
 \subsubsection{Konfigurační položka}
 
-Konfigurační položka nemá nic společného s termínem \textit{položka} ani entitou položka.
+Konfigurační položka nemá nic společného s termínem položka ani entitou položka.
 
 Jedna konfigurační položka definuje jeden parametr, který má vliv na vzhled nebo chování aplikace; lze rozlišit dva typy konfiguračních položek:
 \begin{itemize}
@@ -385,7 +385,69 @@ Rozlišujeme tři různé typy klávesových zkratek:
 		Takovou akcí může být přechod na následující položku, zrušení aktuálního filtru či zobrazení originální stránky položky.
 \end{itemize}
 
-\section{Splnění požadavků}
+\section{Procesy }
 
-Tady popíšu, jak jsou jednotlivé požadavky realizovány pomocí entit.
+Na tomto místě popíšeme manipulaci s entitami, ke které dochází v samotné aplikaci.
+Z popsaných procesů je zřejmé, jak jsou jednotlivé požadavky na aplikaci realizovány.
 
+\subsection{Zdroje}
+
+Po přihlášení si uživatel může vytvořit své vlastní zdroje:
+\begin{enumerate}
+	\item zjistí se, zda takový zdroj už existuje (URL a typ zdroje),
+	\item pokud neexistuje vytvoří se nový zdroj příslušného typu,
+	\item vytvoří se uživatelský zdroj, který propojí zdroj s uživatelem.
+\end{enumerate}
+
+Uživatel nebude moci vytvořit zdroj typu manuální zdroj; manuální zdroj se vytvoří automaticky při prvním přihlášení.
+Při každém přihlášení se zkontroluje, zda existuje; pokud neexistuje, vytvoří se výše uvedeným postupem.
+
+Odstranění zdroje není možné z důvodu, že mohou existovat položky, které jsou na něj navázané.
+Uživatel může zrušit sledování zdroje změnou vlastnosti uživatelského zdroje; sledování zdroje může uživatel obnovit.
+Pokud bylo u zdroje zrušeno sledování, nebudou se nadále vytvářet uživatelské položky pro tento uživatelský zdroj.
+V případě, že neexistuje aktivní uživatelský zdroj pro zdroj, nebude se provádět jeho kontrola.
+K tomu může dojít dvěma způsoby:
+\begin{itemize}
+	\item buď uživatel zrušil sledování zdroje,
+	\item nebo během vytváření uživatelského zdroje došlo k chybě.
+\end{itemize}
+
+\subsection{Položky}
+
+Aplikace pravidelně provádí kontrolu zdrojů; stáhne z internetu dokument odpovídající adreses zdroje a zpracuje jej.
+Pokud se při kontrole zdroje zjistí, že záznam ještě v aplikaci neexistuje, bude vytvořen.
+\begin{enumerate}
+	\item Vytvoří se položka podle typu zdroje,
+	\item vytáhne se z databáze seznam všech aktivních uživatelských zdrojů pro daný zdroj,
+	\item vytvoří se nová uživatelská položka pro každý aktivní uživatelský zdroj.
+\end{enumerate}
+
+Uživatel může přidat do aplikace webovou stránku jako novou položku.
+V případě, že uživatel přidává položku manuálně:
+\begin{enumerate}
+	\item nalezne se uživatelský zdroj odpovídající uživatelovu manuálnímu zdroji,
+	\item vytvoří se manuální položka pro manuální zdroj nalezeného uživatelského zdroje,
+	\item vytvoří se uživatelská položka pro nalezený uživatelský zdroj.
+\end{enumerate}
+
+\subsection{Seznamy položek}
+
+Seznam položek je definován seznamovým filtrem -- několika kritérii, kterým musí každá položka vyhovět.
+Ad-hoc seznamový filtr vzniká v aplikaci přirozeně akcemi uživatele, je jím realizován například výpis položek uživatelského zdroje.
+Uživatel může zobrazit seznam položek na základě svého ad-hoc seznamového filtru; takový seznamový filtr může dále pojmenovat a uložit.
+Uživatel si může zadefinovat libovolné množství vlastních seznamových filtrů, přeneseně i seznamů položek.
+Seznamový filtr může dále měnit, případně odstranit.
+
+\subsection{Štítky}
+
+Uživatel má možnost přidat k položce dodatečnou informaci prostřednictvím štítku; přidání štítku může probíhat i polo-automaticky (klávesovou zkratkou) či plně automaticky (uvedením štítku do seznamu automaticky přidávaných štítku v uživatelském zdroji).
+
+Uživatel může na několika místech vybrat štítek ze seznamu existujících štítků, případně vytvořit nový, pokud žádaný štítek ještě neexistuje.
+Štítek lze odstranit, za předpokladu, že není nikde v aplikaci použit: položkou, seznamovým filtrem, či klávesovou zkratkou.
+
+Pokud má štítek nastavenou vlastnost zálohování, jeho přiřazení uživatelské položce způsobí zazálohování webové stránky položky:
+\begin{enumerate}
+	\item stáhne se webová stránka položky,
+	\item veškeré relativní odkazy na stránce se nahradí za absolutní,
+	\item uloží se soubor stránky do úložiště a zapíše klíč do uživatelské položky.
+\end{enumerate}
