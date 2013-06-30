@@ -1,19 +1,256 @@
 \chapter{Vyskokoúrovňová dokumentace}
 
-\section{Rozhraní pro komunikaci klienta se serverem}
+V této části práce popíšeme funkci/implementaci nejdůležitějších částí aplikace.
+Tento popis je určen programátorům; má za cíl poskytnout dostatečný přehled o všech částech aplikace před tím, než se setká se zdrojovým kódem.
 
-Že klientská část obsahuje nějaké managery, které komunikují pomocí AJAXových služeb se serverem.
-Jaké je rozhraní těchto služeb, co vše se kontroluje na straně serveru, jak aplikace reaguje na chyby.
-Jak probíhá komunikace s doplňkem v prohlížeči.
-Tady bude asi nějaký ten sequence diagram.
+\section{Členění aplikace}
 
-\section{Procesy}
+Jak jsme již popsali v předchozích kapitolách, aplikace se člení na tři hlavní části:
+\begin{enumerate}
+	\item serverovou část,
+	\item klientskou část,
+	\item nepovinný doplněk do prohlížeče.
+\end{enumerate}
 
-Tady popíšu, jaké procesy probíhají na serverové části.
+\begin{figure}
+    \centering
+    \includegraphics[width=12cm]{img/cleneni.eps}
+    \caption{Vztahy mezi zdrojovým kódem a výsledným produktem kompilace}
+    \label{fig:cleneni}
+\end{figure}
 
-\subsection{Sběr položek}
+První dvě části jsou naprogramovány v jazyku Java a sdílejí některé části kódu -- balík \verb|cz.artique.shared|.
+Na obrázku \ref{fig:cleneni} jsou zobrazeny jednotlivé balíky, postup kompilace a její výsledný produkt.
 
-\subsection{Zálohování položky}
+Serverová část závisí na všech balících; můžeme však říct, že závislost na balíku \verb|cz.artique.client| je slabá a vynucená použitou frameworkem GWT.
+GWT vyžaduje, aby rozhraní služby a jeho asynchronní varianta byly ve stejném balíku.
+Samotná rozhraní jsou sice implementována jen v balíku \verb|cz.artique.server|, nicméně je nutné je mít přístupné v klientské části.
 
-\subsection{Výpočet doporučení}
+Sdílená část zdrojového kódu obsahuje především definici modelu -- tříd reprezentujících strukturu dat v databázi podle návrhu entit.
+Jednotlivým entitám odpovídá jedna nebo více tříd.
 
+Kromě modelu obsahuje sdílená část rozhraní implementovaná třídami modelu a pomocné třídy používané při komunikaci mezi serverovou a klientskou částí.
+
+\bigskip{}
+
+Doplněk do prohlížeče je vytvořen zcela odděleně od zbytku aplikace v jazyku JavaScript.
+
+\section{Rozhraní serverové části}
+
+Serverová část je zodpovědná za abstrakci přístupu k databázi, poskytování služeb klientům a vykonávání periodických procesů.
+
+\subsection{Obsluha databáze}
+Jelikož platformou poskytovaná databáze neumožňuje složitější operace, navrhli jsme kolekci služeb, které obalují přístup k databázi a provádějí jednoduché manipulace.
+Přístup k databázi ze zbytku splikace směřujeme přes tyto služby.
+To nám umožňuje mít přehled o typech prováděných operací a zároveň eliminuje skryté závislosti.
+Nejčastějšími operacemi, které takto simulujeme, jsou:
+\begin{itemize}
+	\item dotažení dalšího objektu podle klíče, například: k uživatelskému zdroji dotáhne region,
+	\item vytáhnutí objektu, příp. jeho vytvoření, pokud neexistuje,
+	\item sestavení složitějšího dotazu podle kritérii.
+\end{itemize}
+
+\subsection{Rozhraní pro komunikaci s klientskou částí}
+
+Klientská část komunikuje po síti internet se serverovou částí pomocí několika služeb.
+Tyto služby lze rozpoznat podle jejich názvu začínajícího slovem \verb|Client|.
+
+\subsubsection{Validace vstupu}
+
+Všechny služby, které jsou veřejně dostupné -- mezi ně patří i služby volané z klientské části -- vždy, bez výjimky, provádějí ošetření hodnot vstupů.
+Některé typy validace jsou prováděné z důvodu bezpečnosti, jiné z důvodu zajištění integrity dat či omezení danými použitými knihovnami a databází.
+Prováděné úpravy a kontroly hodnot jsou následující:
+\begin{itemize}
+	\item nahrazení hodnotami dopočítatelnými na straně serveru hodnoty, které dodala klientská část.
+		Sem patří například:
+		\begin{itemize}
+			\item výpočet databázového klíče,
+			\item dosazení typu z výčtu, pokud existuje jediná možnost,
+			\item dosazení aktuálního datumu do datumových atributů,
+			\item nahrazení vlastníka za aktuálně přihlášeného uživatele.
+		\end{itemize}
+	\item kontrola, zda povinný atribut je vyplněný,
+	\item kontrola, zda vlastník všech odkázaných objektů je aktuálně přihlášený uživatel,
+	\item oříznutí bílých znaků z řetězců a následná kontrola délky (databáze povoluje řetězce pouze o maximální délce 500 znaků),
+	\item oříznutí bílých znaků z delších textů,
+	\item kontrola, zda URL je validní,
+	\item kontrola, zda URL je validní a webová stránka jí určená je dostupná,
+	\item kontrola, zda CSS selector je validní,
+	\item oříznutí bílých znaků z názvu štítku a kontrola, zda název štítku neobsahuje bílé znaky a znak \$.
+\end{itemize}
+
+Pokud nebudeme uvažovat validaci, která samotná často zabírá několik desítek řádků kódu, zjistíme, že mnoho z dále popsaných služeb je trivialních.
+Tyto služby většinou spočívají jen v zavolání metody poskytnuté obsluhou databáze a vrácení jejího výsledku.
+
+\bigskip{}
+Dále popíšeme rozhraní všech služeb.
+
+\subsubsection{Přihlášení, odhlášení}
+
+Služba \verb|ClientUserService| poskytuje klientské části informace o aktuálně přihlášeném uživateli skrze jedinou metodu -- \verb|login|.
+Pokud je uživatel přihlášen, vrací metoda objekt uživatele a internetovou adresu určenou k jeho odhlášení.
+Součástí objektu uživatele je i klientský token, který se používá při komunikaci s klientským doplňkem. % TODO klientský doplněk
+Zároveň zkontroluje, jestli existuje manuální zdroj pro daného uživatele: pokud neexistuje (uživatel se přihlásil poprvé), vytvoří se.
+Naopak, pokud není uživatel přihlášen, vrací jen adresu určenou k přihlášení.
+
+Informaci o aktuálně přihlášeném uživateli přebíráme ze služby \verb|UserService|, kterou nám poskytuje platforma Google AppEngine.
+
+\subsubsection{Kontrola spojení}
+
+Služba \verb|ClientPingService| nemá při běžném chodu aplikace žádný význam, ten získá až v okamžiku, kdy dojde k chybě.
+Jakákoli služba pro komunikaci mezi klientskou a serverovou částí může selhat z nejrůznějších důvodů; jedním z důvodů je vypršení času určeného k vyčkání na odpověď.
+Pokud dojde k výjimce \verb|RequestTimeoutException|, zkusí se, zda je serverová část vůbec dostupná pomocí metody \verb|ping| této služby.
+Její implementace je záměrně triviální z důvodu vyloučení jiných možných chyb.
+
+\subsubsection{Konfigurace}
+
+Služba \verb|ClientConfigService| poskytuje klientské části metody pro získání seznamu všech konfiguračních položek pro aktuálního uživatele.
+V případě, že konfigurační položka v databázi neexistuje, vrátí se klientovi s výchozí hodnotou.
+
+Dále tato služba umožňuje dávkovou aktualizaci hodnot několik konfiguračních položek.
+Novou hodnotu konfigurační položky uloží služba do databáze pro aktuálně přihlášeného uživatele.
+
+Tato služba v současné době není plně využívána; navrhli jsme ji obecněji, abych si zajistili možnost pozdějšího rozšíření aplikace.
+
+\subsubsection{Zdroje}
+
+Veškeré manipulace jak se zdroji, tak i s uživatelskými zdroji probíhají skrze službu \verb|ClientSourceService|.
+Zvolili jsme integraci manipulace s několika entitami do jedné jediné služby z důvodu, že klientská část nepracuje se zdroji téměř nikdy přímo, ale výhradně prostřednictvím uživatelských zdrojů.
+Tato služba poskytuje následující metody:
+\begin{itemize}
+	\item přidat zdroj -- vytvoří v databázi zdroj daného typu, pokud ještě neexistoval a vrátí jej.
+		Tato metoda se volá v situaci, kdy uživatel vytváří svůj nový uživatelský zdroj: při vytváření uživatelského zdroje je nutná znalost zdroje, který je personalizován.
+	\item přidat uživatelský zdroj -- vytvoří v databázi uživatelský zdroj, který je personalizací existujícího zdroje.
+		Tato metoda se volá při vytváření uživatelského zdroje po metodě přidat zdroj.
+	\item aktualizovat uživatelský zdroj -- aktualizuje v databázi existující uživatelský zdroj.
+	\item získat regiony -- vrátí seznam existujících regionů ke zdroji; zdroj musí být typu, který podporuje regiony.
+		Tato metoda se volá v okamžiku načtení detailu uživatelského zdroje: buď po jeho vytvoření, nebo během jeho úpravy.
+	\item zkontrolovat region -- zkontroluje, zda region je platný.
+		Tato metoda může být volitelně zavolána před aktualizací uživatelského zdroje; stejná kontrola se provádí během samotné aktualizace.
+	\item naplánovat kontrolu zdroje -- naplánuje okamžitou kontrolu zdroje.
+		Mezi naplánováním a spuštěním kontroly může uběhnout časový interval definovaný frekvencí periodické kontroly zdrojů.
+		Tato metoda je určena uživatelům pro případ, že se dozví jiným způsobem, že existují nové položky na zdroji dříve, než proběhne jeho řádná naplánovaná kontrola.
+	\item získat doporučení -- vrátí předpočítaný seznam doporučených zdrojů pro aktuálního uživatele.
+		V situaci, kdy uživatel vytváří nový zdroj, si může vybrat, zda přidá zdroj podle URL adresy či si vybere některý z jemu doporučených.
+\end{itemize}
+
+\subsubsection{Štítky}
+
+Veškeré manipulace se štítky probíhají skrze službu \verb|ClientLabelService|.
+Jelikož jsme zavedli silná omezení na štítky, je tato služba spíše jednodušší:
+\begin{itemize}
+	\item získat všechny štítky -- vrátí všechny štítky z databáze, které patří aktuálně přihlášenému uživateli, bez ohledu na jejich typ.
+	\item přidat štítek -- vytvoří nový štítek v databázi, pokud štítek se stejným názvem ještě neexistuje a vrátí jej.
+		Tuto metodu volá klientská část v situacích, kdy uživatel má možnost vybrat štítek a uživatel zadá název neexistujícího štítku.
+	\item aktualizovat štítky -- provede dávkovou aktualizaci v databázi několika štítků; nastavením atributu \verb|toBeDeleted| lze štítek odstranit.
+		Odstranění štítku je podmíněné tím, že není nikde ve zbytku aplikace použitý; v opačném případě odstranění selže.
+\end{itemize}
+
+\subsubsection{Seznamové filtry}
+
+Služba \verb|ClientListFilterService| provádí veškeré manipulace se seznamovými filtry.
+Nabízí obvyklé metody:
+\begin{itemize}
+	\item získat všechny seznamové filtry -- vrátí z databáze seznam všech seznamových filtrů, které patří aktuálně přihlášenému uživateli.
+	\item přidat seznamový filtr -- uloží seznamový filtr do databáze.
+	\item aktualizovat seznamový filtr -- aktualizuje v databázi seznamový filtr.
+	\item odstranit seznamový filtr -- odstraní z databáze seznamový filtr.
+\end{itemize}
+
+\subsubsection{Položky}
+
+Nejkomplexnější a nejdůležitější službou, kterou serverová část poskytuje klientské části je \verb|ClientItemsService|.
+Tato služba poskytuje 3 metody, které manipulují s položkami:
+\begin{itemize}
+	\item Přidat manuální položku -- vytvoří v databázi novou manuální položku a odpovídající uživatelskou položku k manuálnímu zdroji aktuálně přihlášeného uživatele.
+	\item Získat položky -- vrátí seznam uživatelských položek, které vyhovují seznamovému filtru.
+		Pokud nejde o první dotaz, bude v dotazu uvedený i klíč poslední uživatelské položky, kterou klientská část zná; vráceny budou jen novější/starší uživatelské položky (závisí na způsobu řazení).
+		V případě, že seznam má být řazený sestupně, bude výsledek obsahovat i seznam uživatelských položek, které jsou novější než klientské části známá nejnovější uživatelská položka.
+		Výsledek obsahuje i informaci o tom, zda mohou existovat ještě další uživatelské položky -- jestli existuje šance, že následující dotaz vrátí neprázdný výsledek.
+	\item Aktualizovat položky -- aktualizuje v databázi uživatelské položky na základě souboru změn, které se na ně mají aplikovat.
+		Soubor změn udává, které štítky se mají uživatelské položce přidat či odebrat a jaký má být nový stav přečtenosti.
+		Metoda vrací seznam uživatelských položek, které byly změněny.
+\end{itemize}
+
+\subsubsection{Klávesové zkratky}
+
+Klávesová zkratka je jednoduchá entita, se kterou nepožadujeme provádění složitějších manipulací; vystačíme si s možností vytvoření a odstranění klávesové zkratky.
+Tato služba poskytuje následující metody:
+\begin{itemize}
+	\item získat všechny klávesové zkratky -- vrátí z databáze seznam všech klávesových zkratek aktuálně přihlášeného uživatele.
+	\item vytvořit klávesovou zkratku -- vytvoří v databázi klávesovou zkratku.
+	\item odstranit klávesovou zkratku -- odstraní klávesovou zkratku z databáze.
+\end{itemize}
+
+Možnost změny klávesové zkratky se ukázala příliš náročnou na implementaci, proto jsme ji nahradili za posloupnost odstranění staré zkratky a následného vytvoření nové zkratky.
+
+\subsection{Rozhraní pro komunikaci s klientským doplňkem}
+
+Služba pro komunikaci s klientským doplňkem -- \verb|ClientServlet| vyžaduje přihlášení uživatele.
+Užití mechanismu ověření proti Google Account se nám nepodařilo jednoduše implementovat.
+Z toho důvodu jsme se rozhodli přidělit každému uživateli náhodný jednoznačný identifikátor, který bude uživatelům doplněk v prohlížeči používat při komunikovat se serverovou částí aplikace ke své identifikaci.
+Tento identifikátor -- token -- je určen jen a pouze pro komunikaci s doplňkem.
+Myslíme si, že jde o rozumný kompromis mezi zajištěním bezpečí a jednoduchostí implementace.
+
+Rozhraní pro komunikaci s doplňkem nabízí dvě metody:
+\begin{itemize}
+	\item získat štítky -- vrátí z databáze seznam názvů všech uživatelských štítků.
+		Funguje velice podobně jako metoda získat všechny štítky služby štítků pro komunikaci s klientskou částí.
+		Liší se jen tím, že tato metoda filtruje štítky podle typu a vrací ještě seznam výchozích štítků pro manuální zdroj.
+%TODO definovat JSON
+	\item přidat položku -- přidá položku popsanou JSON objektem k manuálním zdroji uživatele.
+		Provádí podobné kontroly a úpravy jako metoda přidat manuální položky služby položek pro komunikaci s klientskou částí.
+		Jelikož toto rozhraní je textové (nepřenáší se klíče štítků, ale jejich názvy), může uživatel přidělit položce neexistující štítek.
+		V takovém případě bude v okamžiku, kdy je zřejmé, že objekt položky prošel všemi kontrolami, vytvořen a následně k uživatelské položce přiřazen.
+\end{itemize}
+
+Pro použití tohoto rozhraní musí klient poskytnout svůj klientský token a uvést akci (metodu), která se má provést.
+
+\subsection{Rozhraní pro plánování a plánované úlohy}
+
+Do této skupiny jsme zařadili služby, které jsou spouštěny:
+\begin{itemize}
+		%TODO zadefinovat cron
+	\item buď periodicky cronem (kontrola zdrojů, výpočet doporučení),
+	\item nebo jsou realizovány pomocí úloh, které se postupně zpracovávají (kontrola zdrojů, zálohování položky)
+\end{itemize}
+
+\subsubsection{Kontrola zdrojů}
+
+Naše aplikace vyžaduje pro získávání nového obsahu periodické spouštění kontroly zdrojů.
+Cronem spouštěná služba nejprve zjistí seznam zdrojů, které je třeba zkontrolovat: to jsou takové, jejichž plánovaný čas kontroly je menší než aktuální čas, nenastalo u nich příliš mnoho chyb během poslední kontroly a zároveň nejsou právě kontrolovány.
+Pro každý nalezený zdroj se vytvoří úloha, která je následně vložena do fronty.
+Fronta úloh se stará o to, aby byly jednotlivé úlohy spouštěny postupně s určitou frekvencí, čímž se snaží snížit okamžitou zátěž.
+Dalšími výhodami naplánování úloh oproti okamžitému spuštění kontroly zdroje jsou:
+\begin{itemize}
+	\item možnost kontroly několika zdrojů zároveň -- každá kontrola probíhá ve vlastním vlákně,
+	\item maximální doba běhu skriptu se týká každé kontroly zvlášť, nehrozí tak vypršení časového limitu.
+	\item možnost opakování kontroly zdroje v případě, že dojde k chybě.
+\end{itemize}
+
+Aby se aplikace lépe vypořádala s chybnými zdroji (nekontrolovala je nepříčetně často), po několika chybách při kontrole zastavíme jeho další kontroly v normálním režimu.
+Takový zdroj bude kontrolován v chybovém režimu, méně často, jen jednou za 12 hodin; v případě, že se následná kontrola zdaří, vrátí se zdroj do normálního režimu.
+
+\subsubsection{Výpočet doporučení}
+
+% TODO výpočet doporučování
+Popíšeme v samostatné podkapitole.
+
+\subsubsection{Zálohování položky}
+
+Kdykoli je nějaké uživatelské položce přiřazen štítek, zkontroluje se, zda štítek má nastavenou vlatnost zálohování.
+Pokud ji má, vytvoří se nová zálohovací úloha, která se zařadí do fronty.
+Stejně jako v případě kontroly zdrojů, i zde se fronta úloh stará o jejich postupné spouštění.
+Postup zálohování jsme popsali v procesech. % TODO ref
+
+\subsection{Veřejné rozhraní k obsahu}
+
+% TODO veřejné rozhraní
+
+\subsubsection{Exportování položek}
+
+\subsubsection{Zálohované položky}
+
+\section{Výpočet doporučování}
+
+% TODO podrobně popsat výpočet doporučování

@@ -29,19 +29,19 @@ Samotný výběr poskytovatele nám umožňuje splnit výkonostní požadavky.
 AppEngine je platforma, která poskytuje několik spolu provázaných rozhraní.
 Pro naši aplikaci jsou důležité především:
 \begin{itemize}
-	\item Datastore --- databáze pro uložení všech dat, jak sdílených, tak i dedikovaných jednotlivým uživatelům.
+	\item Datastore -- databáze pro uložení všech dat, jak sdílených, tak i dedikovaných jednotlivým uživatelům.
 		Specifikem této databáze je, že formálně nemá schéma a má jen velice omezené možnosti dotazování na úkor výkonu.
 		Mezi největší omezení patří nemožnost jakýchkoli spojení tabulek, veškeré filtry použité v dotazu mohou jen porovnávat hodnotu atributu s konstantou; toto omezení nutně ovlivnilo návrh entit a implementaci tříd.
 		Dalším omezením je nutnost existence perfektního indexu pro každý dotaz, který se kdy bude provádět; neexistence indexu způsobí běhovou chybu.
 		Na druhou stranu, nutnost zaindexování všech dotazů umožňuje extrémní rychlost databáze; každý dotaz se provádí ve dvou krocích:
 		1. nalezení prvního výsledku v indexu; 2. výpis nalezeného záznamu a všech následujících, dokud záznam vyhovuje všem filtrům.
 		Existují ještě další omezení, které nás příliš netrápí, například, že dotaz může vrátit neaktuální výsledky.
-	\item Task Queue --- fronta úloh, skrze kterou projdou všechny úlohy.
+	\item Task Queue -- fronta úloh, skrze kterou projdou všechny úlohy.
 		Fronta se stará o pravidelné spouštění úloh s pevnou frekvencí; to zajišťuje, že při kontrole zdrojů nedojde k většímu zatížení serveru.
 		Kontrola každého zdroje je jedna úloha a fronta úloh se stará o to, aby bylo spuštěno jen určité množství úloh zároveň.
-	\item Users --- ověřování uživatelů; aplikace přebírá údaje o aktuálně přihlášeném uživateli při každém požadavku.
+	\item Users -- ověřování uživatelů; aplikace přebírá údaje o aktuálně přihlášeném uživateli při každém požadavku.
 		Nemusíme tedy řešit celou infrastrukturu kolem registrace, přihlašování, odhlašování, zapomenutého hesla.
-	\item BlobStore a Files --- jelikož architektura serveru neumožňuje práci s filesystémem -- není známá informace o tom, na kterých serverech a kde na světě aplikace právě běží (potenciálně v několika instancích) -- posktuje server rozhraní ke své abstrakci souborů.
+	\item BlobStore a Files -- jelikož architektura serveru neumožňuje práci s filesystémem -- není známá informace o tom, na kterých serverech a kde na světě aplikace právě běží (potenciálně v několika instancích) -- posktuje server rozhraní ke své abstrakci souborů.
 		My toto API použijeme k uložení a následné prezentaci zazálohovaných webových stránek článků.
 \end{itemize}
 
@@ -152,12 +152,19 @@ Doplněk bude mít podobu tlačítka na liště v prohlížeči; kliknutím na t
 V připadě, že uživatel vybere část textu na stránce, bude jím předvyplněn popis.
 Kliknutím na tlačítko \uv{Odeslat} se vytvoří v aplikaci nová manuální položka podle vyplěných údajů.
 
+\subsubsection{Použité knihovny}
+
+% TODO knihovny v doplňku
+
 \section{Entity}
 
 Entity jsou obecné struktury, se kterými aplikace pracuje.
 Cílem této kapitoly je entity popsat a vysvětlit úlohu, kterou hrají v kontextu celé aplikace.
+Pro přehlednost jsme entity sdružili do oblastí, jichž se týkají.
 
 \subsection{Oblast uživatele a konfigurace}
+
+Oblasti uživatle a konfigurace obsahuje následující entity:
 
 \subsubsection{Uživatel}
 
@@ -170,8 +177,8 @@ Konfigurační položka nemá nic společného s termínem položka ani entitou 
 
 Jedna konfigurační položka definuje jeden parametr, který má vliv na vzhled nebo chování aplikace; lze rozlišit dva typy konfiguračních položek:
 \begin{itemize}
-	\item konfigurace serverové části --- závisí na ní chování serverové části,
-	\item konfigurace klientské části --- závisí na ní vzhled nebo chování klientské části.
+	\item konfigurace serverové části -- závisí na ní chování serverové části,
+	\item konfigurace klientské části -- závisí na ní vzhled nebo chování klientské části.
 		Hodnoty položek tohoto typu mohou záviset na konkrétním uživateli, který aplikaci používá.
 \end{itemize}
 
@@ -179,12 +186,15 @@ Jedna konfigurační položka definuje jeden parametr, který má vliv na vzhled
 
 Tato část seskupuje všechny entity, které jsou souvisejí se zdroji položek, jejich reprezentací a zpracováním.
 Nejdůležitější dvojicí entit je zdroj a uživatelský zdroj: první má význam pouze pro pravidelné kontroly exitence nových položek, druhá popisuje zdroj z pohledu uživatele.
+Oblast zdrojů obsahuje tyto entity:
 
 \subsubsection{Zdroj}
+\label{sss:zdroj}
 
 Zdroj reprezentuje každou webovou stránku nebo službu, kterou aplikace používá k získávání nových položek.
 Aplikace pravidelně kontroluje změny na zdrojích; pokud zaregistruje změnu, aplikace přidá odpovídající položky.
 Zdroj je abstraktní entita, od které jsou odvozeny jednotlivé typy zdrojů; obsahuje všechny informace nutné k tomu, aby zdroj mohl být periodicky kontrolován.
+Typy zdrojů jsou:
 
 \paragraph{Manuální zdroj}
 
@@ -214,6 +224,7 @@ Oblast na stránce je určena výběrem oblastí stránky, které se mají kontr
 Motivací k pozitivnímu a negativnímu přístupu k jednotlivým částem je fakt, že stránky obsahují obsah, který se mění při každém dotazu (reklamy, informace o času generování stránky) nebo není zajímavý (hlavička a patička stránky, menu).
 
 \subsubsection{Uživatelský zdroj}
+\label{sss:uzivatelsky-zdroj}
 
 Entita zdroj slouží výhradně pro účely periodické kontroly, proto zavedeme entitu uživatelský zdroj, jež realizuje vztah mezi uživateli a zdroji.
 Několik uživatelů může sledovat stejný zdroj a každý uživatel většinou sleduje více zdrojů.
@@ -222,9 +233,22 @@ Počet aktivních uživatelských zdrojů určuje, politiku podle které bude pr
 Pokud je v uživatelském rozhraní zmíněn pojem zdroj, je jím myšlena tato entita; entita zdroje nemá pro uživatele praktický význam.
 
 Uživatelský zdroj obsahuje entitu štítek, která reprezentuje informaci o příslušnosti položky ke zdroji.
-Více o tomto štítku a jeho funkci popíšeme v kapitole \ref{entity-label}.
+Více o tomto štítku a jeho funkci popíšeme v kapitole \ref{sss:stitek}.
+
+\subsubsection{Shrnutí entit oblasti zdrojů}
+\label{sss:shrnuti-zdroju}
+Abstraktní entita zdroj má několik typů:
+\begin{itemize}
+	\item manuální zdroj,
+	\item RSS/Atom zdroj,
+	\item webový rozcestník,
+	\item změna stránky.
+\end{itemize}
+Entita uživatelský zdroj není typem zdroje; uživatelský zdroj reprezentuje vazbu mezi uživatelem a zdrojem.
 
 \subsection{Oblast položek}
+
+Oblast položek obsahuje entity:
 
 \subsubsection{Položka}
 
@@ -270,7 +294,7 @@ Položka je závislá jen na zdroji, ze kterého pochází; stejně jako v oblas
 
 \subsubsection{Uživatelská položka}
 
-Entita položka obsahuje jen obecné --- na uživateli nezávislé atributy, které jsou sdíleny všemi uživateli.
+Entita položka obsahuje jen obecné -- na uživateli nezávislé atributy, které jsou sdíleny všemi uživateli.
 Jsou jimi například: titulek, obsah, zdroj, ze kterého pochází, datum a čas přidání.
 Aby mohl každý uživatel mít položku ve vlastním stavu, s vlastními štítky, zavedeme entitu uživatelská položka.
 Tato entita uchovává nastavení vlastní každému uživateli, včetně zálohy, pokud byla vytvořena.
@@ -290,17 +314,18 @@ Na obrázku \ref{fig:source-item} je zobrazen vztah nejdůležitějších entit 
 
 \subsection{Oblast štítků}
 
-% TODO oblast štítků
+Oblast štítků obsahuje entity:
 
 \subsubsection{Seznam položek}
 Než zavedeme entity této oblasti, zadefinujeme pojem seznam položek.
 
-Seznam (uživatelských) položek je podle času vzestupně či sestupně uspořádaný seznam všech uživatelských položek, které vyhovují všem kritériům, které jsou na seznam kladeny.
+Seznam (uživatelských) položek je podle času vzestupně či sestupně uspořádaný seznam všech uživatelských položek, které vyhovují všem kritériům, které jsou uživatelem na seznam kladeny.
 Seznam položek je výsledkem dotazu, neexistuje dokud není dotaz proveden.
 
-Seznam položek je také komponenta grafického prostředí, která zobrazuje uživatelké položky, které jsou součástí seznamu položek, výsledku dotazu.
+Termín seznam položek používáme také pro komponentu grafického prostředí, která zobrazuje uživatelké položky, které jsou součástí seznamu položek, výsledku dotazu.
 
-\subsubsection{Štítek}\label{entity-label}
+\subsubsection{Štítek}
+\label{sss:stitek}
 
 Štítek reprezentuje informaci, kterou může uživatel přidat ke své uživatelské položce.
 Štítek má svého vlastníka, uživatele, který jej vytvořil; tento štítek není dostupný jiným uživatelům.
@@ -322,21 +347,20 @@ Abychom zajistili jednoduché používání štítků, zavedli jsme následujíc
 
 V aplikaci existují dva typy štítků:
 \begin{enumerate}
-	\item uživatelský štítek --- štítek, který vytvořil uživatel, je přiřazovaný uživatelem a je zobrazovaný v seznamu položek,
-	\item štítek reprezentující uživatelský zdroj --- tento typ štítku není spravován uživatelem, nemůže jej ani vytvořit ani přiřadit, nezobrazuje se v seznamu položek.
+	\item uživatelský štítek -- štítek, který vytvořil uživatel, je přiřazovaný uživatelem a je zobrazovaný v seznamu položek,
+	\item zdrojový štítek -- štítek reprezentující uživatelský zdroj -- tento typ štítku není spravován uživatelem, nemůže jej ani vytvořit ani přiřadit, nezobrazuje se v seznamu položek.
 \end{enumerate}
 
 \paragraph{Seznam štítků u uživatelských zdrojů}
-Uživatel má možnost u uživatelského zdroje uvést seznam štítků, které mají být automaticky přidány ke každé uživatelské položce patřící danému uživatelskému zdroji.
-V případě, že zdroj je typu manuální zdroj, nebudou štítky přidány k uživatelské položce, ale budou uživateli nabídnuty přednostně.
+Uživatel má možnost u svého uživatelského zdroje uvést seznam štítků, které mají být automaticky přidány ke každé uživatelské položce, která patří danému uživatelskému zdroji.
+V případě, že zdroj je typu manuální zdroj, nebudou štítky přidány k uživatelské položce automaticky, ale budou jen uživateli nabídnuty přednostně.
 
-Každý uživatelský zdroj obsahuje právě jeden štítek druhého typu; tento štítek zároveň patří právě jednomu uživatelskému zdroji a je vždy součástí seznamu štítků.
+Každý uživatelský zdroj obsahuje právě jeden zdrojový štítek; tento štítek zároveň patří právě jednomu uživatelskému zdroji a je vždy součástí zmíněného seznamu štítků.
 
-Všechny štítky, které jsou součástí seznam štítků u uživatelského zdroje budou automaticky přiřazeny všem uživatelským položkám, které patří danému uživatelskému zdroji.
 Můžeme říct, že existuje dvojí vazba mezi uživatelským zdrojem a jeho uživatelskými položkami:
 \begin{enumerate}
 	\item přímá vazba uživatelské položky na uživatelský zdroj;
-	\item nepřímá vazba přes společný štítek druhého typu.
+	\item nepřímá vazba přes společný zdrojový štítek.
 		Tuto vazbu využijeme dále při popisu entity seznamový filtr.
 \end{enumerate}
 
@@ -353,19 +377,19 @@ Možná kritéria jsou následujících typů:
 
 Poslední uvedené kritérium je zásadní pro funkčnost celé aplikace a všech seznamů položek:
 \begin{itemize}
-	\item seznam všech položek --- filtr je prázdný
-	\item položky nějakého uživatelského zdroje --- filtr obsahuje štítek patřící uživatelskému zdroji
+	\item seznam všech položek -- filtr je prázdný
+	\item položky nějakého uživatelského zdroje -- filtr obsahuje štítek patřící uživatelskému zdroji
 	\item složitější filtry, například seznam položek ze zdroje $X$ nebo položek obsahující zároveň štítek $a$ a $b$:
-		\verb~lsrc$X OR lusr$a AND lusr$b~
+		\verb|lsrc$X OR lusr$a AND lusr$b|
 \end{itemize}
 
 \paragraph{Typy filtrů}
 V rámci aplikace rozjišujeme tři typy seznamových filtrů.
 \begin{itemize}
-	\item obyčejný seznamový filtr --- seznamový filtr, který si uživatel uložil a kdykoli si může zobrazit seznam položek, které mu vyhovují,
-	\item exportovaný seznamový filtr --- chová se shodně jako obyčejný seznamový filtr; umožňuje navíc zobrazit seznam položek jako RSS či Atom dokument komukoli mimo naši aplikaci,
-	\item ad-hoc seznamový filtr --- slouží pro okamžitou navigaci mezi různými seznamy položek v aplikaci, a proto není trvale uložený.
-		Ad-hoc seznamovým filtrem je například realizován seznam položek zobrazený po kliknutí na nějaký štítek.
+	\item obyčejný seznamový filtr -- seznamový filtr, který si uživatel uložil a kdykoli si může zobrazit seznam položek, které mu vyhovují,
+	\item exportovaný seznamový filtr -- chová se shodně jako obyčejný seznamový filtr; umožňuje navíc zobrazit seznam položek jako RSS či Atom dokument komukoli mimo naši aplikaci,
+	\item ad-hoc seznamový filtr -- slouží pro okamžitou navigaci mezi různými seznamy položek v aplikaci, není trvale uložený.
+		Ad-hoc seznamovým filtrem je například realizován seznam položek zobrazený po kliknutí na libovolný štítek.
 \end{itemize}
 
 \subsection{Oblast klávesových zkratek}
@@ -375,23 +399,25 @@ V aplikaci existuje jediná entita, která popisuje klávesové zkratky.
 \subsubsection{Klávesová zkratka}
 
 Klávesová zkratka definuje chování aplikace, které nastane při stisku klávesy či kláves.
+Každý uživatel si může definovat svou vlastní sadu klávesových zkratek.
 Rozlišujeme tři různé typy klávesových zkratek:
 \begin{itemize}
 	\item zkratky, které přiřazují či odebírají štítky uživatelským položkám.
-		Klávesová zkratka má vazbu na štítek, který se má k uživatelské položce přidat, pokud přiřiřazen není, či odebrat, pokud přiřazen je.
+		Klávesová zkratka má vazbu na štítek, který se má k uživatelské položce přidat, pokud přiřazen není, či odebrat, pokud je již přiřazen.
 	\item zkratky, které zobrazují seznam položek.
 		Klávesová zkratka má vazbu na seznamový filtr, který se má použít pro zobrazení seznamu položek.
 	\item zkratky, které vykonávají jednu z mnoha podporovaných akcí.
 		Takovou akcí může být přechod na následující položku, zrušení aktuálního filtru či zobrazení originální stránky položky.
 \end{itemize}
 
-\section{Procesy }
+\section{Procesy}
 
-Na tomto místě popíšeme manipulaci s entitami, ke které dochází v samotné aplikaci.
-Z popsaných procesů je zřejmé, jak jsou jednotlivé požadavky na aplikaci realizovány.
+Na tomto místě popíšeme procesy, které manipulují s entitami.
+Z popsaných procesů je zřejmé, jak jsou jimi realizovány jednotlivé funkční požadavky na aplikaci.
 
 \subsection{Zdroje}
 
+Entity oblasti zdrojů jsme shrnuli v kapitole \ref{sss:shrnuti-zdroju}.
 Po přihlášení si uživatel může vytvořit své vlastní zdroje:
 \begin{enumerate}
 	\item zjistí se, zda takový zdroj už existuje (URL a typ zdroje),
@@ -451,3 +477,12 @@ Pokud má štítek nastavenou vlastnost zálohování, jeho přiřazení uživat
 	\item veškeré relativní odkazy na stránce se nahradí za absolutní,
 	\item uloží se soubor stránky do úložiště a zapíše klíč do uživatelské položky.
 \end{enumerate}
+
+\subsection{Klávesové zkratky}
+
+Uživatel si může přiřadit klávesové zkratky k nejběžnějším úkonům.
+Klávesová zkratku vytvoří uvedením klávesy či kombinace kláves, které spustí akci, ke které je klávesová zkratka přidána.
+Uživatel může klávesovou zkratku odebrat smazáním kombinace kláves, které ji spouští.
+
+Poté, co je klávesová zkratka definována, kdykoli uživatel stiskne příslušnou kombinaci kláves, spustí se příslušná akce.
+Některé akce mohou být závislé na kontextu, ve kterém se uživatel nachází; takovými zkratkami jsou především klávesové zkratky manipulující s aktuálně vybranou uživatelskou položkou v seznamu položek.
