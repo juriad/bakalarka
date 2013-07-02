@@ -31,7 +31,7 @@ Jednotlivým entitám odpovídá jedna nebo více tříd.
 
 Kromě modelu obsahuje sdílená část rozhraní implementovaná třídami modelu a pomocné třídy používané při komunikaci mezi serverovou a klientskou částí.
 
-\bigskip{}
+\bigskip
 
 Doplněk do prohlížeče je vytvořen zcela odděleně od zbytku aplikace v jazyku JavaScript.
 
@@ -82,7 +82,7 @@ Prováděné úpravy a kontroly hodnot jsou následující:
 Pokud nebudeme uvažovat validaci, která samotná často zabírá několik desítek řádků kódu, zjistíme, že mnoho z dále popsaných služeb je trivialních.
 Tyto služby většinou spočívají jen v zavolání metody poskytnuté obsluhou databáze a vrácení jejího výsledku.
 
-\bigskip{}
+\bigskip
 Dále popíšeme rozhraní všech služeb.
 
 \subsubsection{Přihlášení, odhlášení}
@@ -233,8 +233,38 @@ Takový zdroj bude kontrolován v chybovém režimu, méně často, jen jednou z
 
 \subsubsection{Výpočet doporučení}
 
-% TODO výpočet doporučování
-Popíšeme v samostatné podkapitole.
+% TODO link na důvody přepočítávání doporučení offline
+Seznam zdrojů doporučovaných jednotlivým uživatelům přepočítáváme z důvodů, které jsme zmínili v kapitole XXX, jen jednou za den.
+O pravidelné spouštění procesu se stará cron poskytovaný platformou Google AppEngine.
+
+Výpočet probíhá v několika krocích:
+\begin{enumerate}
+	\item Načtení všech uživatelských zdrojů z databáze a vytvoření matice uživatelů a zdrojů.
+		Matice má v řádcích uživatele, ve sloupcích zdroje.
+		Prvek matice vyplníme:
+		\begin{itemize}
+			\item buď jedničkou, pokud uživatel sleduje zdroj (existuje uživatelský zdroj),
+			\item nebo nulou v opačném případě.
+		\end{itemize}
+		Tvorbou matice z uživatelských zdrojů si zajistíme přítomnost alespoň jedné jedničky v každém řádku i sloupci.
+		Matici nazveme $M$.
+	\item Matici normalizujeme zvlášť v řádcích a sloupcích: každý řádek, resp. sloupec vydělíme jeho součtem.
+		Tato normalizace nám zajistí rovnost vah všech uživatelů, resp. zdrojů (jinak by měl větší váhu uživatel s mnoha zdroji resp. zdroj sledovaný mnoha uživateli).
+		Matici s normalizovanými zdroji pro uživatele nazveme $M_u$.
+		Matici s normalizovanými uživateli pro zdroje nazveme $M_z$
+	\item Připravíme si čtvercovou matici popisující vhodnost uživatelů: jak jsou si uživatelé blízcí.
+		Před začátkem výpočtu je tato matice jednotková; zatím neznáme blízké uživatele (reflexivita zajišťuje stabilitu výpočtu).
+		Matici označíme $U_0$; $U = U_0$ bude matice používaná během výpočtu.
+	\item Provedeme krok výpočtu:
+		aktualizujeme nejprve váhy zdrojům pro všechny uživatele:
+			$ Z = U \cdot M_u $
+		a následně aktualizujeme blízkost každých dvou uživatelů:
+			$ U = Z \cdot M_z + U_0 $.
+	\item Několikrát ziterujeme 4. krok výpočtu.
+	\item Matice $Z$ obsahuje váhy popisující vhodnost zdroje pro každého uživatele.
+		Matici budme procházet po řádcích (pro uživatele); setřídíme zdroje podle vah sestupně a vyfiltrujeme ty, které uživatel již sleduje (jsou v matici $M$).
+		Z seznamu vezmeme prvních $k$ doporučených zdrojů a výsledný seznam uložíme pro každého uživatele do databáze.
+\end{enumerate}
 
 \subsubsection{Zálohování položky}
 
@@ -245,12 +275,160 @@ Postup zálohování jsme popsali v procesech. % TODO ref
 
 \subsection{Veřejné rozhraní k obsahu}
 
-% TODO veřejné rozhraní
+Některá rozhraní aplikace jsou dostupná i neregistrovaným uživatelům
 
 \subsubsection{Exportování položek}
 
+Toto rozhraní poskytuje seznam položek vyhovujících seznamovému filtru, u kterého jeho vlastník povolil možnost exportování.
+Export je identifikovaný kombinací aliasu a uživatelského jména vlastníka seznamového filtru.
+Služba zodpovědná za výběr položek z databáze je ta samá jako v případě poskytování seznamu položek klietské položky se všemi svými důsledky.
+Seznam položek je vrácen buď ve formě RSS, nebo Atom (záleží na parametru poskytnutého v URL).
+
 \subsubsection{Zálohované položky}
 
-\section{Výpočet doporučování}
+Připomeňme, že během zálohování stáhneme webovou stránku, mírně ji upravíme a uložíme; záloze je přidělen klíč, který ji identifikuje.
+Odkaz na zálohovanou stránku (přístupnou skrze toto rozhraní) je dostupný uživateli, který zálohu provedl ze seznamu položek.
 
-% TODO podrobně popsat výpočet doporučování
+\section{Členění klientské části}
+
+Doposud jsme se příliš klientskou části nezabývali z důvodu, že klientská část přímo neprovádí žádné manipulace s daty; využívá jen prostředků, které jí poskytuje serverová část.
+Přesto můžeme klientskou část rozčlenit do několika částí (spíše podle funkce než podle balíků):
+\begin{itemize}
+	\item realizace hierarchií a stromových komponent,
+	\item správci, kteří komunikují se serverovou částí a ostatní správci,
+	\item komponenta nekonečného seznamu,
+	\item dialogy, skrze které se vytvářejí a upravují všechny objekty.
+\end{itemize}
+
+\subsection{Hierarchie}
+
+Vzhledem ke způsobu uložení hierarchie v databázi: popisujeme cestu ke kořeni, musíme pro zobrazení stromu napřed hierarchii vybudovat.
+Všichni správci, kteří poskytují hierarchii, musí každý objekt, který spravují, zpracovat a vložit do uměle vytvřené hierarchie.
+Postup vypadá následovně:
+\begin{enumerate}
+	\item Vytvoření kořenového uzlu.
+	\item Pro všechny spravované objekty:
+	\item rozdělení cesty ke kořeni podle lomítek (oddělovačů jednotlivých úrovní),
+	\item vytvoření uzlů pro jednotlivé úrovně, pokud ještě neexistují,
+	\item vytvoření listu v nejnižší úrovni; jeho hodnotou bude příslušný objekt.
+	\item Vrácení kořenového uzlu.
+\end{enumerate}
+
+Uzly se stejným rodičem jsou řazeny podle abecedy.
+
+Z důvodu propagace změn, všechny uzly mají mohou zaregistrovat posluchače událostí změn v hierarchii: uzel byl přidán, odebrán, název uzlu se změnil.
+
+\subsubsection{Stromové komponenty}
+
+% TODO stromové komponenty
+
+\subsection{Správci}
+
+Téměř každé službě, kterou jsme popsali z pohledu serverové části odpovídá správce v klientské části.
+Správce má za úkol zprostředkovávat veškerou komunikaci se serverovou částí a poskytovat nacachováná data.
+Každý správce poskytuje zbytku klientské části rozhraní k metodám služby, kterou obaluje.
+Tento obal většinou spočívá v zavolání příslušné metody služby a ve většině případů zobrazení hlášky o výsledku.
+Hlášku o úspěchu zobrazuje v případě, že volání metody bylo způsobeno akcí uživatele.
+V případě neúspěchu zobríme hlášku vždy; vždy obsahuje informaci, proč volání selhalo, například z důvodu nevyplnění některého z atributů.
+Navíc zkusíme zavolat službu kontroly spojení pro zjištění, zda je dostupně spojení se serverovou částí.
+
+V popisu jednotlivých správců budeme zmiňovat jen metody, které provádějí netriviální další akce.
+
+\subsubsection{Správce konfigurace}
+
+Správce konfigurace tvoří jen obálku kolem vlastní služby.
+V okamžiku spuštění si stáhne veškerou konfiguraci relevantní pro přihlášeného uživatele.
+Jednotlivé dotazy na konfigurační položky pak může zodpovídat okamžitě bez nutnosti komunikace se serverovou částí.
+
+Správce konfigurace umožňuje i aktualizovat hodnoty konfiguačních položek, nicméně tuto možnost naše aplikace v současné době nevyužívá.
+
+\subsubsection{Správce zdrojů}
+
+Správce zdrojů načte ze serveru seznam všech uživatelských zdrojů přihlášeného uživatele.
+Jednotlivé uživatelské zdroje uloží do několika slovníků, aby byly rychle vyhledatelné: podle klíče uživatelského zdroje a podle zdrojového štítku.
+Dále ze všech uživatelských zdrojů vybuduje hierarchii.
+Správce zdrojů si pamatuje, který zdroj je manuální (vždy existuje právě jeden).
+
+Jelikož správce zdrojů poskytuje přístup k hierarchii uživatelských zdrojů, musí reagovat na některé události.
+Jakékoli úspěšné volání metody přidat uživatelský zdroj či aktualizovat uživatelský zdroj může způsobit změnu hierarchie.
+Správce zdrojů ve zmíněných metodách upravuje příslušně hierarchii uživatelských zdrojů.
+
+\subsubsection{Správce štítků}
+
+Správce štítků obsahuje seznam všech štítků rozdělených podle typů: uživatelský štítek, zdrojový štítek, systémový štítek.
+Existují dva systémové štítky, oba reprezentují operátory: AND -- operátor \textit{a}, OR -- operátor \textit{nebo}.
+Zbylé dva seznamy štítků (uživatelských a zdrojových) jsou naplněny dotazem na serverovou část při sprvním spuštění správce.
+Každému štítku je nastaven zobrazovaný název: u uživatelských je to jejich název, u zdrojových je to název zdroje ke kterému patří.
+
+Správce štítků poskytuje metodu pro vyhledávání štítků podle části jejich názvu.
+Tuto metodu používá komponenta nabízení štítků v situaci, kdy uživatel může vložit název štítku (například, když přidává štítek uživatelské položce).
+
+V případě, že uživatel přidá novou položky skrze doplněk v prohlížeči a přidá ji štítek, který doposud neexistoval, dostane se klientská část do zajímavé situace.
+Seznam uživatelských položek by měl obsahovat uživatelskou položku se štítkem, o kterém nemá žádnou informaci.
+Samotná uživatelská položka zná jen klíč štítku a správce štítků by jí měl objekt štítku dodat.
+V takovém případě se aktualizace seznamu položek pozastaví a bude pokračovat, až si správce štítků obnoví seznam všech existujících štítků dotazem na serverovou část.
+
+\subsubsection{Správce seznamových filtrů}
+
+Správce seznamových filtrů poskytuje hierarchii všech seznamových filtrů, kterou si vytvoří po svém spuštění.
+Dále poskytuje metody pro manipulaci se seznamovými filtry, které v případě úspěchu upraví hierarchii.
+Těmito metody jsou: přidat seznamový filtr, aktualizovat seznamový filtr a odstranit seznamový filtr.
+
+\subsubsection{Správce položek}
+
+Správce položek poskytuje transparentní rozhraní k metodám: získat položky a přidat manuální položku.
+Poslední metoda příslušné služby – aktualizovat položky – není uživateli přímo dostupná.
+
+Správce položek si udržuje seznam změn jednotlivých uživatelských položek, které se mají provést v databázi na straně serveru.
+Uživatel tento seznam změn vytváří a upravuje metodami:
+\begin{itemize}
+	\item štítek přidán -- přidá štítek (jeho klíč) do seznamu štítků k přidání v sadě změn příslušející uživatelské položce,
+	\item štítek odebrán -- přidá štítek (jeho klíč) do seznamu štítků k odebrání v sadě změn příslušející uživatelské položce,
+	\item přečtena -- nastaví stav přečtení v sadě změn příslušející uživatelské položce.
+\end{itemize}
+Změny se v klientské části provádějí optimisticky; předpokládá se, že provedení změny bude úspěšné.
+
+Sada změn se chová chytře: v případě posloupnosti přidání a odebrání stejného štítku od uživatelské položky, se obě změny vyruší a příslušná sada změn se zahodí.
+Periodicky, každých několik sekund probíhá dotaz obsahující seznam všech sad změn mezi správcem položek a službou serverové části.
+Toto \uv{zpoždění} provedení změny v databázi nám umožňuje snížit počet dotazů po síti a zvýšit subjektivní rychlost odezvy aplikace.
+
+\subsubsection{Správce klávesových zkratek}
+
+Správce klávesových zkratek si při svém spuštění načte pomocí serverové služby seznam všech klávesových zkratek, která má uživatel definované.
+Kombinace kláves klávesových zkratek rozparsuje a klávesové zkratky vloží do slovníku.
+Dále zaregistruje posluchače událostí stisknutí klávesy: události \verb|KeyPress| a \verb|KeyDown|.
+Pokud je detekováno stisknutí kláves odpovídající nějaké zkratce, vyvolá správce událost \verb|ShortcutEvent|, pomocí které informuje o klávesové zkratce své posluchače.
+Sám správce klávesových zkratek zpracovává některé obecné typy zkratek: navigace mezi seznamy položek, jejich obnovu a podobné.
+
+Správce poskytuje metody vytvořit klávesovou zkratku a odstanit klávesovou zkratku, volají službu poskytovanou serverovou částí.
+Tyto metody v případě úspěchu upraví slovník klávesových zkratek.
+
+Některé typy klávesových zkratek se odkazují na jiné objekty (štítky a seznamové filtry).
+Tyto klávesové zkratky je možné vyhledat na základě klíče objektu, na který se odkazují.
+Využíváme toho v dialozích s nastavením seznamových filtrů a dialogu s nastavením štítků.
+
+\bigskip
+
+Zbylí dva správci nejsou závislí na službách serverové části; spravují objekty, které mají význam jen v kontextu klientské části.
+
+\subsubsection{Správce zpráv}
+
+Zpráva je krátký text o různé důležitosti, který slouží k informování uživatele o úspěchu či selhání některé akce.
+
+Správce zpráv je centrálním bodem v naší aplikaci pro zpracování zpráv.
+Poskytuje rozhraní zbytku aplikace, skrze které může kterákoli komponenta zobrazit zprávu.
+Správce zpráv také poskytuje seznam posledních zpráv v podobě hierarchie.
+
+Správce sám zprávy nezobrazuje, umožňuje jen zaregistrovat posluchače, kteří mají být zpraveni o nových zprávách.
+Jediným takovým posluchačem je vlastní grafická komponenta zodpovědná za zobrazování zpráv.
+
+
+\subsubsection{Správce historie}
+
+\subsection{Nekonečný seznam}
+
+\subsubsection{Poskytovatelé seznamu položek}
+
+\subsubsection{Řádek nekonečného seznamu}
+
+\subsection{Dialogy}

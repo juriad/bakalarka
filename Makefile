@@ -20,6 +20,9 @@ prace.dvi: prace.tex $(wildcard *.tex) $(addsuffix .eps, $(basename $(wildcard i
 	cslatex $<
 	cslatex $<
 
+show: prace.pdf
+	zathura prace.pdf
+
 clean:
 	rm -f *.{log,dvi,aux,toc,lof,out} prace.ps prace.pdf
 	rm -f `ls img/*.eps | grep -v 'logo.eps'`
