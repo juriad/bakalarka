@@ -1,0 +1,126 @@
+\chapter{Použité technologie}
+
+Jako implementační jazyk jsme zvolili jazyk Java.
+
+\section{Serverová část}
+
+% TODO definice Cloudu
+Serverová část aplikace poběží na serverech v Cloudu, to nám umožní efektivní správu prostředků, možnost trvalé expanze a škálovatelnost aplikace.
+Pro volbu konkrétního poskytovatele jsme měli (v době zahájení práce) na výběr z:
+\begin{itemize}
+    \item Amazon EC2
+    \item Google AppEngine
+\end{itemize}
+
+Jelikož jsme měli již zkušenost s druhým zmíněným a jeho architektura a API nám byla známá, zvolili jsme jej.
+
+\subsection{Platforma Google AppEngine}
+
+% TODO definice VPS
+Google AppEngine je platforma pro vývoj a hostování webových aplikací psaných v jednom z několika podporovaných jazyků.
+Poskytovatel účtuje jen prostředky skutečně využité, tím se liší od běžných VPS.
+Platforma umožnuje automatické škálování výkonu podle aktuální potřeby aplikace.
+Samotný výběr poskytovatele nám umožňuje splnit výkonostní požadavky.
+
+AppEngine je platforma, která poskytuje několik spolu provázaných rozhraní.
+Pro naši aplikaci jsou důležité především:
+\begin{itemize}
+    \item Datastore -- databáze pro uložení všech dat, jak sdílených, tak i dedikovaných jednotlivým uživatelům.
+        Specifikem této databáze je, že formálně nemá schéma a má jen velice omezené možnosti dotazování na úkor výkonu.
+        Mezi největší omezení patří nemožnost jakýchkoli spojení tabulek, veškeré filtry použité v dotazu mohou jen porovnávat hodnotu atributu s konstantou; toto omezení nutně ovlivnilo návrh entit a implementaci tříd.
+        Dalším omezením je nutnost existence perfektního indexu pro každý dotaz, který se kdy bude provádět; neexistence indexu způsobí běhovou chybu.
+        Na druhou stranu, nutnost zaindexování všech dotazů umožňuje extrémní rychlost databáze; každý dotaz se provádí ve dvou krocích:
+        1. nalezení prvního výsledku v indexu; 2. výpis nalezeného záznamu a všech následujících, dokud záznam vyhovuje všem filtrům.
+        Existují ještě další omezení, které nás příliš netrápí, například, že dotaz může vrátit neaktuální výsledky.
+    \item Task Queue -- fronta úloh, skrze kterou projdou všechny úlohy.
+        Fronta se stará o pravidelné spouštění úloh s pevnou frekvencí; to zajišťuje, že při kontrole zdrojů nedojde k většímu zatížení serveru.
+        Kontrola každého zdroje je jedna úloha a fronta úloh se stará o to, aby bylo spuštěno jen určité množství úloh zároveň.
+    \item Users -- ověřování uživatelů; aplikace přebírá údaje o aktuálně přihlášeném uživateli při každém požadavku.
+        Nemusíme tedy řešit celou infrastrukturu kolem registrace, přihlašování, odhlašování, zapomenutého hesla.
+    \item BlobStore a Files -- jelikož architektura serveru neumožňuje práci s filesystémem -- není známá informace o tom, na kterých serverech a kde na světě aplikace právě běží (potenciálně v několika instancích) -- posktuje server rozhraní ke své abstrakci souborů.
+        My toto API použijeme k uložení a následné prezentaci zazálohovaných webových stránek článků.
+\end{itemize}
+
+\subsection{Použité knihovny}
+
+% TODO přeformulovat
+Abychom znovu nevynalézali kolo a neřešili problémy, které již jiní řešili před námi, použijeme několik knihoven, které nám zjednodušší implementaci vlatní aplikace.
+
+\subsubsection{Slim3}
+% TODO link Slim3
+Pro obalení nízkoúrovňového API pro přístup k databázi použijeme framework Slim3.
+Slim3 zajišťuje mapování databázových bezschématických entit na reálné javové objekty.
+Tento framework zároveň poskytuje objektově konzistentní rozhraní ke skládání databázových dotazů.
+Tato knihovna je vyvinutá jen a pouze pro platformu AppEngine, neboť je silně závislá na Datastore API.
+
+\subsubsection{ROME}
+%TODO link ROME
+ROME je knihovna, která poskytuje sadu parserů a generátorů pro různé typy formátů zpravujících o novinkách na webovém zdroji.
+My tuto knihovnu použijeme pro oba směry konverze, využijeme parsery při kontrole jednoho typu zdrojů a generátory při sdílení (exportu) položek.
+ROME je starší knihovna, nezdá se, že by její vývoj pokračoval, nicméně je dostatečně robustní a stabilní pro naše potřeby.
+
+\subsubsection{Apache HttpComponents}
+% TODO apache http components
+% definice http
+Apache HttpComponents je široce rozšířená kni\-hov\-na uřcená pro zajištění komunikace přes HTTP.
+My ji použijeme pro stahování webových dokumentů při kontrole zdrojů všech typů (kromě manuálního).
+
+\subsubsection{JSOUP}
+% TODO vysvětlit DOM
+% TODO link jsoup
+Knihovna jsoup umožňuje rozparsovat HTML stránku do DOM struktury a poskytuje metody na procházení a manipulaci se stromem elementů.
+Knihovna zvládá zpracování i takových stránek, které nevyhovující standardům.
+My knihovnu využijeme ve dvou situacích:
+\begin{itemize}
+    \item pro parsování webové stránky při kontrole některých typů zdrojů,
+    \item pro úpravu relativních odkazů při zálohování webové stránky.
+\end{itemize}
+
+\subsubsection{JScience}
+% TODO link JScience
+Knihovna JScience poskytuje implementaci nejrůznějších výpočetních algoritmů určených pro matematiku a fyziku.
+Nás z této knihovny bude zajímat jen malá část: implementace vektorových a maticových operací, které použijeme při výpočtech doporučených zdrojů pro jednotlivé uživatele.
+
+\subsubsection{Diff Match Patch}
+% TODO link diff match patch
+Diff match patch je malá knihovna, která nabízí robustní algoritmy pro operace nutné při synchronizaci textu.
+My využijeme jen jednu ze tří částí: porovnání dvou textů, které nám vrátí seznam rozdílů.
+
+\section{Klientská část}
+
+% TODO vysvětlit html, css, js
+% TODO přeformulovat výraz stáhne
+Klientská část naší apliakce je ta část, kterou si každý uživatel stáhne při návštěvě webové stránky aplikace.
+Jelikož se aplikace spouští v internetovém prohlížeči, je omezená tímto prostředím: grafická část je tvořena jazykem HTML a CSS, výkonná část je napsána v jazyce JavaScript.
+Jelikož serverová část aplikace je vytvořena v jazyce Java, zvolili jsme pro klientskou část nástroj, který umožňuje zkompilovat kód v jazyce Java do jazyku JavaScript, který je určen pro běh v prohlížeči.
+Takovým nástrojem je Google Web Toolkit -- GWT; mezi jeho základní vlastnosti patří:
+\begin{itemize}
+    \item serverová i klientská část je psána ve stejném jazyce,
+    \item společný kód pro serverovou a klientskou část se napíše jen jednou (a přeloží dvakrát),
+    \item poskytuje základ pro komunikaci mezi klientskou a serverovou částí, stará se o serializaci a deserializaci požadavků,
+    \item stará se o minifikaci kódu odeslaného klientovi,
+    \item poskytuje hotové základní komponenty pro tvorbu uživatelského rozhraní.
+\end{itemize}
+
+\subsection{Použité knihovny}
+
+V klientské části aplikace použijeme jedinou knihovnu: GWT Eye Candy.
+Tato knihovna nabízí kolekci ovládacich prvků do uživatelského prostředí aplikace.
+My využijeme jen jediný prvek: ColorPicker pro výběr barvy štítků.
+
+\section{Doplněk do prohlížeče}
+
+% TODO link na crossrider
+Využijeme služeb platformy Crossrider, která umožňuje vytvořit jediný doplněk, který bude fungovat shodně v nejrozšířenějších prohlížečích.
+Podporované prohlížeče jsou:
+% TODO link na FAQ 
+\begin{itemize}
+    \item Internet Explorer 7 a vyšší
+    \item Chrome -- všechny verze
+    \item Firefox -- 3.6 a vyšší
+\end{itemize}
+
+\subsection{Použité knihovny}
+
+% TODO knihovny v doplňku
+

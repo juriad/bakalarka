@@ -1,0 +1,103 @@
+\chapter{Webové čtečky}
+
+% TODO definice RSS
+% TODO definice RSS kanál
+
+Na internetu je dnes dostupné poměrně velké množství nejrůznějšího software a nejrůznějších služeb, které poskytují svým uživatelům přehledný výtah z článků, které se objeví na několika webových portálech.
+Takové aplikace bývají často zaměřeny na různé cílové skupiny: některé se zaměřují na uživatele, kteří se chtějí o novém článku dozvědět okamžitě, jakmile je publikován, jiné zaujmou spíše uživatele, kteří mají příliš mnoho zdrojů na to, aby bylo v jejich silách je pravidelně navštěvovat; v neposlední řadě existují aplikace, které se snaží zvýšit komfort čtení článků svým uživatelům.
+V této kapitole se pokusíme rozebrat charakteristiky jednotlivých aplikací.
+
+\section{Typy čteček}
+
+Před vlastním dělením aplikací vyčleníme ty, které obsahují čtečku RSS jen jako doplněk nebo ho využívají (jen) jako informační kanál o svých změnách.
+% TODO odkaz na zdroj: XBMC RSS na úvodní obrazovce.
+% TODO klikací odkaz na xbmc.org
+Mezi takové aplikace můžeme zařadit například multimediální centrum XBMC, které obsahuje na úvodní obrazovce ve spodní části proužek s běžícím textem: tituly článků na domovské stránce xbmc.org.
+Přestože XBMC má editor RSS kanálů a je možné nastavit vlastní kanál, nemůžeme aplikace takového typu považovat za plnohodnotné RSS čtečky.
+Touto a podobnými aplikacemi se zabívat nebudeme; nebudou nás zajímat ani služby, které sice umožňují sledovat RSS, ale není to jejich primárním cílem.
+% TODO linky na seznam a igoogle
+Příkladem takové služby může být titulní stránka vyhledávače seznam.cz, kterou si uživatelé mohou upravit a přidat svůj RSS kanál, jehož položky se na stránce budou zobrazovat, další podobnou službou byl -- nyní ukončený -- iGoogle.
+
+\bigskip
+
+V následujících podkapitolách rozdělíme čtečky podle několika kritérií:
+\begin{itemize}
+	\item způsobu integrace do uživatelského prostředí,
+	\item uživatele, na kterého jsou zaměřené.
+\end{itemize}
+Bude zřejmé, že výhody jednoho typu čteček jsou často nevýhodami jinýho typu.
+
+\subsection{Nativní aplikace}
+
+% TODO agregátor RSS kanálů
+Pro používání toho typu čteček je nutné nainstalovat nativní aplikaci do operačního systému.
+S tím souvisí několik omezení, se kterými musí uživatel počítat, například: aplikace musí být trvale spuštěná, neboť kontroluje zdroje jednotlivých kanálů.
+
+%TODO rozvést nativní aplikace
+
+Mezi nativní aplikace budeme řadit i samotný internetový prohlížeč, pokud umí sledovat RSS kanály.
+
+\subsubsection{Výhody}
+
+Mezi výhody nativní aplikace patří:
+\begin{itemize}
+    \item rychlejší odezva.
+        Aplikace může ukládat všechny položky na pevný disk, čímž odbourává nutnost neustálé komunikace a opakovaného stahování veškerých dat ze serveru poskytovatele služby.
+    \item offline čtení.
+        Aplikace může stáhnout kompletní webovou stránku, na kterou se uživatel může podívat a přečíst originální text i v době, kdy nemá přístup k internetu.
+		Toho mohou využívat třeba uživatelé, kteří často cestují a chtějí si zkrátit čtením dlouhé čekání.
+    \item nezávislost na jiném subjektu.
+        Uživatel není závislý na provozovateli služby; webové služby mohou skončit nebo mít výpadek.
+        U nativní aplikace maximálně hrozí zastavení jejího dalšího vývoje, což zpravidla nemívá vliv na její dostupnost a funkcionalitu.
+\end{itemize}
+
+\subsection{Webová služba}
+
+Přesným opakem nativních aplikací jsou webové služby; pro používání webové služby není vyžadována instalace aplikace, data jsou dostupná na kterémkoli zařízení s internetem.
+Největší slabinou těchto čteček je nutnost neustálého připojení na internet.
+
+\subsubsection{Výhody}
+
+Mezi výhody aplikací postavených na využití webových služeb patří:
+\begin{itemize}
+    \item synchronizace stavu mezi více počítači.
+        Uživatel má přístup ke svým sledavaným zdrojům a odkazům na články odkudkoli; může se přesouvat mezi několika zařízeními a pokračovat v procházení seznamu článků.
+    \item menší riziko přetížení zdroje.
+        % TODO diskuse o weather undergoundu na xbmc
+        V případě, že jeden zdroj sleduje velké množství uživatelů, stačí jeden jediný dotaz pro stažení RSS dokumentu a uspokojení všech uživatelů najednou.
+        S možností přetížení můžou mít problém nativní aplikace.
+		Tento problém nastala například poskytovali počasí, z jehož serverů si aplikace XBMC stahovala informace příliš často (každých 30 minut).
+    \item není nutné přepínat mezi aplikacemi.
+        Pokud uživatel prochází seznam člán\-ků na stánce webové služby, nemusí se pro zobrazení originálního článku přepínat do internetového prohlížeče.
+        Toto omezení neplatí pro samotné internetové prohlížeče a je redukované pro některé nativní aplikace, které umožňují zobrazit zjednodušenou webovou stránku přímo uvnitř sebe.
+    \item uživatel má dostupné všechny položky bez ohledu na četnost spuštění počítače.
+        Uživatel nemusí být stále online, webová služba kontroluje zdroj RSS bez ohledu na stav svých uživatelů.
+        Pokud uživatel nativní aplikace nespustí čtečku po dobu několika dnů, může ztratit informace o některých článcích, zejména u frekventovaných zdrojů.
+\end{itemize}
+
+\subsection{Běžný uživatel}
+% FIXME běžný uživatel
+
+\subsection{Náročný uživatel}
+
+Za náročného uživatele budeme považovat uživatele, který používá čtečku z důvodu, že již sám není schopný navštěvovat pravidelně stránky svých informačních zdrojů.
+Důvodem může být sledování příliš mnoha zdrojů, na kterých je publikováno mnoho článků každý den.
+\uv{Mnoho} v tomto kontextu znamená desítky zdrojů a stovky článků či zpráv denně.
+
+Náročný uživatel klade na čtečku specifické nároky:
+\begin{itemize}
+    \item Vyžaduje kompaktní zobrazení, nesmí se plýtvat místem.
+        Obrazovka musí být vyhrazená seznamu položek; každá položka musí zabírat minimální prostor, aby se jich vešlo na obrazovku co nejvíce.
+    \item Preferuje prostý text před grafickými efekty; nic nesmí rozpylovat jeho pozornost.
+    \item Vyžaduje aplikaci, která bude převážně ovladatelná klávesovými zkratkami; pohyb a klikání myši je pomalé.
+        Náročný uživatel ve čtečce tráví spoustu času, který musí využít efektivně.
+    \item Nepotřebuje zjednodušené prostředí, protože investice do podrobné konfigurace se mu časem vyplatí.
+\end{itemize}
+
+\section{Existující čtečky}
+
+% TODO existující čtečky
+
+\section{Srovnání čteček}
+
+% TODO srovnání čteček

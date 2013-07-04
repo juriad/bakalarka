@@ -1,4 +1,4 @@
-\chapter{Vyskokoúrovňová dokumentace}
+\chapter{Dokumentace}
 
 V této části práce popíšeme funkci/implementaci nejdůležitějších částí aplikace.
 Tento popis je určen programátorům; má za cíl poskytnout dostatečný přehled o všech částech aplikace před tím, než se setká se zdrojovým kódem.
@@ -243,7 +243,7 @@ Výpočet probíhá v několika krocích:
 		Matice má v řádcích uživatele, ve sloupcích zdroje.
 		Prvek matice vyplníme:
 		\begin{itemize}
-			\item buď jedničkou, pokud uživatel sleduje zdroj (existuje uživatelský zdroj),
+			\item buď jedničkou, pokud existuje uživatelský zdroj – uživatel sleduje zdroj,
 			\item nebo nulou v opačném případě.
 		\end{itemize}
 		Tvorbou matice z uživatelských zdrojů si zajistíme přítomnost alespoň jedné jedničky v každém řádku i sloupci.
@@ -320,7 +320,20 @@ Z důvodu propagace změn, všechny uzly mají mohou zaregistrovat posluchače u
 
 \subsubsection{Stromové komponenty}
 
-% TODO stromové komponenty
+Klientská část aplikace obsahuje tři komponenty, které zobrazují hierarchie v podobě stromu; jsou to:
+\begin{itemize}
+	\item strom zdrojů -- hierarchii poskytuje správce zdrojů,
+	\item strom seznamových filtrů -- hierarchii poskytuje správce seznamových filtrů,
+	\item strom zpráv -- hierarchii poskytuje správce zpráv.
+\end{itemize}
+
+Zprávy ve skutečnosti netvoří strom ale prostý seznam.
+Využili jsme stromovou komponentu pro jejich zobrazení z několika důvodů:
+\begin{itemize}
+	\item poskytuje všechny možnosti, které vyžadujeme,
+	\item vzhled seznamu zpráv je blízký vzhledu stromů zdrojů a stromu seznamových filtrů,
+	\item jednodušší implementace.
+\end{itemize}
 
 \subsection{Správci}
 
@@ -425,10 +438,98 @@ Jediným takovým posluchačem je vlastní grafická komponenta zodpovědná za 
 
 \subsubsection{Správce historie}
 
+Framework GWT obsahuje podporu pro sledování historie v rámci aplikace.
+Jednou položkou v historii je token -- řetězec reprezentující aktuální stav aplikace.
+V našem případě stav aplikace odpovídá zobrazenému seznamovému filtru.
+
+Náš správce historie rozšiřuje tento mechanismus o několik důležitých vlastností.
+Pro nás je užitečnější znalost samotného seznamového filtr než jeho serializované varianty; z toho důvodu si ukládáme do seznamu stavů dvojici token -- seznamový filtr a nižší vrstvě (GWT) předáváme token.
+Při reakci na událost změna historie, kterou vyvolá GWT reagujeme změnou aktuálního seznamového filtru a vyvoláním vlastní událost \verb|HistoryEvent|, skrze kterou informujeme zbytek aplikace o změně.
+
 \subsection{Nekonečný seznam}
 
-\subsubsection{Poskytovatelé seznamu položek}
+V této části pojmem položka myslíme jeden záznam v seznamu, který je reprezentován uživatelskou položkou.
 
-\subsubsection{Řádek nekonečného seznamu}
+Nejdůležitější grafickou komponentou, která tvoří naši aplikaci, je nekonečný seznam položek.
+Nazýváme ho nekonečným, neboť nemá konec – jakmile uživatel odroluje seznam ke konci, načtou se další položky; takto jich může postupně zobrazit stovky.
+Samozřejmé, že v případě omezeného množství položek, má seznam konec, jen může být prakticky nedosažitelný.
+Výhodou tohoto přístupu je stahování ze serverové části jen takovych dat, o která má uživatel bezprostředně zájem.
+
+Položky, které jsou v seznamu zobrazené, jsou dodávané poskytovatelem, který reaguje na událost odrolování blízko konce seznamu zavoláním metody získat položky správce položek.
+Kdykoli se změní aktuální seznamový filtr, zruší se starý poskytovatel a nahradí se novým.
+
+Nekonečný seznam je posluchačem událostí \verb|ShortcutEvent| správce zkratek; reaguje na zkratky typu: přesun na předchozí/další položku, zobrazit originální webovou stránku, přidat/odebrat štítek a podobné.
+
+Každý řádek reprezentuje jednu uživatelskou položku se všemi jejími informacemi: zdroj ze kterého pochází, datum a čas přidání položky, senzma přiřazených štítků a hlavně titulek.
+Obsah položky (text nebo HTML) se zobrazí jen v případě, že položka je vybraná a rozbalená.
 
 \subsection{Dialogy}
+Veškerá manipulace s daty v rámci aplikace probíhá v rámci dvou oblastí: v nekonečném seznamu a skrze dialogy.
+V nekonečném seznamu může uživatel provádět následujíci operace:
+\begin{itemize}
+	\item označení uživatelské položky jako přečtené,
+	\item přidání/odebrání štítku uživatelské položce, příp. vytvoření nového, pokud zadá neexistující název.
+\end{itemize}
+
+Všechny ostatní operace provádí uživatel skrze dialogy -- okna, která dočasně překryjí zbytek stránky aplikace.
+Každá oblast, kterou jsme dříve zmínili, s výjimkou položek a konfigurace, nabízí jeden či více dialogů pro svou konfiguraci:
+\begin{itemize}
+	\item vytvoření a úpravu zdroje,
+	\item vložení manuální položky,
+	\item vytvoření a úpravu seznamového filtru, úpravu ad-hoc seznamového filtru,
+	\item úpravu a odstranění klávesových zkratek,
+	\item tvorbu klávesové zkratky typu akce,
+	\item úpravu a odstranění štítku.
+\end{itemize}
+
+Každý z těchto dialogů má jinou grafickou podobu závislou na atributech spravované třídy.
+V případě, že uživatel změnu provedenou v dialogu potvrdí, zavolají se metody příslušných správců, které změnu delegují na služby serverové části.
+
+\section{Doplněk do prohlížečů}
+
+Doplněk do prohlížeče je nepovinné rozšíření aplikace, které má cíl zjednodušit její ovládání uživatelům.
+Implementace doplňku spoléhá na API poskytované platformou Crossrider, na níž je postaven.
+Doplněk můžeme rozdělit do tří částí, které spolu komunikují; budeme je pro jednoduchost pojmenovávat terminologií platformy:
+\begin{itemize}
+	\item background -- skript, který běží v prohlížeči na pozadí; je nezávislý na otevřených stránkách; existuje vždy v jediné instanci,
+	\item extension -- skript, který se vykonává zvlášť v rámci každé otevřené stránky
+	\item popup -- html stránka, která se zobrazí při kliknutí na ikonku doplňku v liště prohlížeče; mezi dvěma zobrazeními se stav nezachovává.
+\end{itemize}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=9cm]{img/doplnek-init.eps}
+	\caption{Postup inicializace doplňku}
+	\label{fig:doplnek-init}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=11cm]{img/doplnek-akce.eps}
+	\caption{Postup zobrazení popupu a vytvoření manuální položky}
+	\label{fig:doplnek-akce}
+\end{figure}
+
+\subsection{Inicializace doplňku}
+
+Doplněk se inicializuje při spuštění prohlížeče vykonáním background skriptu; postup je znázorněn na obrázku \ref{fig:doplnek-init}.
+Nejprve zkontrolujeme, zda známe klientský token (1, 2); pokud ho známe, nastavíme akci zobrazení popup stránky při kliknutí na ikonku (3).
+V případě, že token neznáme, budeme čekat na zprávu o dostupnosti tokenu (1', 2').
+Až token budeme znát, nastavíme popup stránku (kroky 1, 2, 3).
+
+Skript extension zjišťuje podle URL adresy aktuální stránku; pokud se jedná o stránku naší aplikace, podívá se do hlavičky stránky po elementu meta s názvem \verb|clientToken|.
+Tento meta element do stránky přidá klientská část aplikace při své inicializaci.
+
+\subsection{Přidání manuální položky}
+
+Postup je znázorněn na obrázku \ref{fig:doplnek-akce}.
+Uživatel spustí akci vložení aktuální stránky do naší aplikace kliknutím na ikonu doplňku v liště prohlížeče (1).
+Zobrazí se vyskakovací okno s formulářem, který bude předvyplněný informacemi o aktuální stránce: titulek, URL, vybraná část textu.
+Informace se získají zasláním zprávy (6) skriptu běžícímu v aktuálně otevřené stránce; skript zašle zpět (7) požadované údaje.
+
+Formulář bude dále obsahovat předvyplněný seznam štítků a umožní přidat další štítky.
+Popup zašle zprávu (2) background skriptu, který odešle dotaz (3) na serverovou část skrze API poskytované platformou Crossrider.
+Background skript odpověď (4) zašle zpět (5) do popup okna.
+
+Pokud uživatel odešle formulář, odchytí skript událost odeslání a zašle background skriptu zprávu (8) s vyplněnými údaji o manuální položce, kterou chce uživatel přidat.
+Background skript odešle dotaz (9) serverové části skrze API platformy.
+Využití toho API je nutné z důvodu nutnosti obejít omezení prohlížeče: skript může kontaktovat jen stránky ze stejné domény.
