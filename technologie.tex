@@ -1,22 +1,30 @@
 \chapter{Použité technologie}
 
-Jako implementační jazyk jsme zvolili jazyk Java.
+Jako implementační jazyk aplikace jsme zvolili jazyk Java.
+Tento výběr ovlivňuje volbu jednotlivých knihoven a frameworků, které nám budou poskytovat a zprostředkovávat různé technologie.
+Z povahy aplikace vyplývá, že většina netriviálních úloh bude probíhat na serverové části, tam také použijeme nejvíce knihoven.
 
-\section{Serverová část}
+\section{Poskytovatel platformy}
 
 % TODO definice Cloudu
 Serverová část aplikace poběží na serverech v Cloudu, to nám umožní efektivní správu prostředků, možnost trvalé expanze a škálovatelnost aplikace.
-Pro volbu konkrétního poskytovatele jsme měli (v době zahájení práce) na výběr z:
+Pro volbu konkrétního poskytovatele jsme měli (v době zahájení práce) na výběr z následujících možností:
 \begin{itemize}
+	\item \zkratka{VPS}{Virtual Private Server -- virtualizovaný server, který si může kdokoli pronajmout.}
     \item Amazon EC2
     \item Google AppEngine
 \end{itemize}
 
-Jelikož jsme měli již zkušenost s druhým zmíněným a jeho architektura a API nám byla známá, zvolili jsme jej.
+Virtuální server sice poskytuje největší svobodu, ale za cenu nutné vlastní konfigurace systému.
+Tomu jsme se chtěli vyhnout a zaměřit své úsilí na samotný vývoj aplikace.
+Další jeho nevýhodou je nemožnost automatického škálování.
+Až na výjimky\footnote{Jedinou nám známou výjimkou je poskytovatel \url{http://4smart.cz/}} se účtuje paušální měsíční poplatek.
+
+Zbylí dva poskytovatelé nabízí hotovou platformu, na níž je možné rovnou začít stavět aplikaci.
+Jelikož jsme měli již zkušenost s posledním zmíněným a tedy jeho architektura nám byla známá, zvolili jsme jej.
 
 \subsection{Platforma Google AppEngine}
 
-% TODO definice VPS
 Google AppEngine je platforma pro vývoj a hostování webových aplikací psaných v jednom z několika podporovaných jazyků.
 Poskytovatel účtuje jen prostředky skutečně využité, tím se liší od běžných VPS.
 Platforma umožnuje automatické škálování výkonu podle aktuální potřeby aplikace.

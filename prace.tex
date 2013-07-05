@@ -29,7 +29,6 @@
 \hypersetup{pdftitle=Webová čtečka a knihovna článků}
 \hypersetup{pdfauthor=Adam Juraszek}
 
-
 \usepackage{framed}
 \usepackage{xcolor}
 
@@ -50,7 +49,22 @@
 
 %\usepackage{paralist}
 
-\usepackage{subcaption}
+%\usepackage{subcaption}
+
+\usepackage[intoc]{nomencl}
+\makenomenclature
+
+\usepackage{xparse}
+
+%~-
+\NewDocumentCommand\zkratka{ s m m }{% s = star, m = mandatory arg
+%~+
+	\IfBooleanTF{#1}{% with star
+	}{% without star
+		#2 (#3)
+	}%
+	\nomenclature{#2}{#3}%
+}
 
 %%% Drobné úpravy stylu
 

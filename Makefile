@@ -4,26 +4,38 @@ all: prace.pdf
 # prace.pdf: prace.dvi
 #	dvipdfm -o $@ -p a4 -r 600 $<
 
-VPATH = img
+VPATH = img:work
 
 img/%.eps: %.dia
 	dia -t eps -e $@ $< 
 
-prace.pdf: prace.ps
+work/prace.pdf: prace.ps
 	ps2pdf $< $@
 
-prace.ps: prace.dvi
-	dvips -o $@ -D600 -t a4 $<
+work/prace.ps: prace.dvi
+	cd work; \
+		dvips -o prace.ps -D600 -t a4 prace.dvi
 
-# LaTeX je potreba spustit dvakrat, aby spravne spocital odkazy
-prace.dvi: prace.tex $(wildcard *.tex) $(addsuffix .eps, $(basename $(wildcard img/*)))
-	cslatex $<
-	cslatex $<
+work: $(wildcard *.tex) $(addsuffix .eps, $(basename $(wildcard img/*))) $(wildcard *.bib)
+	mkdir -p work
+	cp $^ work/
+	cp czechiso.bst work/
+	cd work; \
+		vlna -l *.tex; \
+	    vlna -l -v ai *.tex
+
+work/prace.dvi: work
+	cd work; \
+		cslatex prace.tex; \
+		makeindex prace.nlo -s nomencl.ist -o prace.nls; \
+		cslatex prace.tex; \
+		bibtex prace.aux; \
+		cslatex prace.tex 
 
 show: prace.pdf
-	zathura prace.pdf
+	zathura $<
 
 clean:
-	rm -f *.{log,dvi,aux,toc,lof,out} prace.ps prace.pdf
+	rm -rf work
 	rm -f `ls img/*.eps | grep -v 'logo.eps'`
 	rm -f *~ img/*~
