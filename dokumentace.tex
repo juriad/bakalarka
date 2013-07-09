@@ -22,7 +22,7 @@ Jak jsme již popsali v předchozích kapitolách, aplikace se člení na tři h
 První dvě části jsou naprogramovány v jazyku Java a sdílejí některé části kódu -- balík \verb|cz.artique.shared|.
 Na obrázku \ref{fig:cleneni} jsou zobrazeny jednotlivé balíky, postup kompilace a její výsledný produkt.
 
-Serverová část závisí na všech balících; můžeme však říct, že závislost na balíku \verb|cz.artique.client| je slabá a vynucená použitou frameworkem GWT.
+Serverová část závisí na všech balících; můžeme však říci, že závislost na balíku \verb|cz.artique.client| je slabá a vynucená pouze použitým frameworkem GWT.
 GWT vyžaduje, aby rozhraní služby a jeho asynchronní varianta byly ve stejném balíku.
 Samotná rozhraní jsou sice implementována jen v balíku \verb|cz.artique.server|, nicméně je nutné je mít přístupné v klientské části.
 
@@ -41,12 +41,12 @@ Serverová část je zodpovědná za abstrakci přístupu k databázi, poskytov�
 
 \subsection{Obsluha databáze}
 Jelikož platformou poskytovaná databáze neumožňuje složitější operace, navrhli jsme kolekci služeb, které obalují přístup k databázi a provádějí jednoduché manipulace.
-Přístup k databázi ze zbytku splikace směřujeme přes tyto služby.
+Přístup k databázi ze všech částí aplikace směřujeme přes tyto služby.
 To nám umožňuje mít přehled o typech prováděných operací a zároveň eliminuje skryté závislosti.
-Nejčastějšími operacemi, které takto simulujeme, jsou:
+Nejčastějšími operacemi jsou:
 \begin{itemize}
 	\item dotažení dalšího objektu podle klíče, například: k uživatelskému zdroji dotáhne region,
-	\item vytáhnutí objektu, příp. jeho vytvoření, pokud neexistuje,
+	\item získání objektu, příp. jeho vytvoření, pokud neexistuje,
 	\item sestavení složitějšího dotazu podle kritérii.
 \end{itemize}
 
@@ -61,12 +61,11 @@ Všechny služby, které jsou veřejně dostupné -- mezi ně patří i služby 
 Některé typy validace jsou prováděné z důvodu bezpečnosti, jiné z důvodu zajištění integrity dat či omezení danými použitými knihovnami a databází.
 Prováděné úpravy a kontroly hodnot jsou následující:
 \begin{itemize}
-	\item nahrazení hodnotami dopočítatelnými na straně serveru hodnoty, které dodala klientská část.
-		Sem patří například:
+	\item vyplnění vypočitatelných hodnot; patří sem například:
 		\begin{itemize}
 			\item výpočet databázového klíče,
 			\item dosazení typu z výčtu, pokud existuje jediná možnost,
-			\item dosazení aktuálního datumu do datumových atributů,
+			\item dosazení aktuálního data do datumových atributů,
 			\item nahrazení vlastníka za aktuálně přihlášeného uživatele.
 		\end{itemize}
 	\item kontrola, zda povinný atribut je vyplněný,
@@ -75,11 +74,11 @@ Prováděné úpravy a kontroly hodnot jsou následující:
 	\item oříznutí bílých znaků z delších textů,
 	\item kontrola, zda URL je validní,
 	\item kontrola, zda URL je validní a webová stránka jí určená je dostupná,
-	\item kontrola, zda CSS selector je validní,
+	\item kontrola, zda CSS selektor je validní,
 	\item oříznutí bílých znaků z názvu štítku a kontrola, zda název štítku neobsahuje bílé znaky a znak \$.
 \end{itemize}
 
-Pokud nebudeme uvažovat validaci, která samotná často zabírá několik desítek řádků kódu, zjistíme, že mnoho z dále popsaných služeb je trivialních.
+Pokud nebudeme uvažovat validaci, která samotná často zabírá několik desítek řádků kódu, zjistíme, že mnoho z dále popsaných služeb je triviálních.
 Tyto služby většinou spočívají jen v zavolání metody poskytnuté obsluhou databáze a vrácení jejího výsledku.
 
 \bigskip
@@ -87,7 +86,7 @@ Dále popíšeme rozhraní všech služeb.
 
 \subsubsection{Přihlášení, odhlášení}
 
-Služba \verb|ClientUserService| poskytuje klientské části informace o aktuálně přihlášeném uživateli skrze jedinou metodu -- \verb|login|.
+Služba \verb|ClientUserService| poskytuje klientské části informace o aktuálně přihlášeném uživateli pomocí jediné metody -- \verb|login|.
 Pokud je uživatel přihlášen, vrací metoda objekt uživatele a internetovou adresu určenou k jeho odhlášení.
 Součástí objektu uživatele je i klientský token, který se používá při komunikaci s klientským doplňkem. % TODO klientský doplněk
 Zároveň zkontroluje, jestli existuje manuální zdroj pro daného uživatele: pokud neexistuje (uživatel se přihlásil poprvé), vytvoří se.
@@ -114,8 +113,8 @@ Tato služba v současné době není plně využívána; navrhli jsme ji obecn�
 
 \subsubsection{Zdroje}
 
-Veškeré manipulace jak se zdroji, tak i s uživatelskými zdroji probíhají skrze službu \verb|ClientSourceService|.
-Zvolili jsme integraci manipulace s několika entitami do jedné jediné služby z důvodu, že klientská část nepracuje se zdroji téměř nikdy přímo, ale výhradně prostřednictvím uživatelských zdrojů.
+Veškeré manipulace jak se zdroji, tak i s uživatelskými zdroji probíhají přes službu \verb|ClientSourceService|.
+Zvolili jsme integraci manipulace s několika entitami do jediné služby z důvodu, že klientská část nepracuje se zdroji téměř nikdy přímo, ale výhradně prostřednictvím uživatelských zdrojů.
 Tato služba poskytuje následující metody:
 \begin{itemize}
 	\item přidat zdroj -- vytvoří v databázi zdroj daného typu, pokud ještě neexistoval a vrátí jej.
@@ -136,14 +135,14 @@ Tato služba poskytuje následující metody:
 
 \subsubsection{Štítky}
 
-Veškeré manipulace se štítky probíhají skrze službu \verb|ClientLabelService|.
+Veškeré manipulace se štítky probíhají pomocí služby \verb|ClientLabelService|.
 Jelikož jsme zavedli silná omezení na štítky, je tato služba spíše jednodušší:
 \begin{itemize}
 	\item získat všechny štítky -- vrátí všechny štítky z databáze, které patří aktuálně přihlášenému uživateli, bez ohledu na jejich typ.
 	\item přidat štítek -- vytvoří nový štítek v databázi, pokud štítek se stejným názvem ještě neexistuje a vrátí jej.
 		Tuto metodu volá klientská část v situacích, kdy uživatel má možnost vybrat štítek a uživatel zadá název neexistujícího štítku.
 	\item aktualizovat štítky -- provede dávkovou aktualizaci v databázi několika štítků; nastavením atributu \verb|toBeDeleted| lze štítek odstranit.
-		Odstranění štítku je podmíněné tím, že není nikde ve zbytku aplikace použitý; v opačném případě odstranění selže.
+		Odstranění štítku je podmíněné tím, že není nikde použitý; v opačném případě odstranění selže.
 \end{itemize}
 
 \subsubsection{Seznamové filtry}
@@ -168,13 +167,13 @@ Tato služba poskytuje 3 metody, které manipulují s položkami:
 		V případě, že seznam má být řazený sestupně, bude výsledek obsahovat i seznam uživatelských položek, které jsou novější než klientské části známá nejnovější uživatelská položka.
 		Výsledek obsahuje i informaci o tom, zda mohou existovat ještě další uživatelské položky -- jestli existuje šance, že následující dotaz vrátí neprázdný výsledek.
 	\item Aktualizovat položky -- aktualizuje v databázi uživatelské položky na základě souboru změn, které se na ně mají aplikovat.
-		Soubor změn udává, které štítky se mají uživatelské položce přidat či odebrat a jaký má být nový stav přečtenosti.
+		Soubor změn udává, které štítky se mají uživatelské položce přidat či odebrat a jaký má být její nový stav (přečtená -- nepřečtená).
 		Metoda vrací seznam uživatelských položek, které byly změněny.
 \end{itemize}
 
 \subsubsection{Klávesové zkratky}
 
-Klávesová zkratka je jednoduchá entita, se kterou nepožadujeme provádění složitějších manipulací; vystačíme si s možností vytvoření a odstranění klávesové zkratky.
+Klávesová zkratka je jednoduchá entita, na níž není kladen požadavek složitější manipulace; vystačíme si s možností vytvoření a odstranění klávesové zkratky.
 Tato služba poskytuje následující metody:
 \begin{itemize}
 	\item získat všechny klávesové zkratky -- vrátí z databáze seznam všech klávesových zkratek aktuálně přihlášeného uživatele.
@@ -182,13 +181,12 @@ Tato služba poskytuje následující metody:
 	\item odstranit klávesovou zkratku -- odstraní klávesovou zkratku z databáze.
 \end{itemize}
 
-Možnost změny klávesové zkratky se ukázala příliš náročnou na implementaci, proto jsme ji nahradili za posloupnost odstranění staré zkratky a následného vytvoření nové zkratky.
+Změna klávesové zkratky je možná posloupností odstranění staré zkratky a následného vytvoření nové zkratky.
 
 \subsection{Rozhraní pro komunikaci s klientským doplňkem}
 
 Služba pro komunikaci s klientským doplňkem -- \verb|ClientServlet| vyžaduje přihlášení uživatele.
-Užití mechanismu ověření proti Google Account se nám nepodařilo jednoduše implementovat.
-Z toho důvodu jsme se rozhodli přidělit každému uživateli náhodný jednoznačný identifikátor, který bude uživatelům doplněk v prohlížeči používat při komunikovat se serverovou částí aplikace ke své identifikaci.
+Rozhodli jsme se přidělit každému uživateli náhodný jednoznačný identifikátor, který bude doplněk v prohlížeči používat při komunikovat se serverovou částí aplikace ke své identifikaci.
 Tento identifikátor -- token -- je určen jen a pouze pro komunikaci s doplňkem.
 Myslíme si, že jde o rozumný kompromis mezi zajištěním bezpečí a jednoduchostí implementace.
 
@@ -198,13 +196,13 @@ Rozhraní pro komunikaci s doplňkem nabízí dvě metody:
 		Funguje velice podobně jako metoda získat všechny štítky služby štítků pro komunikaci s klientskou částí.
 		Liší se jen tím, že tato metoda filtruje štítky podle typu a vrací ještě seznam výchozích štítků pro manuální zdroj.
 %TODO definovat JSON
-	\item přidat položku -- přidá položku popsanou JSON objektem k manuálním zdroji uživatele.
+	\item přidat položku -- přidá položku popsanou JSON objektem k manuálnímu zdroji uživatele.
 		Provádí podobné kontroly a úpravy jako metoda přidat manuální položky služby položek pro komunikaci s klientskou částí.
-		Jelikož toto rozhraní je textové (nepřenáší se klíče štítků, ale jejich názvy), může uživatel přidělit položce neexistující štítek.
-		V takovém případě bude v okamžiku, kdy je zřejmé, že objekt položky prošel všemi kontrolami, vytvořen a následně k uživatelské položce přiřazen.
+		Jelikož toto rozhraní je textové (nepřenáší se klíče štítků, ale jejich názvy), může uživatel přidělit položce i neexistující štítek.
+		V takovém případě bude v okamžiku, kdy je zřejmé, že objekt položky prošel všemi kontrolami, vytvořen nový štítek a následně k uživatelské položce přiřazen.
 \end{itemize}
 
-Pro použití tohoto rozhraní musí klient poskytnout svůj klientský token a uvést akci (metodu), která se má provést.
+Při použití tohoto klientského rozhraní musí klient poskytnout svůj klientský token a uvést akci (metodu), která se má provést.
 
 \subsection{Rozhraní pro plánování a plánované úlohy}
 
@@ -220,7 +218,7 @@ Do této skupiny jsme zařadili služby, které jsou spouštěny:
 Naše aplikace vyžaduje pro získávání nového obsahu periodické spouštění kontroly zdrojů.
 Cronem spouštěná služba nejprve zjistí seznam zdrojů, které je třeba zkontrolovat: to jsou takové, jejichž plánovaný čas kontroly je menší než aktuální čas, nenastalo u nich příliš mnoho chyb během poslední kontroly a zároveň nejsou právě kontrolovány.
 Pro každý nalezený zdroj se vytvoří úloha, která je následně vložena do fronty.
-Fronta úloh se stará o to, aby byly jednotlivé úlohy spouštěny postupně s určitou frekvencí, čímž se snaží snížit okamžitou zátěž.
+Fronta úloh se stará o to, aby byly jednotlivé úlohy spouštěny postupně s určitou frekvencí, což snižuje okamžitou zátěž.
 Dalšími výhodami naplánování úloh oproti okamžitému spuštění kontroly zdroje jsou:
 \begin{itemize}
 	\item možnost kontroly několika zdrojů zároveň -- každá kontrola probíhá ve vlastním vlákně,
@@ -228,7 +226,7 @@ Dalšími výhodami naplánování úloh oproti okamžitému spuštění kontrol
 	\item možnost opakování kontroly zdroje v případě, že dojde k chybě.
 \end{itemize}
 
-Aby se aplikace lépe vypořádala s chybnými zdroji (nekontrolovala je nepříčetně často), po několika chybách při kontrole zastavíme jeho další kontroly v normálním režimu.
+Aby se aplikace lépe vypořádala s chybnými zdroji (nekontrolovala je nepřiměřeně často), po několika chybách při kontrole zastavíme jeho další kontroly v normálním režimu.
 Takový zdroj bude kontrolován v chybovém režimu, méně často, jen jednou za 12 hodin; v případě, že se následná kontrola zdaří, vrátí se zdroj do normálního režimu.
 
 \subsubsection{Výpočet doporučení}
@@ -260,18 +258,18 @@ Výpočet probíhá v několika krocích:
 			$ Z = U \cdot M_u $
 		a následně aktualizujeme blízkost každých dvou uživatelů:
 			$ U = Z \cdot M_z + U_0 $.
-	\item Několikrát ziterujeme 4. krok výpočtu.
+	\item Několikrát provedeme iteraci 4. kroku výpočtu.
 	\item Matice $Z$ obsahuje váhy popisující vhodnost zdroje pro každého uživatele.
-		Matici budme procházet po řádcích (pro uživatele); setřídíme zdroje podle vah sestupně a vyfiltrujeme ty, které uživatel již sleduje (jsou v matici $M$).
-		Z seznamu vezmeme prvních $k$ doporučených zdrojů a výsledný seznam uložíme pro každého uživatele do databáze.
+		Matici budeme procházet po řádcích (pro uživatele); setřídíme zdroje podle vah sestupně a vyfiltrujeme ty, které uživatel již sleduje (jsou v matici $M$).
+		Ze seznamu vezmeme prvních $k$ doporučených zdrojů a výsledný seznam uložíme pro každého uživatele do databáze.
 \end{enumerate}
 
 \subsubsection{Zálohování položky}
 
-Kdykoli je nějaké uživatelské položce přiřazen štítek, zkontroluje se, zda štítek má nastavenou vlatnost zálohování.
+Kdykoli je nějaké uživatelské položce přiřazen štítek, zkontroluje se, zda štítek má nastavenou vlastnost zálohování.
 Pokud ji má, vytvoří se nová zálohovací úloha, která se zařadí do fronty.
 Stejně jako v případě kontroly zdrojů, i zde se fronta úloh stará o jejich postupné spouštění.
-Postup zálohování jsme popsali v procesech. % TODO ref
+Postup zálohování jsme popsali v části XXX. % TODO ref
 
 \subsection{Veřejné rozhraní k obsahu}
 
@@ -281,29 +279,29 @@ Některá rozhraní aplikace jsou dostupná i neregistrovaným uživatelům
 
 Toto rozhraní poskytuje seznam položek vyhovujících seznamovému filtru, u kterého jeho vlastník povolil možnost exportování.
 Export je identifikovaný kombinací aliasu a uživatelského jména vlastníka seznamového filtru.
-Služba zodpovědná za výběr položek z databáze je ta samá jako v případě poskytování seznamu položek klietské položky se všemi svými důsledky.
+Služba zodpovědná za výběr položek z databáze je stejná jako v případě poskytování seznamu položek klientské položky se všemi svými důsledky.
 Seznam položek je vrácen buď ve formě RSS, nebo Atom (záleží na parametru poskytnutého v URL).
 
 \subsubsection{Zálohované položky}
 
 Připomeňme, že během zálohování stáhneme webovou stránku, mírně ji upravíme a uložíme; záloze je přidělen klíč, který ji identifikuje.
-Odkaz na zálohovanou stránku (přístupnou skrze toto rozhraní) je dostupný uživateli, který zálohu provedl ze seznamu položek.
+Odkaz na zálohovanou stránku (přístupnou přes toto rozhraní) je dostupný uživateli, který zálohu provedl ze seznamu položek.
 
 \section{Členění klientské části}
 
-Doposud jsme se příliš klientskou části nezabývali z důvodu, že klientská část přímo neprovádí žádné manipulace s daty; využívá jen prostředků, které jí poskytuje serverová část.
+Doposud jsme se příliš klientskou části nezabývali z důvodu, že klientská část přímo neprovádí žádné manipulace s daty; využívá pouze prostředků, které jí poskytuje serverová část.
 Přesto můžeme klientskou část rozčlenit do několika částí (spíše podle funkce než podle balíků):
 \begin{itemize}
 	\item realizace hierarchií a stromových komponent,
 	\item správci, kteří komunikují se serverovou částí a ostatní správci,
 	\item komponenta nekonečného seznamu,
-	\item dialogy, skrze které se vytvářejí a upravují všechny objekty.
+	\item dialogy, pomocí kterých se vytvářejí a upravují všechny objekty.
 \end{itemize}
 
 \subsection{Hierarchie}
 
-Vzhledem ke způsobu uložení hierarchie v databázi: popisujeme cestu ke kořeni, musíme pro zobrazení stromu napřed hierarchii vybudovat.
-Všichni správci, kteří poskytují hierarchii, musí každý objekt, který spravují, zpracovat a vložit do uměle vytvřené hierarchie.
+Vzhledem ke způsobu uložení hierarchie v databázi: popisujeme cestu ke kořeni, je nutné pro zobrazení stromu primárně vlastní hierarchii vybudovat.
+Všichni správci, kteří poskytují hierarchii, musejí každý objekt, který spravují, zpracovat a vložit do uměle vytvořené hierarchie.
 Postup vypadá následovně:
 \begin{enumerate}
 	\item Vytvoření kořenového uzlu.
@@ -316,11 +314,11 @@ Postup vypadá následovně:
 
 Uzly se stejným rodičem jsou řazeny podle abecedy.
 
-Z důvodu propagace změn, všechny uzly mají mohou zaregistrovat posluchače událostí změn v hierarchii: uzel byl přidán, odebrán, název uzlu se změnil.
+Z důvodu propagace změn, všechny uzly umožňují zaregistrování posluchače událostí změn v hierarchii: uzel byl přidán, odebrán, název uzlu se změnil.
 
 \subsubsection{Stromové komponenty}
 
-Klientská část aplikace obsahuje tři komponenty, které zobrazují hierarchie v podobě stromu; jsou to:
+Klientská část aplikace obsahuje tři komponenty, které umožňují zobrazit hierarchie v podobě stromu; jsou to:
 \begin{itemize}
 	\item strom zdrojů -- hierarchii poskytuje správce zdrojů,
 	\item strom seznamových filtrů -- hierarchii poskytuje správce seznamových filtrů,
@@ -332,20 +330,20 @@ Využili jsme stromovou komponentu pro jejich zobrazení z několika důvodů:
 \begin{itemize}
 	\item poskytuje všechny možnosti, které vyžadujeme,
 	\item vzhled seznamu zpráv je blízký vzhledu stromů zdrojů a stromu seznamových filtrů,
-	\item jednodušší implementace.
+	\item zjednodušuje výslednou implementaci.
 \end{itemize}
 
 \subsection{Správci}
 
 Téměř každé službě, kterou jsme popsali z pohledu serverové části odpovídá správce v klientské části.
-Správce má za úkol zprostředkovávat veškerou komunikaci se serverovou částí a poskytovat nacachováná data.
-Každý správce poskytuje zbytku klientské části rozhraní k metodám služby, kterou obaluje.
-Tento obal většinou spočívá v zavolání příslušné metody služby a ve většině případů zobrazení hlášky o výsledku.
-Hlášku o úspěchu zobrazuje v případě, že volání metody bylo způsobeno akcí uživatele.
-V případě neúspěchu zobríme hlášku vždy; vždy obsahuje informaci, proč volání selhalo, například z důvodu nevyplnění některého z atributů.
-Navíc zkusíme zavolat službu kontroly spojení pro zjištění, zda je dostupně spojení se serverovou částí.
+Správce má za úkol zprostředkovávat veškerou komunikaci se serverovou částí a poskytovat nakešovaná data.
+Každý správce poskytuje klientské části rozhraní k metodám služby, kterou obaluje.
+Tento obal většinou spočívá v zavolání příslušné metody služby a ve většině případů zobrazení zprávy o výsledku.
+Hlášku o úspěchu zobrazuje v případě, že volání metody bylo vyvoláno akcí uživatele.
+V případě neúspěchu zobrazíme zprávu vždy; ta obsahuje informaci, proč volání selhalo, například z důvodu nevyplnění některého z atributů.
+Navíc se zavolá služba kontroly spojení pro zjištění, zda je vůbec dostupné spojení se serverovou částí.
 
-V popisu jednotlivých správců budeme zmiňovat jen metody, které provádějí netriviální další akce.
+V popisu jednotlivých správců budeme zmiňovat pouze metody, které provádějí netriviální další akce.
 
 \subsubsection{Správce konfigurace}
 
@@ -353,32 +351,32 @@ Správce konfigurace tvoří jen obálku kolem vlastní služby.
 V okamžiku spuštění si stáhne veškerou konfiguraci relevantní pro přihlášeného uživatele.
 Jednotlivé dotazy na konfigurační položky pak může zodpovídat okamžitě bez nutnosti komunikace se serverovou částí.
 
-Správce konfigurace umožňuje i aktualizovat hodnoty konfiguačních položek, nicméně tuto možnost naše aplikace v současné době nevyužívá.
+Správce konfigurace umožňuje rovněž i aktualizovat hodnoty konfiguračních položek, nicméně tuto možnost naše aplikace v současné době nevyužívá.
 
 \subsubsection{Správce zdrojů}
 
 Správce zdrojů načte ze serveru seznam všech uživatelských zdrojů přihlášeného uživatele.
 Jednotlivé uživatelské zdroje uloží do několika slovníků, aby byly rychle vyhledatelné: podle klíče uživatelského zdroje a podle zdrojového štítku.
-Dále ze všech uživatelských zdrojů vybuduje hierarchii.
+Ze všech uživatelských zdrojů vybuduje hierarchii.
 Správce zdrojů si pamatuje, který zdroj je manuální (vždy existuje právě jeden).
 
-Jelikož správce zdrojů poskytuje přístup k hierarchii uživatelských zdrojů, musí reagovat na některé události.
+Jelikož správce zdrojů poskytuje přístup k hierarchii uživatelských zdrojů, musí reagovat na určitě události.
 Jakékoli úspěšné volání metody přidat uživatelský zdroj či aktualizovat uživatelský zdroj může způsobit změnu hierarchie.
-Správce zdrojů ve zmíněných metodách upravuje příslušně hierarchii uživatelských zdrojů.
+Správce zdrojů ve zmíněných metodách případně upravují hierarchii uživatelských zdrojů.
 
 \subsubsection{Správce štítků}
 
 Správce štítků obsahuje seznam všech štítků rozdělených podle typů: uživatelský štítek, zdrojový štítek, systémový štítek.
 Existují dva systémové štítky, oba reprezentují operátory: AND -- operátor \textit{a}, OR -- operátor \textit{nebo}.
-Zbylé dva seznamy štítků (uživatelských a zdrojových) jsou naplněny dotazem na serverovou část při sprvním spuštění správce.
-Každému štítku je nastaven zobrazovaný název: u uživatelských je to jejich název, u zdrojových je to název zdroje ke kterému patří.
+Zbylé dva seznamy štítků (uživatelských a zdrojových) jsou naplněny dotazem na serverovou část při prvním spuštění správce.
+Každému štítku je nastaven zobrazovaný název: u uživatelských štítků je to jejich vlastní název, u zdrojových je to název zdroje ke kterému štítek patří.
 
 Správce štítků poskytuje metodu pro vyhledávání štítků podle části jejich názvu.
-Tuto metodu používá komponenta nabízení štítků v situaci, kdy uživatel může vložit název štítku (například, když přidává štítek uživatelské položce).
+Tuto metodu používá komponenta, která nabízí štítky v situaci, kdy uživatel může vložit název štítku (například, pokud se přidává štítek uživatelské položce).
 
-V případě, že uživatel přidá novou položky skrze doplněk v prohlížeči a přidá ji štítek, který doposud neexistoval, dostane se klientská část do zajímavé situace.
+V případě, že uživatel přidá novou položku doplňkem v prohlížeči a přiřadí ji dosud neexistující štítek, dostane se klientská část do zvláštní situace.
 Seznam uživatelských položek by měl obsahovat uživatelskou položku se štítkem, o kterém nemá žádnou informaci.
-Samotná uživatelská položka zná jen klíč štítku a správce štítků by jí měl objekt štítku dodat.
+Samotná uživatelská položka zná pouze klíč štítku a správce štítků by jí měl objekt štítku dodat.
 V takovém případě se aktualizace seznamu položek pozastaví a bude pokračovat, až si správce štítků obnoví seznam všech existujících štítků dotazem na serverovou část.
 
 \subsubsection{Správce seznamových filtrů}
@@ -390,7 +388,7 @@ Těmito metody jsou: přidat seznamový filtr, aktualizovat seznamový filtr a o
 \subsubsection{Správce položek}
 
 Správce položek poskytuje transparentní rozhraní k metodám: získat položky a přidat manuální položku.
-Poslední metoda příslušné služby – aktualizovat položky – není uživateli přímo dostupná.
+Poslední metoda příslušné služby -- aktualizovat položky -- není uživateli přímo dostupná.
 
 Správce položek si udržuje seznam změn jednotlivých uživatelských položek, které se mají provést v databázi na straně serveru.
 Uživatel tento seznam změn vytváří a upravuje metodami:
@@ -399,21 +397,21 @@ Uživatel tento seznam změn vytváří a upravuje metodami:
 	\item štítek odebrán -- přidá štítek (jeho klíč) do seznamu štítků k odebrání v sadě změn příslušející uživatelské položce,
 	\item přečtena -- nastaví stav přečtení v sadě změn příslušející uživatelské položce.
 \end{itemize}
-Změny se v klientské části provádějí optimisticky; předpokládá se, že provedení změny bude úspěšné.
 
-Sada změn se chová chytře: v případě posloupnosti přidání a odebrání stejného štítku od uživatelské položky, se obě změny vyruší a příslušná sada změn se zahodí.
+Změna v grafickém rozhraní se provede okamžitě, odeslání změny na server se odloží.
+V případě posloupnosti přidání a odebrání stejného štítku od uživatelské položky se obě změny vyruší.
 Periodicky, každých několik sekund probíhá dotaz obsahující seznam všech sad změn mezi správcem položek a službou serverové části.
 Toto \uv{zpoždění} provedení změny v databázi nám umožňuje snížit počet dotazů po síti a zvýšit subjektivní rychlost odezvy aplikace.
 
 \subsubsection{Správce klávesových zkratek}
 
-Správce klávesových zkratek si při svém spuštění načte pomocí serverové služby seznam všech klávesových zkratek, která má uživatel definované.
+Správce klávesových zkratek si při svém spuštění načte pomocí serverové služby seznam všech klávesových zkratek, které si uživatel sám definoval.
 Kombinace kláves klávesových zkratek rozparsuje a klávesové zkratky vloží do slovníku.
 Dále zaregistruje posluchače událostí stisknutí klávesy: události \verb|KeyPress| a \verb|KeyDown|.
 Pokud je detekováno stisknutí kláves odpovídající nějaké zkratce, vyvolá správce událost \verb|ShortcutEvent|, pomocí které informuje o klávesové zkratce své posluchače.
 Sám správce klávesových zkratek zpracovává některé obecné typy zkratek: navigace mezi seznamy položek, jejich obnovu a podobné.
 
-Správce poskytuje metody vytvořit klávesovou zkratku a odstanit klávesovou zkratku, volají službu poskytovanou serverovou částí.
+Správce poskytuje metody vytvořit klávesovou zkratku a odstranit klávesovou zkratku.
 Tyto metody v případě úspěchu upraví slovník klávesových zkratek.
 
 Některé typy klávesových zkratek se odkazují na jiné objekty (štítky a seznamové filtry).
@@ -422,18 +420,18 @@ Využíváme toho v dialozích s nastavením seznamových filtrů a dialogu s na
 
 \bigskip
 
-Zbylí dva správci nejsou závislí na službách serverové části; spravují objekty, které mají význam jen v kontextu klientské části.
+Zbylí dva správci nejsou závislí na službách serverové části; spravují objekty, které mají význam pouze v kontextu klientské části.
 
 \subsubsection{Správce zpráv}
 
 Zpráva je krátký text o různé důležitosti, který slouží k informování uživatele o úspěchu či selhání některé akce.
 
 Správce zpráv je centrálním bodem v naší aplikaci pro zpracování zpráv.
-Poskytuje rozhraní zbytku aplikace, skrze které může kterákoli komponenta zobrazit zprávu.
+Poskytuje rozhraní klientské části aplikace, přes které může kterákoli komponenta zobrazit zprávu.
 Správce zpráv také poskytuje seznam posledních zpráv v podobě hierarchie.
 
-Správce sám zprávy nezobrazuje, umožňuje jen zaregistrovat posluchače, kteří mají být zpraveni o nových zprávách.
-Jediným takovým posluchačem je vlastní grafická komponenta zodpovědná za zobrazování zpráv.
+Správce sám zprávy nezobrazuje, ale umožňuje zaregistrovat posluchače, kteří mají být zpraveni o nových zprávách.
+Jediným posluchačem je vlastní grafická komponenta zodpovědná za zobrazování zpráv.
 
 
 \subsubsection{Správce historie}
@@ -444,35 +442,35 @@ V našem případě stav aplikace odpovídá zobrazenému seznamovému filtru.
 
 Náš správce historie rozšiřuje tento mechanismus o několik důležitých vlastností.
 Pro nás je užitečnější znalost samotného seznamového filtr než jeho serializované varianty; z toho důvodu si ukládáme do seznamu stavů dvojici token -- seznamový filtr a nižší vrstvě (GWT) předáváme token.
-Při reakci na událost změna historie, kterou vyvolá GWT reagujeme změnou aktuálního seznamového filtru a vyvoláním vlastní událost \verb|HistoryEvent|, skrze kterou informujeme zbytek aplikace o změně.
+Při reakci na událost změna historie, kterou vyvolá GWT reagujeme změnou aktuálního seznamového filtru a vyvoláním vlastní událost \verb|HistoryEvent|, pomocí které informujeme příslušnou část aplikace o změně.
 
 \subsection{Nekonečný seznam}
 
-V této části pojmem položka myslíme jeden záznam v seznamu, který je reprezentován uživatelskou položkou.
+V této části pod pojmem položka myslíme jeden záznam v seznamu, který je reprezentován uživatelskou položkou.
 
 Nejdůležitější grafickou komponentou, která tvoří naši aplikaci, je nekonečný seznam položek.
 Nazýváme ho nekonečným, neboť nemá konec – jakmile uživatel odroluje seznam ke konci, načtou se další položky; takto jich může postupně zobrazit stovky.
-Samozřejmé, že v případě omezeného množství položek, má seznam konec, jen může být prakticky nedosažitelný.
-Výhodou tohoto přístupu je stahování ze serverové části jen takovych dat, o která má uživatel bezprostředně zájem.
+Samozřejmě, že v případě omezeného množství položek, vlastní konec seznamu existuje, avšak může být prakticky nedosažitelný.
+Výhodou tohoto přístupu je možnost stahovat ze serverové části pouze data, o která má uživatel právě zájem.
 
 Položky, které jsou v seznamu zobrazené, jsou dodávané poskytovatelem, který reaguje na událost odrolování blízko konce seznamu zavoláním metody získat položky správce položek.
-Kdykoli se změní aktuální seznamový filtr, zruší se starý poskytovatel a nahradí se novým.
+Kdykoli se změní aktuální seznamový filtr, zruší se původní poskytovatel a nahradí se novým.
 
 Nekonečný seznam je posluchačem událostí \verb|ShortcutEvent| správce zkratek; reaguje na zkratky typu: přesun na předchozí/další položku, zobrazit originální webovou stránku, přidat/odebrat štítek a podobné.
 
-Každý řádek reprezentuje jednu uživatelskou položku se všemi jejími informacemi: zdroj ze kterého pochází, datum a čas přidání položky, senzma přiřazených štítků a hlavně titulek.
-Obsah položky (text nebo HTML) se zobrazí jen v případě, že položka je vybraná a rozbalená.
+Každý řádek reprezentuje jednu uživatelskou položku se všemi jejími informacemi: zdroj ze kterého pochází, datum a čas přidání položky, seznam přiřazených štítků a hlavně titulek.
+Obsah položky (text nebo HTML) se zobrazí pouze v případě, že položka je vybraná a rozbalená.
 
 \subsection{Dialogy}
-Veškerá manipulace s daty v rámci aplikace probíhá v rámci dvou oblastí: v nekonečném seznamu a skrze dialogy.
-V nekonečném seznamu může uživatel provádět následujíci operace:
+Manipulace s daty v aplikaci probíhá v rámci dvou oblastí: v nekonečném seznamu a přes dialogy.
+V nekonečném seznamu může uživatel provádět následující operace:
 \begin{itemize}
 	\item označení uživatelské položky jako přečtené,
-	\item přidání/odebrání štítku uživatelské položce, příp. vytvoření nového, pokud zadá neexistující název.
+	\item přidání/odebrání štítku uživatelské položce, příp. vytvoření nového štítku, pokud zadá neexistující název.
 \end{itemize}
 
-Všechny ostatní operace provádí uživatel skrze dialogy -- okna, která dočasně překryjí zbytek stránky aplikace.
-Každá oblast, kterou jsme dříve zmínili, s výjimkou položek a konfigurace, nabízí jeden či více dialogů pro svou konfiguraci:
+Všechny ostatní operace provádí uživatel prostřednictvím dialogů -- oken, která dočasně překryjí stránku aplikace.
+Každá oblast, kterou jsme dříve zmínili, s výjimkou položek a konfigurace, nabízí jeden či více dialogů pro svoji konfiguraci:
 \begin{itemize}
 	\item vytvoření a úpravu zdroje,
 	\item vložení manuální položky,
@@ -487,9 +485,9 @@ V případě, že uživatel změnu provedenou v dialogu potvrdí, zavolají se m
 
 \section{Doplněk do prohlížečů}
 
-Doplněk do prohlížeče je nepovinné rozšíření aplikace, které má cíl zjednodušit její ovládání uživatelům.
+Doplněk do prohlížeče je nepovinné rozšíření aplikace, které má za cíl zjednodušit její ovládání uživatelům.
 Implementace doplňku spoléhá na API poskytované platformou Crossrider, na níž je postaven.
-Doplněk můžeme rozdělit do tří částí, které spolu komunikují; budeme je pro jednoduchost pojmenovávat terminologií platformy:
+Doplněk můžeme rozdělit do tří částí, které spolu komunikují; pro jednoduchost je budeme pojmenovávat terminologií platformy:
 \begin{itemize}
 	\item background -- skript, který běží v prohlížeči na pozadí; je nezávislý na otevřených stránkách; existuje vždy v jediné instanci,
 	\item extension -- skript, který se vykonává zvlášť v rámci každé otevřené stránky
@@ -516,20 +514,20 @@ Nejprve zkontrolujeme, zda známe klientský token (1, 2); pokud ho známe, nast
 V případě, že token neznáme, budeme čekat na zprávu o dostupnosti tokenu (1', 2').
 Až token budeme znát, nastavíme popup stránku (kroky 1, 2, 3).
 
-Skript extension zjišťuje podle URL adresy aktuální stránku; pokud se jedná o stránku naší aplikace, podívá se do hlavičky stránky po elementu meta s názvem \verb|clientToken|.
+Skript extension zjišťuje podle URL adresy aktuální stránku; pokud se jedná o stránku naší aplikace, vyhledá v hlavičce stránky elementu meta s názvem \verb|clientToken|.
 Tento meta element do stránky přidá klientská část aplikace při své inicializaci.
 
 \subsection{Přidání manuální položky}
 
 Postup je znázorněn na obrázku \ref{fig:doplnek-akce}.
-Uživatel spustí akci vložení aktuální stránky do naší aplikace kliknutím na ikonu doplňku v liště prohlížeče (1).
-Zobrazí se vyskakovací okno s formulářem, který bude předvyplněný informacemi o aktuální stránce: titulek, URL, vybraná část textu.
+Uživatel vyvolá akci vložení aktuální stránky do naší aplikace kliknutím na ikonu doplňku v liště prohlížeče (1).
+Zobrazí se vyskakovací (popup) okno s formulářem, který bude předvyplněný informacemi o aktuální stránce: titulek, URL, vybraná část textu.
 Informace se získají zasláním zprávy (6) skriptu běžícímu v aktuálně otevřené stránce; skript zašle zpět (7) požadované údaje.
 
 Formulář bude dále obsahovat předvyplněný seznam štítků a umožní přidat další štítky.
-Popup zašle zprávu (2) background skriptu, který odešle dotaz (3) na serverovou část skrze API poskytované platformou Crossrider.
+Popup zašle zprávu (2) background skriptu, který odešle dotaz (3) na serverovou část pomocí metody \verb|post| poskytované platformou Crossrider.
 Background skript odpověď (4) zašle zpět (5) do popup okna.
 
 Pokud uživatel odešle formulář, odchytí skript událost odeslání a zašle background skriptu zprávu (8) s vyplněnými údaji o manuální položce, kterou chce uživatel přidat.
-Background skript odešle dotaz (9) serverové části skrze API platformy.
-Využití toho API je nutné z důvodu nutnosti obejít omezení prohlížeče: skript může kontaktovat jen stránky ze stejné domény.
+Background skript odešle dotaz (9) serverové části pomocí metody \verb|post|.
+Využití této metody je nutné z důvodu obejití některých omezení prohlížeče: skript může kontaktovat jen stránky ze stejné domény.

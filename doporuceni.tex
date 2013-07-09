@@ -1,15 +1,15 @@
 \chapter{Systém doporučování zdrojů}
 % TODO ozdrojovat
 
-Abychom uživatelům nabídli možnost objevovat nové zdroje, které jsou podobné těm, jež sledují, bude aplikace obsahovat systém doporučování zdrojů na základě podobnosti.
+Abychom uživatelům nabídli možnost objevovat nové zdroje, které jsou podobné těm, které již sledují, bude aplikace obsahovat systém doporučování zdrojů na základě podobnosti.
 Na tomto místě popíšeme a rozebereme různé způsoby doporučování.
 Ve formulaci problematiky budeme používat pojmy uživatel -- osoba, která interaguje se systémem a položka -- objekt, který nabízíme a chceme doporučovat; v našem případě je položkou ve formulaci problematiky jakýkoli zdroj, který uživatelé sledují.
 
 \section{Globální doporučování}
 
-Nejjednoduším způsobem doporučování je využití globálních statistik o všech položkách.
-Vychází z předpokladu, že existují položky, které jsou objektivně dobré a vhodné pro většinu uživatelů.
-Kritérii, podle kterých jsou produkty seřazeny, mohou být:
+Nejjednodušším způsobem doporučování je využití globálních statistik o všech položkách.
+Vychází z předpokladu, že existují položky, které jsou objektivně kvalitní a vhodné pro většinu uživatelů.
+Kritérii, podle kterých jsou položky seřazeny, mohou být:
 \begin{itemize}
     \item počet uživatelů, kteří si zakoupili položku,
     \item počet zhlédnutí položky,
@@ -17,7 +17,7 @@ Kritérii, podle kterých jsou produkty seřazeny, mohou být:
 	\item počet recenzí položky,
     \item \ldots
 \end{itemize}
-Tento způsob používají menší internetové obchody z důvodu snadné implementace a nenáročnosti výpočtu.
+Tento způsob používají některé menší internetové obchody z důvodu snadné implementace a nenáročnosti výpočtu.
 
 Globální doporučování je v našem případě nevhodné, naším cílem není doporučovat velké zpravodajské servery, které zná každý uživatel.
 Naším cílem je naopak nabídnout uživatelům i menší zdroje, které třeba nemusí být mezi uživateli příliš známé.
@@ -30,29 +30,29 @@ Model uživatele může obsahovat nejrůznější informace:
 \begin{itemize}
     \item údaje, které si o sobě vyplní sám uživatel: oblíbený žánr (u hudby), oblíbený autor (u knih),
     \item hodnocení, které sám vyplnil: klikl na tlačítko \uv{Líbí/nelíbí}, ohodnotil položku na stupnici 1--10,
-    \item záznam dosavadní interakce: písníčky si uživatel poslechl, které knihy zakoupil,
+    \item záznam dosavadní interakce: písničky si uživatel poslechl, které knihy zakoupil,
 	\item případně podrobněji: kategorie či produkty, které navštívil; kolik času strávil na jednotlivých stránkách.
 \end{itemize}
 
 Existují dva základní přístupy k nabízení položek na základě podobnosti.
-Buď doporučují položky na základě podobnosti obsahu -- detailní znalosti atributů -- položek, které se uživateli již líbili,
+Buď doporučují položky na základě podobnosti obsahu -- detailní znalosti atributů -- položek, které se uživateli již líbily,
 nebo naopak porovnávají, jaký vztah k položce mají podobní uživatelé.
-Nároky na systémy doporučování ve velkých obchodech si vynucují konstrukci hybridních algoritmů, které se snaží získat dobré vlastnost z obu skupin.
+Nároky na systémy doporučování ve velkých obchodech si vynucují konstrukci hybridních algoritmů, které se snaží získat dobré vlastnost z obou skupin.
 
 \subsection{Doporučování založené na podobnosti obsahu}
 
-V případě, že položky v systému jsou takové povahy, že jsou o nich známé podrobné informace, může systém nabízet položky, které jsou podle nějakých kritérií blízké těm, které se uživateli dříve líbili.
+V případě, že položky v systému jsou takové povahy, že jsou o nich známé podrobné informace, může systém nabízet položky, které jsou podle nějakých kritérií blízké těm, které se uživateli již dříve líbily.
 Potřebnými podrobnými informacemi mohou být například:
 \begin{itemize}
     \item zvukové charakteristiky hudební nahrávky, její tempo, melodie apod.,
     \item text jednotlivých knižních děl jako vektory ve vektorovém prostoru nad slovy.
 \end{itemize}
 
-Tento přístup není v našem případě použitelný, nemáme dostatečné informace o jednotlivých zdrojích; jediné, co známe je typ zdroje a jeho internetová adresa.
+Tento přístup však není v našem případě použitelný, nemáme dostatečné informace o jednotlivých zdrojích; jediné, co známe je typ zdroje a jeho internetová adresa.
 
 \subsection{Doporučování na základě podobnosti uživatelů}
 
-V dobách, kdy ještě neexistovali počítače, si lidé mezi sebou doporučovali ku příkladu knihy, které se jim líbili.
+V dobách, kdy ještě neexistovaly počítače, si lidé mezi sebou doporučovali ku příkladu knihy, které se jim líbily.
 Jelikož se obvykle přátelí lidé, kteří mají podobné zájmy, je vysoce pravděpodobné, že kniha, která se jedné osobě líbila, se bude líbit i jejím přátelům.
 
 Doporučování založené na podobnosti uživatelů je na tomto principu založené.
@@ -76,7 +76,7 @@ Chování dat v naší aplikaci se liší od běžných modelů doporučování;
 
 \begin{itemize}
     \item Uživatelů bude relativně málo; doporučení se vypočítává pouze uživatelům, kteří aplikaci používají (sledují alespoň jeden zdroj).
-    \item Změna hodnocení položek (v našem případě: 0 -- uživatel zdroj nesleduje, 1 -- uživatel zdroj sleduje) neprobíhá často.
+    \item Změna hodnocení položek (v našem případě: 0 -- uživatel zdroj nesleduje, 1 -- uživatel zdroj sleduje) neprobíhá příliš často.
         Vycházíme z pozorování, že uživatel stále sleduje stejné zdroje.
         Bude nám tedy stačit přepočítávat doporučení offline -- například jednou za den, místo na prostředky náročného výpočtu při každém dotazu.
     \item Matice uživatelů a zdrojů je řídká; mohou sice existovat zdroje, které sleduje většina uživatelů, ale žádný uživatel nebude sledovat většinu zdrojů.
@@ -85,25 +85,26 @@ Chování dat v naší aplikaci se liší od běžných modelů doporučování;
 \end{itemize}
 
 Z výše uvedených předpokladů vyplývá, že nejvhodnější volbou algoritmu bude některá z variant doporučování založená na podobnosti uživatelů.
-Jako největší problém při návrhu doporučování v naší aplikaci považujeme řídkost dat: obáváme se, že uživatelé nebudou dostatečně sdílet zdroje, aby doporučení dávalo relevantní výsledky.
+Jako největší problém při návrhu doporučování v naší aplikaci považujeme řídkost dat: obáváme se, že uživatelé nebudou dostatečně sdílet své zdroje, aby doporučení dávalo relevantní výsledky.
 
 % TODO zdroj
-Zvolili jsme algoritmus, který navrhli Z. Huang, D. Zeng, H. Chen ve svém článku \uv{A link analysis approach to recommendation under sparse data}.
+Zvolili jsme algoritmus, který navrhli Z. Huang, D. Zeng, H. Chen ve svém článku \cite{huang2004link}.
 Tento algoritmus je do velké míry inspirovaný algoritmy známými z prostředí internetových vyhledávačů, jako je například algoritmus PageRank.
 
+Algoritmus si v průběhu výpočtu udržuje seznam zdrojů, které jsou vhodné k doporučení uživateli.
 Princip algoritmu je následující:
 \begin{enumerate}
-    \item algoritmus začíná se seznamem zdrojů, které uživatel sleduje; všechny zdroje mají stejnou váhu,
+    \item inicializuje seznam zdrojů našeho uživatele zdroji, které již sleduje,
     \item najde všechny uživatele, kteří sledují některý ze zdrojů, které jsou v seznamu našeho uživatel: nazveme je sousedy,
     \item vypočítá, jak jsou si náš uživatel a soused blízcí, podle toho přidělí každému sousedovi váhu,
     \item přidá všechny zdroje všech sousedů do seznamu zdrojů našeho uživatele a přiřadí jim váhy podle toho, kteří sousedé je sledují,
     \item iteruje několikrát kroky 2--4,
-    \item vrátí nový seznam zdrojů, které uživatel sleduje, seřazený podle jejich váhy.
+    \item vrátí nový seznam zdrojů vhodných pro našeho uživatele seřazený podle jejich váhy.
 \end{enumerate}
 
 Kouzlo toho algoritmu spočívá v tom, že:
 \begin{itemize}
     \item umožňuje vypočítat doporučení pro všechny uživatele najednou,
-    \item všechny operace lze implementovat efektivně jako operace s maticemi; kroky 2--4 jsou spočívají jen v násobení matic.
+    \item všechny operace lze implementovat efektivně jako operace s maticemi; kroky 2--4 spočívají pouze v násobení matic.
 \end{itemize}
 

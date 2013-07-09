@@ -30,6 +30,7 @@ work/prace.dvi: work
 		makeindex prace.nlo -s nomencl.ist -o prace.nls; \
 		cslatex prace.tex; \
 		bibtex prace.aux; \
+		cslatex prace.tex; \
 		cslatex prace.tex 
 
 show: prace.pdf

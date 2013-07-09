@@ -1,23 +1,23 @@
 \chapter{Analýza aplikace}
 
-V této kapitole nejprve identifikujeme vlastní problémy čteček, jímiž se budeme dále zabývat a popíšeme požadavky na aplikaci, která bude dané problémy řešit.
+V této kapitole nejprve identifikujeme vlastní problémy čteček, jimiž se budeme dále zabývat a popíšeme požadavky na aplikaci, která bude dané problémy řešit.
 
 \section{Identifikace problému}
 
-Naší snahou je pokrýt jednou aplikací několik příbuzných problémů, kterým čelí náročný uživatel.
+Naší snahou je pokrýt jedinou aplikací několik příbuzných problémů, kterým čelí náročný uživatel.
 Náročný uživatel má podle nás především následující potřeby:
 
 % TODO linky
-\subsection{Přístup odevšad}
+\subsection{Přístup odkudkoli}
 Z vlastní zkušenosti víme, že náročný uživatel často střídá zařízení, na kterých prochází internet.
 Může to být domácí počítač, notebook, mobilní telefon, tablet; uživatel chce mít přístup ke čtečce odkudkoli.
-Vyžaduje, aby bylo možné přejít z jednoho zařízení na druhé a tam pokračovat ve čtení clánků.
+Vyžaduje, aby bylo možné přejít z jednoho zařízení na druhé a tam pokračovat ve čtení článků.
 
 Hledáme tedy webovou službu, která bude zajišťovat synchronizaci a dostupnost bez ohledu na zařízení, které uživatel aktuálně používá.
 
 \subsection{Kanály RSS, Atom}
 Náročný uživatel chce/musí sledovat několik desítek různých webových stránek, blogů, portálů.
-Naštěsí, většina z nich poskytuje informace o novinkách (nových článkcích, které byly publovány) skrze kanály RSS nebo novější Atom.
+Naštěstí, většina z nich poskytuje informace o novinkách (nových článcích, které byly publikovány) pomocí kanálů RSS nebo novějšího Atomu.
 Toto je také nejčastější využití hledané čtečky; vyhovuje mu téměř každá čtečka, kterou jsme popsali v minulé kapitole. % TODO link
 
 Čtečka musí podporovat získáváni informací z kanálů RSS a Atom.
@@ -34,46 +34,49 @@ Tento přístup trpí stejnými problémy jako výše uvedená služba a co víc
 Pokud publikujeme nový článek na webu, vytvoříme tedy novou stránku, dáme o něm vědět (přidáme odkaz) většinou v seznamu nejnovějších článků na úvodní stránce.
 Pokud vyjdeme z tohoto předpokladu, nezajímá nás, že je na stránce nový odstavec, ale že obsahuje odkaz na samotný nový článek, který je v odstavci zmíněn.
 
-Nejsme si vědomi, že by existovala služba, která by umožňovala detekci nově publikovaných články pomocí rozboru samotných odkazů na webové stránce.
+Nejsme si vědomi, že by existovala služba, která by umožňovala detekci nově publikovaných článků pomocí rozboru samotných odkazů na webové stránce.
 
 \subsection{Uložení adresy článku}
 
 Pokud si uživatel chce uložit nějaký článek, resp. jeho internetovou adresu, typicky má na výběr několik různých služeb.
 
-Uživatel si může uložit adresu webové stránky do záložek v prohlížeči, nicméně jejich synchronizace je probletická.
-Výrobci prohlížečů často umožňují synchronizaci záložek, nicméně ta je podmíněná tím, že všechny používané prohlížeče jsou od stejného výrobce.
-Synchronizaci záložek umožňují také různé služby, které nabízejí doplňky do prohlížečů, některé z nich fungují dokonce nezávisle na konkrétním prohlížeči, nicméně je třeba je mít nainstalované, jinak pohodlí použivání těchto služeb dramaticky klesá. % TODO delicious
+Uživatel si může uložit adresu webové stránky do záložek v prohlížeči, nicméně jejich synchronizace je problematická.
+Výrobci prohlížečů často umožňují synchronizaci záložek, ale ta je podmíněná tím, že všechny používané prohlížeče jsou od stejného výrobce.
+Synchronizaci záložek umožňují také různé služby, které nabízejí doplňky do prohlížečů.
+Některé z nich fungují dokonce nezávisle na konkrétním prohlížeči, nicméně je třeba je mít nainstalované, jinak pohodlí používání těchto služeb dramaticky klesá. % TODO delicious
 
 S těmito službami souvisí tlačítka, která najdeme všude na internetu obvykle pod názvy share button.
-Jejich příkladem může být plugin AddToAny do redakčního systému wordpress. % TODO link http://wordpress.org/plugins/add-to-any/screenshots/
-Skrze tato tlačítka je možné odeslat články do některé z rozšířenějších služeb; často je jejich seznam omezený na facebook, twitter a google plus. % TODO linky
+% TODO link wordpress
+Jejich příkladem může být plugin AddToAny do redakčního systému Wordpress. % TODO link http://wordpress.org/plugins/add-to-any/screenshots/
+Za použití těchto tlačítek je možné odeslat články do některé z rozšířenějších služeb; často je jejich seznam omezený na facebook, twitter a google plus. % TODO linky
 Počet webových portálů, které ukládání článků tímto způsobem umožňují, je značně omezený, určitě na tuto vlastnost nelze spoléhat.
 
 Čtečky RSS tuto problematiku také částečně řeší, umožňují k položkám přidávat hvězdičky a štítky.
-Problémem ale stále zůstává fakt, že není možné přidat štítek k článku, který ve čtečce není, ani není možné přidat vlastní internetovou adresu do RSS čtečky, tak aby s ní čtečka pracovala stejným způsobem, jako s ostatními položkami.
+Problémem ale stále zůstává fakt, že štítek je možné přidat pouze k článku, který je ve čtečce dostupný.
+Obvykle není možné přidat libovolnou vlastní internetovou adresu do RSS čtečky, tak aby s ní čtečka pracovala stejným způsobem, jako s ostatními položkami.
 
 Jelikož je naše aplikace povahou čtečka, budeme vyžadovat možnost jednoduchého přidání internetové adresy jako nové položky.
 
 \subsection{Přečíst později}
 
-Často si nemohou uživatelé přečíst zajímavý článek okamžitě, protože na to nemají čas, nebo se nenacházejí ve vhodném prostředí.
-Důvodem může být to, že článek je přiliš dlouhý nebo obsahuje video.
+Často si uživatelé nemohou přečíst zajímavý článek okamžitě, protože na to nemají čas, nebo se nenacházejí ve vhodném prostředí.
+Důvodem může být to, že článek je příliš dlouhý nebo obsahuje video.
 V takových případech si chtějí uživatelé článek uložit/poznamenat k pozdějšímu přečtení.
 
 % TODO linky
 Jednou z možností je využít některou ze služeb zmíněných v minulém bodu.
 Další možností, které uživatelé využívají, jsou specializované služby.
-Některé jen udržují prostý seznam článků (http://getpocket.com/), jiné se snaží preformátovat článek do podoby vhodnější ke čtení (odstraňují rušivé elementy).
+Některé jen udržují prostý seznam článků (http://getpocket.com/), jiné se snaží přeformátovat článek do podoby vhodnější ke čtení (odstraňují rušivé elementy).
 Zástupcem druhé skupiny je například http://www.instapaper.com/.
 
 \subsection{Efektivní ovládání}
 
 Aby náročný uživatel mohl čtečku efektivně používat, musí mu aplikace nabídnout adekvátní prostředí.
-Nároky, které na něj uživatel má, jsme již uvedli v kapitole. % TODO link
+Nároky, které na toto prostředí uživatel klade, jsme již uvedli v kapitole. % TODO link
 
 Ke klávesovým zkratkám ještě zmíníme několik poznámek.
 Nejčastější operace musí být snadno vyvolatelné, ideálně pomocí stisknutí jediného tlačítka.
-Uživatel by měl mít možnost nastavit si své schéma klávesových zkratek, které mu bude vyhovovat.
+Uživatel by měl mít možnost nastavit si své vlastní schéma klávesových zkratek, které mu bude vyhovovat.
 
 \bigskip
 
@@ -83,10 +86,10 @@ Mezi tyto potřeby zařadíme:
 \subsection{Zálohování článku}
 
 Občas se stane, že webový portál, na němž byl publikovaný zajímavý a pro uživatele důležitý článek, ukončí svůj provoz.
-V takové situaci je uživatel většinou rozezlen a následně hledá, zda je článek dostupný v některém z internetových archivů.
+V takové situaci je uživatel většinou rozladěn a následně hledá, zda je článek dostupný v některém z internetových archivů.
 
 Aby tomu předešel, mohl by si zazálohovat aktuální podobu článku pro případ, že originál nebude dostupný.
-Všechny prohlížeče umožňují uložit webou stránku na disk, nicméně správa takto uložených stránek určitě není pohodlná.
+Všechny prohlížeče umožňují uložit webovou stránku na disk, nicméně správa takto uložených stránek určitě není pohodlná.
 
 Služba, kterou hledáme, by měla umožnit zazálohovat konkrétní webovou stránku a sama jí poskytovat v zazálohované podobě pro případ, že originál nebude dostupný.
 
@@ -100,11 +103,11 @@ Nabídnout uživatelům možnost nenásilně si vytvořit několik vlastních ka
 
 \bigskip
 
-Přestože existuje mnoho aplikací, které naplňují jednotlivé potřeby, tak jak jsme je zde popsali, nepodařilo se nám najít žádnou existující aplikaci, která by řešila celou výše zmíněnou problematiku.
+Přestože existuje mnoho aplikací, které naplňují jednotlivé potřeby, tak jak jsme je zde popsali, nepodařilo se nám najít žádnou existující aplikaci, která by komplexně řešila celou výše zmíněnou problematiku.
 
 \section{Zavedení pojmů}
 
-Před samotným rozborem problému zavedeme několi pojmů, které budeme používat ve zbytku dokumentu.
+Před samotným rozborem problému zavedeme několik pojmů, které budeme používat v následujících částech dokumentu.
 Jednotlivým termínům bude později odpovídat jedna entita.
 
 \begin{description}
@@ -115,7 +118,7 @@ Jednotlivým termínům bude později odpovídat jedna entita.
 	\item[Kontrola zdroje] Úkon provedený k zjištění, zda zdroj obsahuje nové položky.
 		Obvykle je kontrola realizovaná stáhnutím dokumentu reprezentovaného zdrojem a porovnáním s minulou verzí.
     \item[Položka] Položka reprezentuje odkaz na jeden článek nebo stránku v síti internet.
-		Každá položka je vázáná k právě jednomu zdroji.
+		Každá položka je vázaná právě k jednomu zdroji.
     \item[Štítek] Popisek, který může uživatel přidat k položce.
 		V našem případě bude popisek krátký, většinou jednoslovný.
 \end{description}
@@ -142,15 +145,15 @@ Mezi požadavky na funkcionalitu, které musí aplikace splňovat patří násle
 Požadavky na použitelnost popisují, jak má aplikace vypadat a jak se má chovat, aby se pohodlně používala a ovládala.
 
 \begin{itemize}
-    \item Aplikace musí být ovladatelená klávesovými zkratkami.
+    \item Aplikace musí být ovladatelná klávesovými zkratkami.
     \item Největší část aplikace bude zaujímat seznam položek.
     \item Každá položka obsahuje odkaz na originální webovou stránku.
     \item Aplikace bude fungovat ve všech běžných prohlížečích.
 \end{itemize}
 
-\subsection{Výkonostní požadavky}
+\subsection{Výkonnostní požadavky}
 
-Výkonostní požadavky určují parametry zátěže, na kterou má být aplikace navrhnuta.
+Výkonnostní požadavky určují parametry zátěže, na kterou má být aplikace navržena.
 
 \begin{itemize}
 	\item Aplikaci může používat několik stovek uživatelů.
@@ -163,22 +166,22 @@ Výkonostní požadavky určují parametry zátěže, na kterou má být aplikac
 \section{Moduly aplikace}
 
 Z požadavků, které na aplikaci klademe, vyplývají důsledky na volbu její architektury.
-Aplikce se bude skládat ze tří modulů, které spolu budou komunikovat.
+Aplikace se bude skládat ze tří modulů, které spolu budou vzájemně komunikovat.
 
 % TODO část =?? modul
 
 \subsection{Serverová část}
 
-Serverá část bude zodpovědná za získávání nových položek z jednotlivých zdrojů, uložení všech dat včetně uživatelského nastavení a poskytování těchto dat ostatním modulům.
+Serverová část aplikace bude zodpovědná za získávání nových položek z jednotlivých zdrojů, uložení všech dat včetně uživatelského nastavení a poskytování těchto dat ostatním modulům.
 
 \subsection{Klientská část}
 
-Klientská část bude zobrazovat data získaná ze serverové části a bude interagovat s uživatelem, který skrze ni aplikaci ovládá.
+Klientská část bude zobrazovat data získaná ze serverové části a bude interagovat s uživatelem, který pomocí ni aplikaci ovládá.
 Půjde o standardní webové stránky fungující v běžných prohlížečích.
 
 \subsection{Doplněk do prohlížeče}
 
 Doplněk bude tvořit nepovinné rozšíření do nejběžnějších prohlížečů; bude mít za cíl zjednodušit práci s aplikací.
-Tento doplněk nebude poskytovat žádnou vyšší funkcionalitu, které by nešlo docílit skrze klientskou část.
+Tento doplněk nebude poskytovat žádnou vyšší funkcionalitu, které by nešlo docílit klientskou částí.
 Bude umožňovat uživateli přidat novou položku do svého manuálního zdroje pouhými dvěma kliknutími myši.
 

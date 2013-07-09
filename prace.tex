@@ -51,19 +51,33 @@
 
 %\usepackage{subcaption}
 
+\usepackage[stable]{footmisc}
+
 \usepackage[intoc]{nomencl}
 \makenomenclature
 
 \usepackage{xparse}
 
 %~-
-\NewDocumentCommand\zkratka{ s m m }{% s = star, m = mandatory arg
+\NewDocumentCommand\zkratka{ s o m m }{% s = star, m = mandatory arg
 %~+
 	\IfBooleanTF{#1}{% with star
 	}{% without star
-		#2 (#3)
+		{\IfNoValueTF{#2}
+			{#3}{#2}}\footnote{#4}
 	}%
-	\nomenclature{#2}{#3}%
+	\nomenclature{#3}{#4}%
+}
+
+%~-
+\NewDocumentCommand\pojem{ s o m m }{% s = star, m = mandatory arg
+%~+
+	\IfBooleanTF{#1}{% with star
+	}{% without star
+		{\IfNoValueTF{#2}
+			{#3}{#2}}\footnote{#4}
+	}%
+	\nomenclature{#3}{#4}%
 }
 
 %%% Drobné úpravy stylu
