@@ -51,6 +51,21 @@
 
 %\usepackage{subcaption}
 
+%\usepackage{multirow}
+
+%\usepackage{cancel}
+
+\usepackage{breakurl}
+%\usepackage{url}
+
+\usepackage{tabu}
+
+%\usepackage{pdflscape}
+
+%\usepackage{threeparttable}
+
+\usepackage{rotating}
+
 \usepackage[stable]{footmisc}
 
 \usepackage[intoc]{nomencl}
@@ -63,21 +78,34 @@
 %~+
 	\IfBooleanTF{#1}{% with star
 	}{% without star
-		{\IfNoValueTF{#2}
-			{#3}{#2}}\footnote{#4}
+		{\IfNoValueTF{#2}%
+			{#3}{#2}}\footnote{#4}%
 	}%
 	\nomenclature{#3}{#4}%
-}
+}%
 
 %~-
 \NewDocumentCommand\pojem{ s o m m }{% s = star, m = mandatory arg
 %~+
 	\IfBooleanTF{#1}{% with star
 	}{% without star
-		{\IfNoValueTF{#2}
-			{#3}{#2}}\footnote{#4}
+		{\IfNoValueTF{#2}%
+			{#3}{#2}}\footnote{#4}%
 	}%
 	\nomenclature{#3}{#4}%
+}%
+
+\def\chaptert#1{
+	\chapter*{#1}
+	\addcontentsline{toc}{chapter}{#1}
+}
+\def\sectiont#1{
+	\section*{#1}
+	\addcontentsline{toc}{section}{#1}
+}
+\def\subsectiont#1{
+	\subsection*{#1}
+	\addcontentsline{toc}{subsection}{#1}
 }
 
 %%% Drobné úpravy stylu
@@ -132,7 +160,5 @@
 \include{zaver}
 
 \include{literatura}
-\include{tabulky}
 \include{zkratky}
-\include{prilohy}
 \end{document}

@@ -1,5 +1,4 @@
 \chapter{Systém doporučování zdrojů}
-% TODO ozdrojovat
 
 Abychom uživatelům nabídli možnost objevovat nové zdroje, které jsou podobné těm, které již sledují, bude aplikace obsahovat systém doporučování zdrojů na základě podobnosti.
 Na tomto místě popíšeme a rozebereme různé způsoby doporučování.
@@ -30,19 +29,19 @@ Model uživatele může obsahovat nejrůznější informace:
 \begin{itemize}
     \item údaje, které si o sobě vyplní sám uživatel: oblíbený žánr (u hudby), oblíbený autor (u knih),
     \item hodnocení, které sám vyplnil: klikl na tlačítko \uv{Líbí/nelíbí}, ohodnotil položku na stupnici 1--10,
-    \item záznam dosavadní interakce: písničky si uživatel poslechl, které knihy zakoupil,
+    \item záznam dosavadní interakce se systémem: písničky si uživatel poslechl, které knihy zakoupil,
 	\item případně podrobněji: kategorie či produkty, které navštívil; kolik času strávil na jednotlivých stránkách.
 \end{itemize}
 
 Existují dva základní přístupy k nabízení položek na základě podobnosti.
 Buď doporučují položky na základě podobnosti obsahu -- detailní znalosti atributů -- položek, které se uživateli již líbily,
 nebo naopak porovnávají, jaký vztah k položce mají podobní uživatelé.
-Nároky na systémy doporučování ve velkých obchodech si vynucují konstrukci hybridních algoritmů, které se snaží získat dobré vlastnost z obou skupin.
+Nároky na systémy doporučování ve velkých obchodech si vynucují konstrukci hybridních algoritmů, které se snaží získat dobré vlastnosti z obou skupin.
 
 \subsection{Doporučování založené na podobnosti obsahu}
 
 V případě, že položky v systému jsou takové povahy, že jsou o nich známé podrobné informace, může systém nabízet položky, které jsou podle nějakých kritérií blízké těm, které se uživateli již dříve líbily.
-Potřebnými podrobnými informacemi mohou být například:
+Potřebnými podrobnými informacemi mohou být například~\cite{pazzani2007content}:
 \begin{itemize}
     \item zvukové charakteristiky hudební nahrávky, její tempo, melodie apod.,
     \item text jednotlivých knižních děl jako vektory ve vektorovém prostoru nad slovy.
@@ -55,7 +54,7 @@ Tento přístup však není v našem případě použitelný, nemáme dostatečn
 V dobách, kdy ještě neexistovaly počítače, si lidé mezi sebou doporučovali ku příkladu knihy, které se jim líbily.
 Jelikož se obvykle přátelí lidé, kteří mají podobné zájmy, je vysoce pravděpodobné, že kniha, která se jedné osobě líbila, se bude líbit i jejím přátelům.
 
-Doporučování založené na podobnosti uživatelů je na tomto principu založené.
+Doporučování založené na podobnosti uživatelů je na tomto principu založené~\cite{schafer2007collaborative}.
 Pokud budeme mít informace o oblíbených položkách mnoha uživatelů, můžeme se uživateli pokusit doporučit takové, které se líbí jeho okolí.
 Okolím myslíme v tomto kontextu všechny uživatele, kteří jsou jemu podobní.
 
@@ -70,7 +69,7 @@ Pro nalezení vhodných položek k doporučení můžeme porovnávat vektory:
 
 Podobnost vektorů je možné porovnávat několika způsoby, například mírou jejich korelace či skalárním součinem (úhel mezi vektory).
 
-\section{Volba systému doporučování}
+\section{Volba systému doporučování}\label{sec:volba-systemu-doporucovani}
 
 Chování dat v naší aplikaci se liší od běžných modelů doporučování; mezi specifické vlastnosti patří:
 
@@ -87,24 +86,31 @@ Chování dat v naší aplikaci se liší od běžných modelů doporučování;
 Z výše uvedených předpokladů vyplývá, že nejvhodnější volbou algoritmu bude některá z variant doporučování založená na podobnosti uživatelů.
 Jako největší problém při návrhu doporučování v naší aplikaci považujeme řídkost dat: obáváme se, že uživatelé nebudou dostatečně sdílet své zdroje, aby doporučení dávalo relevantní výsledky.
 
-% TODO zdroj
-Zvolili jsme algoritmus, který navrhli Z. Huang, D. Zeng, H. Chen ve svém článku \cite{huang2004link}.
-Tento algoritmus je do velké míry inspirovaný algoritmy známými z prostředí internetových vyhledávačů, jako je například algoritmus PageRank.
+Zvolili jsme algoritmus, který navrhli Z. Huang, D. Zeng, H. Chen ve svém článku~\cite{huang2004link}.
+Tento algoritmus je do velké míry inspirovaný algoritmy známými z prostředí internetových vyhledávačů, jako je například algoritmus PageRank~\cite{page1999pagerank}.
 
 Algoritmus si v průběhu výpočtu udržuje seznam zdrojů, které jsou vhodné k doporučení uživateli.
 Princip algoritmu je následující:
 \begin{enumerate}
     \item inicializuje seznam zdrojů našeho uživatele zdroji, které již sleduje,
-    \item najde všechny uživatele, kteří sledují některý ze zdrojů, které jsou v seznamu našeho uživatel: nazveme je sousedy,
+    \item najde všechny uživatele, kteří sledují některý ze zdrojů, které jsou v seznamu našeho uživatele: nazveme je sousedy,
     \item vypočítá, jak jsou si náš uživatel a soused blízcí, podle toho přidělí každému sousedovi váhu,
     \item přidá všechny zdroje všech sousedů do seznamu zdrojů našeho uživatele a přiřadí jim váhy podle toho, kteří sousedé je sledují,
     \item iteruje několikrát kroky 2--4,
     \item vrátí nový seznam zdrojů vhodných pro našeho uživatele seřazený podle jejich váhy.
 \end{enumerate}
 
-Kouzlo toho algoritmu spočívá v tom, že:
+Výhoda toho algoritmu spočívá v tom, že:
 \begin{itemize}
     \item umožňuje vypočítat doporučení pro všechny uživatele najednou,
     \item všechny operace lze implementovat efektivně jako operace s maticemi; kroky 2--4 spočívají pouze v násobení matic.
 \end{itemize}
+
+% FIXME dokončit doporučování
+\uv{Na závěr tady napište alespoň něco negativního :-) nebojte se, naopak tím, že to tady napíšete, ukážete, že jste se tím zabýval.
+Taky stručně popište, jak to konkrétně funguje ve Vaší čtečce. Čili kdy se to počítá, jak se to počítá, jak se dostanu k tomu seznamu doporučených zdrojů.}
+
+\uv{Pokud byste měl čas, můžete dodat konkrétní příklad. Vymyslete si třeba 5 uživatelů a 8 zdrojů, nějak tu matici vyplňte; a pak nad tím něco spočítejte; samozřejmě ten příklad vymyslete tak, abyste nakonec doporučil něco smysluplného :-)}
+
+Ano, doplním během víkendu.
 

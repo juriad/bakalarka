@@ -1,4 +1,5 @@
 \chapter{Dokumentace}
+% TODO dokumentace je prý nudná
 
 V této části práce popíšeme funkci/implementaci nejdůležitějších částí aplikace.
 Tento popis je určen programátorům; má za cíl poskytnout dostatečný přehled o všech částech aplikace před tím, než se setká se zdrojovým kódem.
@@ -20,10 +21,10 @@ Jak jsme již popsali v předchozích kapitolách, aplikace se člení na tři h
 \end{figure}
 
 První dvě části jsou naprogramovány v jazyku Java a sdílejí některé části kódu -- balík \verb|cz.artique.shared|.
-Na obrázku \ref{fig:cleneni} jsou zobrazeny jednotlivé balíky, postup kompilace a její výsledný produkt.
+Na obrázku~\ref{fig:cleneni} jsou zobrazeny jednotlivé balíky, postup kompilace a její výsledný produkt.
 
 Serverová část závisí na všech balících; můžeme však říci, že závislost na balíku \verb|cz.artique.client| je slabá a vynucená pouze použitým frameworkem GWT.
-GWT vyžaduje, aby rozhraní služby a jeho asynchronní varianta byly ve stejném balíku.
+Vyžaduje, aby rozhraní služby a jeho asynchronní varianta byly ve stejném balíku.
 Samotná rozhraní jsou sice implementována jen v balíku \verb|cz.artique.server|, nicméně je nutné je mít přístupné v klientské části.
 
 Sdílená část zdrojového kódu obsahuje především definici modelu -- tříd reprezentujících strukturu dat v databázi podle návrhu entit.
@@ -45,9 +46,9 @@ Přístup k databázi ze všech částí aplikace směřujeme přes tyto služby
 To nám umožňuje mít přehled o typech prováděných operací a zároveň eliminuje skryté závislosti.
 Nejčastějšími operacemi jsou:
 \begin{itemize}
-	\item dotažení dalšího objektu podle klíče, například: k uživatelskému zdroji dotáhne region,
+	\item získání dalšího objektu podle klíče, například k uživatelskému zdroji doplní region,
 	\item získání objektu, příp. jeho vytvoření, pokud neexistuje,
-	\item sestavení složitějšího dotazu podle kritérii.
+	\item sestavení složitějšího dotazu podle kritérií.
 \end{itemize}
 
 \subsection{Rozhraní pro komunikaci s klientskou částí}
@@ -88,7 +89,7 @@ Dále popíšeme rozhraní všech služeb.
 
 Služba \verb|ClientUserService| poskytuje klientské části informace o aktuálně přihlášeném uživateli pomocí jediné metody -- \verb|login|.
 Pokud je uživatel přihlášen, vrací metoda objekt uživatele a internetovou adresu určenou k jeho odhlášení.
-Součástí objektu uživatele je i klientský token, který se používá při komunikaci s klientským doplňkem. % TODO klientský doplněk
+Součástí objektu uživatele je i klientský token, který se používá při komunikaci s klientským doplňkem.
 Zároveň zkontroluje, jestli existuje manuální zdroj pro daného uživatele: pokud neexistuje (uživatel se přihlásil poprvé), vytvoří se.
 Naopak, pokud není uživatel přihlášen, vrací jen adresu určenou k přihlášení.
 
@@ -195,8 +196,7 @@ Rozhraní pro komunikaci s doplňkem nabízí dvě metody:
 	\item získat štítky -- vrátí z databáze seznam názvů všech uživatelských štítků.
 		Funguje velice podobně jako metoda získat všechny štítky služby štítků pro komunikaci s klientskou částí.
 		Liší se jen tím, že tato metoda filtruje štítky podle typu a vrací ještě seznam výchozích štítků pro manuální zdroj.
-%TODO definovat JSON
-	\item přidat položku -- přidá položku popsanou JSON objektem k manuálnímu zdroji uživatele.
+	\item přidat položku -- přidá položku popsanou \zkratka{JSON}{JavaScript Object Notation -- textový formát určený pro přenos strukturovaných dat založený na syntaxi jazyku JavaScript} objektem k manuálnímu zdroji uživatele.
 		Provádí podobné kontroly a úpravy jako metoda přidat manuální položky služby položek pro komunikaci s klientskou částí.
 		Jelikož toto rozhraní je textové (nepřenáší se klíče štítků, ale jejich názvy), může uživatel přidělit položce i neexistující štítek.
 		V takovém případě bude v okamžiku, kdy je zřejmé, že objekt položky prošel všemi kontrolami, vytvořen nový štítek a následně k uživatelské položce přiřazen.
@@ -208,8 +208,7 @@ Při použití tohoto klientského rozhraní musí klient poskytnout svůj klien
 
 Do této skupiny jsme zařadili služby, které jsou spouštěny:
 \begin{itemize}
-		%TODO zadefinovat cron
-	\item buď periodicky cronem (kontrola zdrojů, výpočet doporučení),
+	\item buď periodicky plánovačem \pojem{Cron}{plánovač, který spouští úlohy periodicky v předem určený čas} (kontrola zdrojů, výpočet doporučení),
 	\item nebo jsou realizovány pomocí úloh, které se postupně zpracovávají (kontrola zdrojů, zálohování položky)
 \end{itemize}
 
@@ -231,9 +230,8 @@ Takový zdroj bude kontrolován v chybovém režimu, méně často, jen jednou z
 
 \subsubsection{Výpočet doporučení}
 
-% TODO link na důvody přepočítávání doporučení offline
-Seznam zdrojů doporučovaných jednotlivým uživatelům přepočítáváme z důvodů, které jsme zmínili v kapitole XXX, jen jednou za den.
-O pravidelné spouštění procesu se stará cron poskytovaný platformou Google AppEngine.
+Seznam zdrojů doporučovaných jednotlivým uživatelům přepočítáváme z důvodů, které jsme zmínili v kapitole~\ref{sec:volba-systemu-doporucovani}, jen jednou za den.
+O pravidelné spouštění procesu se stará Cron poskytovaný platformou Google AppEngine.
 
 Výpočet probíhá v několika krocích:
 \begin{enumerate}
@@ -269,7 +267,7 @@ Výpočet probíhá v několika krocích:
 Kdykoli je nějaké uživatelské položce přiřazen štítek, zkontroluje se, zda štítek má nastavenou vlastnost zálohování.
 Pokud ji má, vytvoří se nová zálohovací úloha, která se zařadí do fronty.
 Stejně jako v případě kontroly zdrojů, i zde se fronta úloh stará o jejich postupné spouštění.
-Postup zálohování jsme popsali v části XXX. % TODO ref
+Postup zálohování jsme popsali v části~\ref{ssec:procesy-stitky} 
 
 \subsection{Veřejné rozhraní k obsahu}
 
@@ -299,6 +297,7 @@ Přesto můžeme klientskou část rozčlenit do několika částí (spíše pod
 \end{itemize}
 
 \subsection{Hierarchie}
+% FIXME lépe popsat hierarchie
 
 Vzhledem ke způsobu uložení hierarchie v databázi: popisujeme cestu ke kořeni, je nutné pro zobrazení stromu primárně vlastní hierarchii vybudovat.
 Všichni správci, kteří poskytují hierarchii, musejí každý objekt, který spravují, zpracovat a vložit do uměle vytvořené hierarchie.
@@ -509,7 +508,7 @@ Doplněk můžeme rozdělit do tří částí, které spolu komunikují; pro jed
 
 \subsection{Inicializace doplňku}
 
-Doplněk se inicializuje při spuštění prohlížeče vykonáním background skriptu; postup je znázorněn na obrázku \ref{fig:doplnek-init}.
+Doplněk se inicializuje při spuštění prohlížeče vykonáním background skriptu; postup je znázorněn na obrázku~\ref{fig:doplnek-init}.
 Nejprve zkontrolujeme, zda známe klientský token (1, 2); pokud ho známe, nastavíme akci zobrazení popup stránky při kliknutí na ikonku (3).
 V případě, že token neznáme, budeme čekat na zprávu o dostupnosti tokenu (1', 2').
 Až token budeme znát, nastavíme popup stránku (kroky 1, 2, 3).
@@ -519,7 +518,7 @@ Tento meta element do stránky přidá klientská část aplikace při své inic
 
 \subsection{Přidání manuální položky}
 
-Postup je znázorněn na obrázku \ref{fig:doplnek-akce}.
+Postup je znázorněn na obrázku~\ref{fig:doplnek-akce}.
 Uživatel vyvolá akci vložení aktuální stránky do naší aplikace kliknutím na ikonu doplňku v liště prohlížeče (1).
 Zobrazí se vyskakovací (popup) okno s formulářem, který bude předvyplněný informacemi o aktuální stránce: titulek, URL, vybraná část textu.
 Informace se získají zasláním zprávy (6) skriptu běžícímu v aktuálně otevřené stránce; skript zašle zpět (7) požadované údaje.

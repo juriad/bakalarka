@@ -28,16 +28,14 @@ Serverová část bude mít v aplikaci následující úlohy:
 \subsubsection{Uložení dat}
 
 Všechna data, jak sdílená, tak i dedikovaná jednotlivým uživatelům, budeme ukládat do databáze Datastore, kterou poskytuje platforma AppEngine.
-% TODO link slim
 Data budou modelována s pomocí frameworku Slim3, který použijeme jako obálku kolem samotné databáze.
 K vlastním datům v databázi budeme přistupovat pomocí sady služeb zaměřených podle typu objektů, se kterými pracují.
 
 \subsubsection{Rozhraní služeb}
 
 Pro komunikaci s klientskou částí navrhneme sadu rozhraní/služeb, přes která bude probíhat veškerá komunikace.
-% TODO link GWT
 Realizaci vlastní komunikace přenecháme frameworku GWT za účasti knihovny Slim3.
-Tyto služby budou mít za úkol zkontrolovat požadavky klientů a zavolat příslušné služby komunikující přímo s databází.
+Tyto služby budou mít za úkol kontrolovat požadavky klientů a volat příslušné služby komunikující přímo s databází.
 
 \subsubsection{Služby pro realizaci procesů}
 
@@ -45,31 +43,25 @@ Naše aplikace bude vykonávat několik náročnějších procesů; mezi ně pat
 
 \paragraph{Kontrola zdroje}
 Při kontrole zdrojů využijeme frontu úloh -- pro každý požadavek na kontrolu zdroje vytvoříme úlohu.
-Úloha kontroly zdrojů vyžaduje stažení dokumentu z webu: buď bude typu HTML, nebo XML.
-% TODO link
+Úloha kontroly zdrojů vyžaduje stažení dokumentu z webu: buď HTML, nebo XML.
 Pro stažení použijeme knihovnu HttpComponents.
 
-% TODO link rome
 Pokud je zdroj typu RSS/Atom, použijeme knihovnu ROME pro rozparsování dokumentu.
-% TODO jsoup
 Pokud naopak zdroj pracuje s webovými stránkami, vytvoříme pomocí knihovny jsoup její stromovou reprezentaci, se kterou budeme dále pracovat.
-% TODO diff match patch
 V případě, že zdroj je typu Změna stránky, použijeme knihovnu Diff Match Patch pro výpočet, určení změny.
 
 \paragraph{Zálohování položky}
-Při zálohování položky musíme nejprve stáhnout webovou stránku kterou reprezentuje; využije opět knihovnu HttpComponents.
+Při zálohování položky musíme nejprve stáhnout webovou stránku kterou reprezentuje; využijeme opět knihovnu HttpComponents.
 Strán\-ku následně upravíme (změníme všechny relativní odkazy a cesty k obrázkům) převedením do DOMu pomocí knihovny jsoup a provedením vhodných operací s elementy.
-% TODO gcs
 Upravenou stránku uložíme do \uv{souboru} pomocí rozhraní poskytovaného službou Google Cloud Storage.
 
 Zálohovanou stránku budeme poskytovat pomocí metod služby Blobstore, které nám umožní její přímé streamování.
 
 \paragraph{Exportování položek}
-Knihovnu ROME použijeme i pro druhý směr konverze, využijeme její generátory pro tvorbu RSS a Atom dokumentů při sdílení (exportu) položek.
+Knihovnu ROME použijeme i pro opačný směr konverze, využijeme její generátory pro tvorbu RSS a Atom dokumentů při sdílení (exportu) položek.
 
 \paragraph{Výpočet doporučení}
-Algoritmus pro výpočet doporučení je realizovatelný posloupností operací provedených s maticemi.
-% TODO jscience
+Algoritmus pro výpočet doporučení je realizovatelný posloupností operací provedených nad maticemi.
 Použijeme modul lineární algebry z knihovny JScience k výpočtům s vektory a maticemi.
 
 \subsection{Klientská část}
@@ -83,7 +75,7 @@ Klientská část bude obsahovat vrstvu prezentéra a zobrazení.
 \subsubsection{Úloha klientské části}
 
 Uživatel ovládá celou aplikaci klientskou částí pomocí prvků grafického prostředí webové stránky.
-Skrze ní manipuluje se všemi svými daty uloženými v serverové části aplikace.
+Přes ní manipuluje se všemi svými daty uloženými v serverové části aplikace.
 Mezi nejdůležitější úkony prováděné uživatelem patří:
 \begin{itemize}
 	\item správa zdrojů: přidání a úprava zdroje, zastavení a obnovení sledování zdroje
@@ -93,11 +85,10 @@ Mezi nejdůležitější úkony prováděné uživatelem patří:
 \end{itemize}
 
 Jelikož serverová část aplikace bude vytvořena v jazyku Java, zvolili jsme pro vývoj klientské části nástroj, který umožňuje zkompilovat kód v jazyku Java do jazyku JavaScript.
-% TODO link GWT
 Tímto nástrojem je GWT.
 
 Samotné knihovny GWT obsahují mnoho užitečných grafických prvků, nic\-mé\-ně neobsahují například dialog pro výběr barev.
-GWT Eye Candy je knihovna, která nám rozšíří nabídku grafických komponent. %TODO link GWT Eye Candy
+GWT Eye Candy je knihovna, která nám rozšíří nabídku grafických komponent.
 My z ní využijeme jediný prvek: ColorPicker pro výběr barvy štítků.
 
 \subsection{Doplněk do prohlížeče}
@@ -113,12 +104,10 @@ Kliknutím na tlačítko \uv{Odeslat} se vytvoří v aplikaci nová manuální p
 
 \bigskip
 
-% TODO link crossrider
 Doplněk vytvoříme na platformě Crossrider, která zajistí produkci výsledných doplňků do nejběžnějších prohlížečů.
 Z možností platformy využijeme jen zobrazení tlačítka v liště prohlížeče, komunikaci po síti, databázi k uložení hodnot a posílání zprav mezi jednotlivými částmi doplňku.
 
 Nejdůležitější částí doplňku je popup okno, zobrazené po kliknutí na tlačítko; obsah tohoto okna je běžná webová stránka, která bude obsahovat formulář s údaji o položce.
-% TODO link textext
 Součástí formuláře je i seznam štítků, který budeme realizovat knihovnou TexExt, která bude poskytovat uživatelsky přívětivé rozhraní.
 
 \section{Entity}
@@ -127,9 +116,9 @@ Entity jsou obecné struktury, se kterými aplikace pracuje.
 Cílem této kapitoly je entity popsat a vysvětlit úlohu, kterou mají v kontextu celé aplikace.
 Pro přehlednost jsme entity sdružili do oblastí, jichž se týkají.
 
-\subsection{Oblast uživatele a konfigurace}
+\subsection{Uživatele a konfigurace}
 
-Oblasti uživatele a konfigurace obsahuje následující entity:
+Oblasti uživatele a konfigurace obsahuje následující entity.
 
 \subsubsection{Uživatel}
 
@@ -147,10 +136,10 @@ Jedna konfigurační položka definuje jeden parametr, který má vliv na vzhled
 		Hodnoty položek tohoto typu mohou záviset na konkrétním uživateli, který aplikaci používá.
 \end{itemize}
 
-\subsection{Oblast zdrojů}
+\subsection{Zdroje}
 
 Tato část seskupuje všechny entity, které souvisejí se zdroji položek, jejich reprezentací a zpracováním.
-Nejdůležitější dvojicí entit je zdroj a uživatelský zdroj: první má význam pouze pro pravidelné kontroly existence nových položek, druhá popisuje zdroj z pohledu uživatele.
+Nejdůležitější dvojicí entit je zdroj a uživatelský zdroj: zdroj má význam pouze pro pravidelné kontroly existence nových položek, uživatelský zdroj popisuje zdroj z pohledu uživatele.
 Oblast zdrojů obsahuje tyto entity:
 
 \subsubsection{Zdroj}
@@ -166,6 +155,7 @@ Typy zdrojů jsou:
 Manuální zdroj patří vždy jednomu konkrétnímu uživateli.
 Nereprezentuje žádnou internetovou adresu a sám o sobě neposkytuje žádné položky.
 Všechny položky, které tomuto zdroji patří, přidal sám uživatel pomocí některé ze služeb, které má k dispozici.
+Jde tedy o technický prostředek, jak naplnit funkcionalitu přidávání vlastních položek.
 
 \paragraph{RSS/Atom}
 
@@ -186,34 +176,25 @@ Každá změna stránky způsobí vytvoření položky informující o změně.
 
 Region definuje pro typ zdroje Webový rozcestník a Změna stránky oblast stránky, která je z pohledu uživatele zajímavá.
 Region je určen výběrem oblastí stránky, které se mají kontrolovat a oblastí, které se mají při kontrole ignorovat.
-Motivací k pozitivnímu a negativnímu přístupu k jednotlivým částem je fakt, že stránky obsahují obsah, který se mění při každém dotazu (reklamy, informace o času generování stránky) nebo není zajímavý (hlavička a patička stránky, menu).
+Motivací k pozitivnímu a negativnímu přístupu k jednotlivým částem je fakt, že stránky obsahují prvky, který se mění při každém dotazu (reklamy, informace o času generování stránky) nebo není zajímavý (hlavička a patička stránky, menu).
 
 \subsubsection{Uživatelský zdroj}
 \label{sss:uzivatelsky-zdroj}
 
-Entita zdroj slouží výhradně pro účely periodické kontroly, proto zavedeme entitu uživatelský zdroj, jež realizuje vztah mezi uživateli a zdroji.
+Zavedeme entitu uživatelský zdroj, jež realizuje vztah mezi uživateli a zdroji.
 Několik uživatelů může sledovat stejný zdroj a každý uživatel většinou sleduje více zdrojů.
 Tato entita uchovává vlastní nastavení každého zdroje zvlášť pro každého uživatele.
 Počet aktivních uživatelských zdrojů určuje, politiku podle které bude probíhat jeho kontrola.
+Uživatel vždy pracuje s uživatelskými zdroji, od zdrojů, které jsou pod nimi, je odstíněn.
 Pokud je v uživatelském rozhraní zmíněn pojem zdroj, je jím myšlena tato entita; entita zdroje nemá pro uživatele praktický význam.
 
 Uživatelský zdroj obsahuje entitu štítek, která reprezentuje informaci o příslušnosti položky ke zdroji.
-Více o tomto štítku a jeho funkci popíšeme v kapitole \ref{sss:stitek}.
+Této nepřímé vazby využíváme v dotazech do databáze, při kterých klademe na uživatelské položky kritérium, že musejí pocházet z konkrétního uživatelského zdroje.
+Více o tomto štítku a jeho funkci popíšeme v kapitole~\ref{sss:stitek}.
 
-\subsubsection{Shrnutí entit oblasti zdrojů}
-\label{sss:shrnuti-zdroju}
-Abstraktní entita zdroj má několik typů:
-\begin{itemize}
-	\item manuální zdroj,
-	\item RSS/Atom zdroj,
-	\item webový rozcestník,
-	\item změna stránky.
-\end{itemize}
-Entita uživatelský zdroj není typem zdroje; uživatelský zdroj reprezentuje vazbu mezi uživatelem a zdrojem.
+\subsection{Položky}
 
-\subsection{Oblast položek}
-
-Oblast položek obsahuje entity:
+Oblast položek obsahuje následující entity.
 
 \subsubsection{Položka}
 
@@ -245,7 +226,7 @@ Obecně tyto informace nejsou jednoduše zjistitelné v případě položek jin�
 
 Položka typu odkaz pochází ze zdroje typu webový rozcestník.
 Každému nalezenému odkazu na webové stránce (uvnitř regionem omezené oblasti) odpovídá právě jediná položka.
-Titulek resp. popis přebíráme z textu odkazu reps. textu nejbližšího okolí odkazu.
+Titulek resp. popis přebíráme z textu odkazu resp. textu nejbližšího okolí odkazu.
 
 \paragraph{Položka typu změna stránky}
 
@@ -268,7 +249,7 @@ Pokud je v uživatelském rozhraní zmíněn pojem položka, je jím myšlena ta
 
 \bigskip
 
-Na obrázku \ref{fig:source-item} je zobrazen vztah nejdůležitějších entit z oblastí zdrojů a položek.
+Na obrázku~\ref{fig:source-item} je zobrazen vztah nejdůležitějších entit z oblastí zdrojů a položek.
 
 \begin{figure}
     \centering
@@ -277,9 +258,7 @@ Na obrázku \ref{fig:source-item} je zobrazen vztah nejdůležitějších entit 
     \label{fig:source-item}
 \end{figure}
 
-\subsection{Oblast štítků}
-
-Oblast štítků obsahuje entity:
+\subsection{Štítky}
 
 \subsubsection{Seznam položek}
 Než zavedeme entity této oblasti, zadefinujeme pojem seznam položek.
@@ -288,6 +267,8 @@ Seznam (uživatelských) položek je podle času vzestupně či sestupně uspoř
 Seznam položek je výsledkem dotazu, neexistuje dokud není dotaz proveden.
 
 Termín seznam položek používáme také pro komponentu grafického prostředí, která zobrazuje uživatelské položky, které jsou součástí seznamu položek, výsledku dotazu.
+
+Oblast štítků obsahuje následující entity.
 
 \subsubsection{Štítek}
 \label{sss:stitek}
@@ -314,6 +295,7 @@ V aplikaci existují dva typy štítků:
 \begin{enumerate}
 	\item uživatelský štítek -- štítek, který vytvořil uživatel, je přiřazovaný uživatelem a je zobrazovaný v seznamu položek,
 	\item zdrojový štítek -- štítek reprezentující uživatelský zdroj -- tento typ štítku není spravován uživatelem, nemůže jej ani vytvořit ani přiřadit, nezobrazuje se v seznamu položek.
+		Jde o technickou záležitost, která nám umožňuje zjednodušit některé dotazy do databáze.
 \end{enumerate}
 
 \paragraph{Seznam štítků u uživatelských zdrojů}
@@ -343,9 +325,9 @@ Možná kritéria jsou následujících typů:
 Poslední uvedené kritérium je zásadní pro funkčnost celé aplikace a všech seznamů položek:
 \begin{itemize}
 	\item seznam všech položek -- filtr je prázdný
-	\item položky nějakého uživatelského zdroje -- filtr obsahuje štítek patřící uživatelskému zdroji
-	\item složitější filtry, například seznam položek ze zdroje $X$ nebo položek obsahující zároveň štítek $a$ a $b$:
-		\verb|lsrc$X OR lusr$a AND lusr$b|
+	\item položky mající konkrétní štítek -- filtr obsahuje právě ten štítek,
+	\item položky konkrétního uživatelského zdroje -- filtr obsahuje štítek patřící uživatelskému zdroji,
+	\item složitější filtry -- předchozí dvě možnosti spojené pomocí operátorů \verb|AND| a \verb|OR|\footnote{Databáze má stanovené omezení na složitost dotazu: dotaz může obsahovat maximálně 30 větví disjunkce.}.
 \end{itemize}
 
 \paragraph{Typy filtrů}
@@ -357,7 +339,7 @@ V rámci aplikace rozlišujeme tři typy seznamových filtrů.
 		Ad-hoc seznamovým filtrem je například realizován seznam položek zobrazený po kliknutí na libovolný štítek.
 \end{itemize}
 
-\subsection{Oblast klávesových zkratek}
+\subsection{Klávesové zkratky}
 
 V aplikaci existuje jediná entita, která popisuje klávesové zkratky.
 
@@ -382,7 +364,6 @@ Z popsaných procesů je zřejmé, jak jsou jimi realizovány jednotlivé funkč
 
 \subsection{Zdroje}
 
-Entity oblasti zdrojů jsme shrnuli v kapitole \ref{sss:shrnuti-zdroju}.
 Po přihlášení si uživatel může vytvořit své vlastní zdroje:
 \begin{enumerate}
 	\item zjistí se, zda takový zdroj již existuje (URL a typ zdroje),
@@ -429,7 +410,7 @@ Uživatel může zobrazit seznam položek na základě svého ad-hoc seznamovéh
 Uživatel si může zadefinovat libovolné množství vlastních seznamových filtrů, přeneseně i seznamů položek.
 Seznamový filtr může dále měnit, případně odstranit.
 
-\subsection{Štítky}
+\subsection{Štítky}\label{ssec:procesy-stitky}
 
 Uživatel má možnost přidat k položce dodatečnou informaci prostřednictvím štítku; přidání štítku může probíhat i polo-automaticky (klávesovou zkratkou) či plně automaticky (uvedením štítku do seznamu automaticky přidávaných štítku v uživatelském zdroji).
 
@@ -440,7 +421,6 @@ Pokud má štítek nastavenou vlastnost zálohování, jeho přiřazení uživat
 \begin{enumerate}
 	\item stáhne se webová stránka položky,
 	\item veškeré relativní odkazy na stránce se nahradí za absolutní,
-		% TODO link GCS
 	\item uloží se soubor stránky do úložiště pomocí služby Google Cloud Storage a zapíše klíč do uživatelské položky.
 \end{enumerate}
 
