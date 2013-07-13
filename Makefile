@@ -16,13 +16,14 @@ work/prace.ps: prace.dvi
 	cd work; \
 		dvips -o prace.ps -D600 -t a4 prace.dvi
 
-work: $(wildcard *.tex) $(addsuffix .eps, $(basename $(wildcard img/*))) $(wildcard *.bib)
+work: $(wildcard *.tex) $(addsuffix .eps, $(basename $(wildcard img/*))) $(wildcard *.bib) doporuceni.py
 	mkdir -p work
 	cp $^ work/
 	cp czechiso.bst work/
 	cd work; \
 		vlna -l *.tex; \
-	    vlna -l -v ai *.tex
+	    vlna -l -v ai *.tex; \
+		python doporuceni.py > doporuceni.out
 
 work/prace.dvi: work
 	cd work; \

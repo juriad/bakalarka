@@ -13,8 +13,7 @@ Kritérii, podle kterých jsou položky seřazeny, mohou být:
     \item počet uživatelů, kteří si zakoupili položku,
     \item počet zhlédnutí položky,
     \item průměr hodnocení všech uživatelů,
-	\item počet recenzí položky,
-    \item \ldots
+	\item počet recenzí položky a další.
 \end{itemize}
 Tento způsob používají některé menší internetové obchody z důvodu snadné implementace a nenáročnosti výpočtu.
 
@@ -29,8 +28,8 @@ Model uživatele může obsahovat nejrůznější informace:
 \begin{itemize}
     \item údaje, které si o sobě vyplní sám uživatel: oblíbený žánr (u hudby), oblíbený autor (u knih),
     \item hodnocení, které sám vyplnil: klikl na tlačítko \uv{Líbí/nelíbí}, ohodnotil položku na stupnici 1--10,
-    \item záznam dosavadní interakce se systémem: písničky si uživatel poslechl, které knihy zakoupil,
-	\item případně podrobněji: kategorie či produkty, které navštívil; kolik času strávil na jednotlivých stránkách.
+    \item záznam dosavadní interakce se systémem: písničky, jež si uživatel poslechl; knihy, které zakoupil,
+	\item případně podrobněji: kategorie či produkty, které navštívil; čas, který strávil na jednotlivých stránkách.
 \end{itemize}
 
 Existují dva základní přístupy k nabízení položek na základě podobnosti.
@@ -89,6 +88,8 @@ Jako největší problém při návrhu doporučování v naší aplikaci považu
 Zvolili jsme algoritmus, který navrhli Z. Huang, D. Zeng, H. Chen ve svém článku~\cite{huang2004link}.
 Tento algoritmus je do velké míry inspirovaný algoritmy známými z prostředí internetových vyhledávačů, jako je například algoritmus PageRank~\cite{page1999pagerank}.
 
+\subsection{Popis algoritmu}
+
 Algoritmus si v průběhu výpočtu udržuje seznam zdrojů, které jsou vhodné k doporučení uživateli.
 Princip algoritmu je následující:
 \begin{enumerate}
@@ -100,17 +101,74 @@ Princip algoritmu je následující:
     \item vrátí nový seznam zdrojů vhodných pro našeho uživatele seřazený podle jejich váhy.
 \end{enumerate}
 
-Výhoda toho algoritmu spočívá v tom, že:
+Výhody a nevýhody tohoto algoritmu:
+\def\proitem{\item[$\boldsymbol{+}$]}
+\def\conitem{\item[$\boldsymbol{-}$]}
 \begin{itemize}
-    \item umožňuje vypočítat doporučení pro všechny uživatele najednou,
-    \item všechny operace lze implementovat efektivně jako operace s maticemi; kroky 2--4 spočívají pouze v násobení matic.
+    \proitem umožňuje vypočítat doporučení pro všechny uživatele najednou,
+    \proitem všechny operace lze implementovat efektivně jako operace s maticemi; kroky 2--4 spočívají pouze v násobení matic,
+	\conitem algoritmus je iterativní -- iterace by ideálně měla probíhat, dokud se výsledek neustabilizuje,
+	\conitem je nutné udržovat v paměti celou matici, přestože nás může zajímat doporučení pro jediného uživatele.
 \end{itemize}
 
-% FIXME dokončit doporučování
-\uv{Na závěr tady napište alespoň něco negativního :-) nebojte se, naopak tím, že to tady napíšete, ukážete, že jste se tím zabýval.
-Taky stručně popište, jak to konkrétně funguje ve Vaší čtečce. Čili kdy se to počítá, jak se to počítá, jak se dostanu k tomu seznamu doporučených zdrojů.}
+\subsection{Příklad doporučení}
 
-\uv{Pokud byste měl čas, můžete dodat konkrétní příklad. Vymyslete si třeba 5 uživatelů a 8 zdrojů, nějak tu matici vyplňte; a pak nad tím něco spočítejte; samozřejmě ten příklad vymyslete tak, abyste nakonec doporučil něco smysluplného :-)}
+Naše aplikace bude vypočítávat doporučení pro všechny uživatele jednou za 24 hodin.
+Výsledky doporučení budou uživatelům dostupné v dialogu pro přidání nového zdroje.
+Mohou si vybrat, zda zadají vlastní internetovou adresu zdroje nebo chtějí sledovat některý z doporučených zdrojů.
 
-Ano, doplním během víkendu.
+\begin{figure}
+    \centering
+    \includegraphics[width=14.5cm]{doporuceni.eps}
+    \caption{Uživatelé sledující zdroje a jejich doporučení}
+    \label{fig:doporuceni}
+\end{figure}
 
+Abychom přiblížili možnosti algoritmu, uvedeme příklad doporučení zdrojů na příbězích pěti lidí\footnote{Popsané osoby jsou vymyšlené; uvedené zdroje skutečně existují, jsou jimi:
+\href{http://bugemos.com/}{bugemos.com}, \href{http://technet.idnes.cz/}{technet.idnes.cz},
+\href{http://osel.cz/}{osel.cz}, \href{http://xkcd.com/}{xkcd.com}, 
+\href{http://www.abclinuxu.cz/}{abclinuxu.cz}, \href{http://www.root.cz/}{root.cz},
+\href{http://www.zdrojak.cz/}{zdrojak.cz}, \href{http://webylon.info/}{webylon.info} a
+\href{http://interval.cz/}{interval.cz}.
+}.
+
+\begin{itemize}
+	\item Věra je běžná uživatelka, která sleduje zpravodajský magazín o technice (technet) a ráda se pobaví u vtipného komixu (bugemos).
+	\item Konstantin se také zajímá o techniku, stejně jako Věra sleduje technet.
+		O téma se však zajímá hlouběji, čte články na oslovi a baví se náročnějším komixem (xkcd).
+	\item Rút je srdcem linuxačka; mezi její sledované weby patří především abclinuxu a root.
+		Zajímá se okrajově o techniku (technet) a čte komix xkcd.
+	\item Linda je Rútina kamarádka; začíná s tvorbou webu, sleduje tedy návody na zdrojáku.
+		Ve čtečce má i web root, protože chce vědět, co je ten Linux zač.
+	\item Waldemar se věnuje tvorbě webových stránek, a proto sleduje všechny tématické weby (zdroják, webylon, interval).
+		Jako mnoho ostatních má rád komixy na xkcd.
+\end{itemize}
+
+Na schématu~\ref{fig:doporuceni} je znázorněno, který uživatel sleduje které zdroje.
+Nad každým uživatelem je seznam zdrojů, které mu byly doporučeny.
+
+\begin{vypis}
+	\verbatiminput{doporuceni.out}
+	\caption{Výstup algoritmu doporučení po 10 iteracích.}
+	\label{vypis:doporuceni}
+\end{vypis}
+
+Doporučení jsme vypočítali skriptem, který je dostupný na přiloženém CD a přesně odpovídá implementaci, kterou používame ve vlastní aplikaci.
+Jeho výstupem (výpis~\ref{vypis:doporuceni}) je trojice řádků pro každého uživatele: jméno; sledované zdroje; doporučené zdroje (jejich váha).
+
+\begin{itemize}
+	\item Věře jsou doporučeny zdroje, které sledují její sousedé (Konstantin a Rút).
+		Přednost získaly zdroje, které sledují jen sousedé (osel, abclinuxu), protože se netříští jejich síla (xkcd a root sledují i jiní uživatel, kteří jsou Věře vzdálenější).
+		Za dobré doporučení můžeme považovat zdroje osel a xkcd.
+	\item Konstantinovi jsou doporučeny opět zdroje jeho sousedů (bugemos, abclinuxu) a root, u kterého se opět dělí jeho síla mezi více uživatelů.
+		Dobrým doporučením je jen bugemos.
+	\item Rútina záliba v komixech a technice jí způsobí doporučení osla (s Konstantinem, který ho sleduje má společnou polovinu zdrojů).
+		Rút je si s Konstaninem velice blízká, to je důvodem zvýšení váhy technetu (který sledují oba).
+		Tedy systém doporučení preferuje Věru před Lindou a doporučí bugemos před zdrojákem.
+		Bugemos a osel jsou doporučení.
+	\item Lindě jsou doporučeny zdroje jejích sousedů (Waldemara a Rút).
+		Waldemarovi zdroje mají větší váhu, protože Waldemar získal doporučením dvou zdrojů větší váhu (projev iterace algoritmu).
+	\item Waldemarovi jsou doporučeny zdroje, které sledují sousedé (Linda, Rút, Konstantin). Abclinuxu a osel mají větší váhu než technet (netříští se jejich síla; $1 > \tfrac{2}{3}$).
+		Nejvhodnějším zdrojem pro Waldemara je ale root, který je sledovaný všemi jeho sousedy.
+		Waldemarovi není doporučen žádný vhodný zdroj (bugemos, který by jej mohl zajímat, je v grafu příliš daleho).
+\end{itemize}

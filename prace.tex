@@ -47,6 +47,19 @@
     \endMakeFramed
 }
 
+\usepackage{float}
+
+\floatstyle{plain}
+\newfloat{vypis}{t}{lop}
+\floatname{vypis}{Výpis}
+
+\usepackage{chngcntr}
+\counterwithin{vypis}{chapter}
+
+\makeatletter
+\let\c@vypis\c@figure
+\makeatother
+
 %\usepackage{paralist}
 
 %\usepackage{subcaption}
@@ -55,10 +68,19 @@
 
 %\usepackage{cancel}
 
+\usepackage{enumitem}
+
+\usepackage{caption}
+
 \usepackage{breakurl}
 %\usepackage{url}
 
 \usepackage{tabu}
+
+\usepackage{amsmath}
+%\usepackage{bm}
+
+\usepackage{verbatim}
 
 %\usepackage{pdflscape}
 
@@ -108,6 +130,9 @@
 	\addcontentsline{toc}{subsection}{#1}
 }
 
+\def\proitem{\item[$\boldsymbol{+}$]}
+\def\conitem{\item[$\boldsymbol{-}$]}
+
 %%% Drobné úpravy stylu
 
 % Tato makra přesvědčují mírně ošklivým trikem LaTeX, aby hlavičky kapitol
@@ -126,12 +151,6 @@
    \vskip 20\p@
 }}
 \makeatother
-
-% Toto makro definuje kapitolu, která není očíslovaná, ale je uvedena v obsahu.
-\def\chapwithtoc#1{
-\chapter*{#1}
-\addcontentsline{toc}{chapter}{#1}
-}
 
 % Trochu volnější nastavení dělení slov, než je default.
 \lefthyphenmin=2

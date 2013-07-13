@@ -107,10 +107,10 @@ Její implementace je záměrně triviální z důvodu vyloučení jiných možn
 Služba \verb|ClientConfigService| poskytuje klientské části metody pro získání seznamu všech konfiguračních položek pro aktuálního uživatele.
 V případě, že konfigurační položka v databázi neexistuje, vrátí se klientovi s výchozí hodnotou.
 
-Dále tato služba umožňuje dávkovou aktualizaci hodnot několik konfiguračních položek.
+Dále tato služba umožňuje dávkovou aktualizaci hodnot několika konfiguračních položek.
 Novou hodnotu konfigurační položky uloží služba do databáze pro aktuálně přihlášeného uživatele.
 
-Tato služba v současné době není plně využívána; navrhli jsme ji obecněji, abych si zajistili možnost pozdějšího rozšíření aplikace.
+Tato služba v současné době není plně využívána; navrhli jsme ji obecněji, abychom si zajistili možnost pozdějšího rozšíření aplikace.
 
 \subsubsection{Zdroje}
 
@@ -303,12 +303,14 @@ Vzhledem ke způsobu uložení hierarchie v databázi: popisujeme cestu ke koře
 Všichni správci, kteří poskytují hierarchii, musejí každý objekt, který spravují, zpracovat a vložit do uměle vytvořené hierarchie.
 Postup vypadá následovně:
 \begin{enumerate}
-	\item Vytvoření kořenového uzlu.
-	\item Pro všechny spravované objekty:
-	\item rozdělení cesty ke kořeni podle lomítek (oddělovačů jednotlivých úrovní),
-	\item vytvoření uzlů pro jednotlivé úrovně, pokud ještě neexistují,
-	\item vytvoření listu v nejnižší úrovni; jeho hodnotou bude příslušný objekt.
-	\item Vrácení kořenového uzlu.
+	\item vytvoření kořenového uzlu,
+	\item pro všechny spravované objekty:
+		\begin{enumerate}[label*=\arabic*.]
+			\item rozdělení cesty podle lomítek (oddělovače jednotlivých úrovní),
+			\item vytvoření uzlů pro jednotlivé úrovně, pokud ještě neexistují,
+			\item vytvoření listu v nejnižší úrovni; jeho hodnotou bude příslušný objekt,
+		\end{enumerate}
+	\item vrácení kořenového uzlu.
 \end{enumerate}
 
 Uzly se stejným rodičem jsou řazeny podle abecedy.
@@ -324,7 +326,7 @@ Klientská část aplikace obsahuje tři komponenty, které umožňují zobrazit
 	\item strom zpráv -- hierarchii poskytuje správce zpráv.
 \end{itemize}
 
-Zprávy ve skutečnosti netvoří strom ale prostý seznam.
+Zprávy ve skutečnosti netvoří strom, ale prostý seznam.
 Využili jsme stromovou komponentu pro jejich zobrazení z několika důvodů:
 \begin{itemize}
 	\item poskytuje všechny možnosti, které vyžadujeme,
@@ -334,11 +336,11 @@ Využili jsme stromovou komponentu pro jejich zobrazení z několika důvodů:
 
 \subsection{Správci}
 
-Téměř každé službě, kterou jsme popsali z pohledu serverové části odpovídá správce v klientské části.
+Téměř každé službě, kterou jsme popsali z pohledu serverové části, odpovídá správce v klientské části.
 Správce má za úkol zprostředkovávat veškerou komunikaci se serverovou částí a poskytovat nakešovaná data.
 Každý správce poskytuje klientské části rozhraní k metodám služby, kterou obaluje.
 Tento obal většinou spočívá v zavolání příslušné metody služby a ve většině případů zobrazení zprávy o výsledku.
-Hlášku o úspěchu zobrazuje v případě, že volání metody bylo vyvoláno akcí uživatele.
+Informaci o úspěchu zobrazuje v případě, že volání metody bylo vyvoláno akcí uživatele.
 V případě neúspěchu zobrazíme zprávu vždy; ta obsahuje informaci, proč volání selhalo, například z důvodu nevyplnění některého z atributů.
 Navíc se zavolá služba kontroly spojení pro zjištění, zda je vůbec dostupné spojení se serverovou částí.
 
@@ -346,7 +348,7 @@ V popisu jednotlivých správců budeme zmiňovat pouze metody, které provádě
 
 \subsubsection{Správce konfigurace}
 
-Správce konfigurace tvoří jen obálku kolem vlastní služby.
+Správce konfigurace tvoří pouze obálku kolem vlastní služby.
 V okamžiku spuštění si stáhne veškerou konfiguraci relevantní pro přihlášeného uživatele.
 Jednotlivé dotazy na konfigurační položky pak může zodpovídat okamžitě bez nutnosti komunikace se serverovou částí.
 
@@ -361,19 +363,19 @@ Správce zdrojů si pamatuje, který zdroj je manuální (vždy existuje právě
 
 Jelikož správce zdrojů poskytuje přístup k hierarchii uživatelských zdrojů, musí reagovat na určitě události.
 Jakékoli úspěšné volání metody přidat uživatelský zdroj či aktualizovat uživatelský zdroj může způsobit změnu hierarchie.
-Správce zdrojů ve zmíněných metodách případně upravují hierarchii uživatelských zdrojů.
+Správce zdrojů ve zmíněných metodách případně upravuje hierarchii uživatelských zdrojů.
 
 \subsubsection{Správce štítků}
 
 Správce štítků obsahuje seznam všech štítků rozdělených podle typů: uživatelský štítek, zdrojový štítek, systémový štítek.
 Existují dva systémové štítky, oba reprezentují operátory: AND -- operátor \textit{a}, OR -- operátor \textit{nebo}.
 Zbylé dva seznamy štítků (uživatelských a zdrojových) jsou naplněny dotazem na serverovou část při prvním spuštění správce.
-Každému štítku je nastaven zobrazovaný název: u uživatelských štítků je to jejich vlastní název, u zdrojových je to název zdroje ke kterému štítek patří.
+Každému štítku je nastaven zobrazovaný název: u uživatelských štítků je to jejich vlastní název, u zdrojových je to název zdroje, ke kterému štítek patří.
 
 Správce štítků poskytuje metodu pro vyhledávání štítků podle části jejich názvu.
 Tuto metodu používá komponenta, která nabízí štítky v situaci, kdy uživatel může vložit název štítku (například, pokud se přidává štítek uživatelské položce).
 
-V případě, že uživatel přidá novou položku doplňkem v prohlížeči a přiřadí ji dosud neexistující štítek, dostane se klientská část do zvláštní situace.
+V případě, že uživatel přidá novou položku doplňkem v prohlížeči a přiřadí jí dosud neexistující štítek, dostane se klientská část do zvláštní situace.
 Seznam uživatelských položek by měl obsahovat uživatelskou položku se štítkem, o kterém nemá žádnou informaci.
 Samotná uživatelská položka zná pouze klíč štítku a správce štítků by jí měl objekt štítku dodat.
 V takovém případě se aktualizace seznamu položek pozastaví a bude pokračovat, až si správce štítků obnoví seznam všech existujících štítků dotazem na serverovou část.
@@ -382,7 +384,7 @@ V takovém případě se aktualizace seznamu položek pozastaví a bude pokračo
 
 Správce seznamových filtrů poskytuje hierarchii všech seznamových filtrů, kterou si vytvoří po svém spuštění.
 Dále poskytuje metody pro manipulaci se seznamovými filtry, které v případě úspěchu upraví hierarchii.
-Těmito metody jsou: přidat seznamový filtr, aktualizovat seznamový filtr a odstranit seznamový filtr.
+Těmito metodami jsou: přidat seznamový filtr, aktualizovat seznamový filtr a odstranit seznamový filtr.
 
 \subsubsection{Správce položek}
 
@@ -440,19 +442,19 @@ Jednou položkou v historii je token -- řetězec reprezentující aktuální st
 V našem případě stav aplikace odpovídá zobrazenému seznamovému filtru.
 
 Náš správce historie rozšiřuje tento mechanismus o několik důležitých vlastností.
-Pro nás je užitečnější znalost samotného seznamového filtr než jeho serializované varianty; z toho důvodu si ukládáme do seznamu stavů dvojici token -- seznamový filtr a nižší vrstvě (GWT) předáváme token.
-Při reakci na událost změna historie, kterou vyvolá GWT reagujeme změnou aktuálního seznamového filtru a vyvoláním vlastní událost \verb|HistoryEvent|, pomocí které informujeme příslušnou část aplikace o změně.
+Pro nás je užitečnější znalost samotného seznamového filtru než jeho serializované varianty; z toho důvodu si ukládáme do seznamu stavů dvojici token -- seznamový filtr a nižší vrstvě (GWT) předáváme token.
+Při reakci na událost změna historie, kterou vyvolá GWT reagujeme změnou aktuálního seznamového filtru a vyvoláním vlastní události \verb|HistoryEvent|, pomocí které informujeme příslušnou část aplikace o změně.
 
 \subsection{Nekonečný seznam}
 
-V této části pod pojmem položka myslíme jeden záznam v seznamu, který je reprezentován uživatelskou položkou.
+V této části si pod pojmem položka představíme jeden záznam v seznamu, který je reprezentován uživatelskou položkou.
 
 Nejdůležitější grafickou komponentou, která tvoří naši aplikaci, je nekonečný seznam položek.
 Nazýváme ho nekonečným, neboť nemá konec – jakmile uživatel odroluje seznam ke konci, načtou se další položky; takto jich může postupně zobrazit stovky.
 Samozřejmě, že v případě omezeného množství položek, vlastní konec seznamu existuje, avšak může být prakticky nedosažitelný.
 Výhodou tohoto přístupu je možnost stahovat ze serverové části pouze data, o která má uživatel právě zájem.
 
-Položky, které jsou v seznamu zobrazené, jsou dodávané poskytovatelem, který reaguje na událost odrolování blízko konce seznamu zavoláním metody získat položky správce položek.
+Položky, které jsou v seznamu zobrazené, jsou dodávané poskytovatelem, jenž reaguje na událost odrolování blízko konce seznamu zavoláním metody získat položky správce položek.
 Kdykoli se změní aktuální seznamový filtr, zruší se původní poskytovatel a nahradí se novým.
 
 Nekonečný seznam je posluchačem událostí \verb|ShortcutEvent| správce zkratek; reaguje na zkratky typu: přesun na předchozí/další položku, zobrazit originální webovou stránku, přidat/odebrat štítek a podobné.

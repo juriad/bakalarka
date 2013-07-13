@@ -6,7 +6,7 @@ Z povahy aplikace vyplývá, že většina netriviálních úloh bude probíhat 
 
 \section{Poskytovatel platformy}
 Pro běh serverové části potřebujeme server(y), na kterých poběží naše aplikace.
-Na výběr jsme měli možnost pronajmutí si vlastního (virtuálního) serveru, nebo využít služby některého z poskytovatelů \pojem[Cloudu]{Cloud computing}{model poskytování prostředků založený na internetu; obvykle je zpoplatněno využití služby namísto klasické platby za software}.
+Na výběr jsme měli možnost pronájmu vlastního (virtuálního) serveru, nebo využít služby některého z poskytovatelů \pojem[Cloudu]{Cloud computing}{model poskytování prostředků založený na internetu; obvykle je zpoplatněno využití služby namísto klasické platby za software}.
 
 Virtuální server sice poskytuje největší svobodu, ale za cenu nutné vlastní konfigurace systému.
 Tomu jsme se chtěli vyhnout a zaměřit své úsilí na samotný vývoj aplikace.
@@ -32,7 +32,7 @@ Platforma umožňuje automatické škálování výkonu podle aktuální potřeb
 Výběr tohoto poskytovatele nám umožňuje splnit výkonnostní požadavky.
 Vzhledem k principu fungování této platformy, totiž že výkon se přiděluje podle aktuálních požadavků a účtuje se spotřeba systémových prostředků (počet volání metod poskytovaného API), je relativně levná pro nenáročné aplikace.
 
-AppEngine je platforma, která poskytuje několik vzájemně spolu provázaných rozhraní.
+AppEngine je platforma, která poskytuje několik spolu vzájemně provázaných rozhraní.
 Čtyři z nich, které jsou pro naši aplikaci důležité, nyní krátce popíšeme.
 
 \subsection{Datastore}
@@ -43,8 +43,8 @@ Nejprve popíšeme, jak databáze funguje, a následně, jaké důsledky to obn�
 Databáze nemá pevné schéma; obdobou tabulek z relačních databází je \verb|kind| -- druh.
 Každý záznam v databázi je nějakého druhu; všechny záznamy stejného druhu jsou seskupené a lze nad nimi provádět dotazy.
 Každý záznam může mít jiné atributy, příp. jiné datové typy atributů.
-Takže je teoreticky možné mít u stejného druhu odlišné typy záznamů; například záznam s atributem pojmenovaným \verb|a|, který má řetězcovou hodnotu \verb|"aaa"| a jiný záznam, který tento atribut vůbec nemá nebo se jedná o číslo \verb|1| nebo se dokonce jedná seznam dat.
-Datastore podporuje hodnotu atributů mnoha datových typů, některé z nich jsou neobvyklé, například geografický bod pro určení polohy na Zemi, či hodnocení v rozsahu 0--100.
+Takže je teoreticky možné mít u stejného druhu odlišné typy záznamů; například záznam s atributem pojmenovaným \verb|a|, který má řetězcovou hodnotu \verb|"aaa"| a jiný záznam, který tento atribut vůbec nemá nebo se jedná o číslo \verb|1| nebo se dokonce jedná o seznam dat.
+Datastore podporuje hodnotu atributů mnoha datových typů, některé z nich jsou neobvyklé, například geografický bod pro určení polohy na Zemi, či hodnocení v rozsahu \mbox{0--100}.
 To jsou možnosti uložení dat, které databáze poskytuje.
 
 Požadavek na vysoký výkon omezuje možnosti manipulací s daty a dotazování.
@@ -52,7 +52,7 @@ Databáze umožňuje jen následující operace:
 \begin{itemize}
 	\item získat záznam -- podle klíče najde záznam v databázi a vrátí jeho aktuální hodnotu,
 	\item uložit záznam -- uloží záznam do databáze; přepíše původní hodnotu, pokud již v databázi takový záznam existoval,
-	\item odstranit záznam -- odstraní záznam z databáze; záznam je určeny svým klíčem,
+	\item odstranit záznam -- odstraní záznam z databáze; záznam je určen svým klíčem,
 	\item vyhledat záznamy -- vyhledá záznamy daného druhu, které vyhovují filtru seřazené podle některého atributu.
 \end{itemize}
 
@@ -69,7 +69,7 @@ Nejvíce omezené jsou možnosti vyhledávání záznamů; uvedeme některá z n
 
 Všechna z popsaných omezení souvisejí se způsobem provádění dotazů.
 Každý dotaz, který se provádí, neprobíhá proti vlastním záznamům, ale proti jednomu či více indexům.
-To vlastně znamená, že výsledky všech možných dotazů, které kdy může uživatel databáze provést jsou předpočítané.
+To vlastně znamená, že výsledky všech možných dotazů, které kdy může uživatel databáze provést, jsou předpočítané.
 S tím také souvisí neaktuálnost dat v indexech, mohou být o několik sekund zpožděné oproti hodnotám vlastních záznamů.
 Samotný dotaz probíhá v několika krocích:
 \begin{enumerate}
@@ -91,10 +91,10 @@ Další výhodou jsou samostatné limity pro každou úlohu; nestane se, že by 
 
 \subsection{Users}
 
-Platforma AppEngine poskytuje službu \href{https://developers.google.com/appengine/docs/java/users/}{Users}, která umožňuje přebírat informace o aktuálně přihlášeném uživateli; deleguje tak celou infrastrukturu okolo registrace, přihlašování, odhlašování, zapomenutého hesla.
-Pokud uživatel odsouhlasí, že aplikace má přistup k datům uživatele (ve skutečnosti je to pouze e-mailová adresa), může aplikace zjistit, jaký je aktuálně přihlášený uživatel pro každý webový dotaz.
+Platforma AppEngine poskytuje službu \href{https://developers.google.com/appengine/docs/java/users/}{Users}, která umožňuje přebírat informace o aktuálně přihlášeném uživateli; deleguje tak na sebe celou infrastrukturu okolo registrace, přihlašování, odhlašování, zapomenutého hesla.
+Pokud uživatel odsouhlasí, že aplikace má přístup k datům uživatele (ve skutečnosti je to pouze e-mailová adresa), může aplikace zjistit, jaký je aktuálně přihlášený uživatel pro každý webový dotaz.
 
-Obvykle, pokud aplikace detekuje nepřihlášeného uživatele reaguje zobrazením odkazu, který vede na přihlašovací formulář Google účtu.
+Obvykle, pokud aplikace detekuje nepřihlášeného uživatele, reaguje zobrazením odkazu, který vede na přihlašovací formulář Google účtu.
 Jakmile jej uživatel vyplní,  odešle a úspěšně se přihlásí, je přesměrován zpět do naší aplikace.
 Proces odhlášení probíhá analogicky, jen opačně.
 
@@ -110,7 +110,7 @@ Doplňkem tohoto rozhraní je \href{https://developers.google.com/appengine/docs
 
 \section{Slim3}
 
-\href{https://sites.google.com/site/slim3appengine/}{Slim3} je framework, který zajišťuje mapování databázových bezschématických entit na reálné javové objekty.
+\href{https://sites.google.com/site/slim3appengine/}{Slim3} je framework, který zajišťuje mapování databázových bezschématových entit na reálné javové objekty.
 Je vyvíjen japonským vývojářem \href{mailto:higayasuo@gmail.com}{Jasuem Higem} a je poskytován pod open-sourcovou licencí Apache~2.0~\cite{apache20}.
 
 Na rozdíl od jiných \zkratka{ORM}{Object-relational mapping -- slouží k převádění dat mezi dvěma nekompatibilními systémy uložení; tradičně mezi objekty tříd a záznamy v relační databázi} frameworků typu \href{http://www.hibernate.org/}{Hibernate}, které mapování provádějí za běhu aplikace rozborem atributů objektu za pomoci javové reflexe, Slim3 předem vygeneruje meta třídy ke všem třídám modelu.
@@ -120,7 +120,7 @@ Tyto třídy slouží k převádění reprezentace dat mezi objekty modelových 
 \href{https://rometools.jira.com/wiki/display/ROME/Home}{ROME} je knihovna, která poskytuje sadu parserů a generátorů pro různé typy formátů zpravujících o novinkách na webovém zdroji.
 Jedná se o starší knihovnu, která se nezdá být aktivně vyvíjena, nicméně je běžně používaná a pro nás dostatečně robustní a stabilní; je dostupná pod open-sourcovou licencí Apache~2.0~\cite{apache20}.
 
-Knihovna umí pracovat s většinou variant RSS a Atom dokumentů, umožňuje jejich stahování po síti, rozparsován i generování.
+Knihovna umí pracovat s většinou variant RSS a Atom dokumentů, umožňuje jejich stahování po síti, rozparsování i generování.
 Poskytuje jednotné rozhraní, přes které je možné dokumenty číst a vytvářet bez ohledu na jejich původní či výsledný formát.
 
 \section{Apache HttpComponents}
@@ -190,7 +190,7 @@ GWT se skládá z několika komponent:
 Tyto komponenty dohromady umožňují naprogramovat téměř libovolnou klientskou část aplikace v Javě.
 Pokud by nabízené prostředky Javy nestačily, je možné části kódu naprogramovat v JavaScriptu.
 
-Mezi výhody použiti GWT v projektu patří:
+Mezi výhody použití GWT v projektu patří:
 \begin{itemize}
     \item serverová i klientská část je psána ve stejném jazyku.
     \item společný kód pro serverovou a klientskou část se napíše jen jednou (a přeloží dvakrát),

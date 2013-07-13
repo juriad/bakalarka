@@ -67,7 +67,7 @@ Použijeme modul lineární algebry z knihovny JScience k výpočtům s vektory 
 \subsection{Klientská část}
 
 Klientskou část uvidí uživatel při každé návštěvě webové stránky aplikace.
-Je tvořena drobnou kostrou napsanou v HTML, která je masivně rozšířená \pojem[JavaScriptovým]{JavaScript}{formálně ECMAScript, interpretovaný jazyk běžící v internetovém prohlížeči, který umožňuje tvůrci webové stránky interaktivně manipulovat s jejím obsah} frameworkem, který zajišťuje dynamičnost a interaktivitu celé stránky.
+Je tvořena drobnou kostrou napsanou v HTML, která je masivně rozšířená \pojem[JavaScriptovým]{JavaScript}{formálně ECMAScript, interpretovaný jazyk běžící v internetovém prohlížeči, který umožňuje tvůrci webové stránky interaktivně manipulovat s jejím obsahem} frameworkem, který zajišťuje dynamičnost a interaktivitu celé stránky.
 Vzhled stránky je definovaný v jazyku CSS.
 
 Klientská část bude obsahovat vrstvu prezentéra a zobrazení.
@@ -97,7 +97,7 @@ Nepovinný doplněk má za úkol zvýšit komfort používání aplikace těm u�
 
 \subsubsection{Funkce doplňku}
 
-Doplněk slouží k přidání nové manuální položky do aplikace.
+Doplněk slouží k přidávání nové manuální položky do aplikace.
 Doplněk bude mít podobu tlačítka na liště v prohlížeči; kliknutím na tlačítko se objeví vyskakovací okno s předvyplněnou adresou a titulkem aktuální stránky.
 V případě, že uživatel vybral část textu na stránce, bude jím předvyplněn popis položky.
 Kliknutím na tlačítko \uv{Odeslat} se vytvoří v aplikaci nová manuální položka podle vyplněných údajů.
@@ -105,7 +105,7 @@ Kliknutím na tlačítko \uv{Odeslat} se vytvoří v aplikaci nová manuální p
 \bigskip
 
 Doplněk vytvoříme na platformě Crossrider, která zajistí produkci výsledných doplňků do nejběžnějších prohlížečů.
-Z možností platformy využijeme jen zobrazení tlačítka v liště prohlížeče, komunikaci po síti, databázi k uložení hodnot a posílání zprav mezi jednotlivými částmi doplňku.
+Z možností platformy využijeme jen zobrazení tlačítka v liště prohlížeče, komunikaci po síti, databázi k uložení hodnot a posílání zpráv mezi jednotlivými částmi doplňku.
 
 Nejdůležitější částí doplňku je popup okno, zobrazené po kliknutí na tlačítko; obsah tohoto okna je běžná webová stránka, která bude obsahovat formulář s údaji o položce.
 Součástí formuláře je i seznam štítků, který budeme realizovat knihovnou TexExt, která bude poskytovat uživatelsky přívětivé rozhraní.
@@ -116,7 +116,7 @@ Entity jsou obecné struktury, se kterými aplikace pracuje.
 Cílem této kapitoly je entity popsat a vysvětlit úlohu, kterou mají v kontextu celé aplikace.
 Pro přehlednost jsme entity sdružili do oblastí, jichž se týkají.
 
-\subsection{Uživatele a konfigurace}
+\subsection{Uživatelé a konfigurace}
 
 Oblasti uživatele a konfigurace obsahuje následující entity.
 
@@ -367,7 +367,7 @@ Z popsaných procesů je zřejmé, jak jsou jimi realizovány jednotlivé funkč
 Po přihlášení si uživatel může vytvořit své vlastní zdroje:
 \begin{enumerate}
 	\item zjistí se, zda takový zdroj již existuje (URL a typ zdroje),
-	\item pokud neexistuje vytvoří se nový zdroj příslušného typu,
+	\item pokud neexistuje, vytvoří se nový zdroj příslušného typu,
 	\item vytvoří se uživatelský zdroj, který propojí zdroj s uživatelem.
 \end{enumerate}
 
@@ -388,8 +388,9 @@ K tomu může dojít dvěma způsoby:
 
 Aplikace pravidelně provádí kontrolu zdrojů; stáhne z internetu dokument odpovídající adrese zdroje a zpracuje jej.
 Pokud se při kontrole zdroje zjistí, že záznam ještě v aplikaci neexistuje, bude vytvořen.
+Postup vytvoření položky při kontrole:
 \begin{enumerate}
-	\item Vytvoří se položka podle typu zdroje,
+	\item vytvoří se položka podle typu zdroje,
 	\item zjistí se z databáze seznam všech aktivních uživatelských zdrojů pro daný zdroj,
 	\item vytvoří se nová uživatelská položka pro každý aktivní uživatelský zdroj.
 \end{enumerate}
@@ -412,7 +413,7 @@ Seznamový filtr může dále měnit, případně odstranit.
 
 \subsection{Štítky}\label{ssec:procesy-stitky}
 
-Uživatel má možnost přidat k položce dodatečnou informaci prostřednictvím štítku; přidání štítku může probíhat i polo-automaticky (klávesovou zkratkou) či plně automaticky (uvedením štítku do seznamu automaticky přidávaných štítku v uživatelském zdroji).
+Uživatel má možnost přidat k položce dodatečnou informaci prostřednictvím štítku; přidání štítku může probíhat i poloautomaticky (klávesovou zkratkou) či plně automaticky (uvedením štítku do seznamu automaticky přidávaných štítku v uživatelském zdroji).
 
 Uživatel může na několika místech vybrat štítek ze seznamu existujících štítků, případně vytvořit nový, pokud žádaný štítek ještě neexistuje.
 Štítek lze odstranit, za předpokladu, že není nikde v aplikaci použit: položkou, seznamovým filtrem, či klávesovou zkratkou.
@@ -430,5 +431,5 @@ Uživatel si může přiřadit klávesové zkratky k nejběžnějším úkonům.
 Klávesovou zkratku vytvoří uvedením klávesy či kombinace kláves, které spustí akci, ke které je klávesová zkratka přidána.
 Uživatel může klávesovou zkratku odebrat smazáním kombinace kláves, které ji spouští.
 
-Když je klávesová zkratka definována a uživatel stiskne příslušnou kombinaci kláves, spustí se příslušná akce.
+Jakmile je klávesová zkratka definována a uživatel stiskne příslušnou kombinaci kláves, spustí se příslušná akce.
 Některé akce mohou být závislé na kontextu, ve kterém se uživatel nachází; takovými zkratkami jsou především klávesové zkratky manipulující s aktuálně vybranou uživatelskou položkou v seznamu položek.
