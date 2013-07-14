@@ -1,51 +1,40 @@
 \chaptert{Úvod}
 
-Naše bakalářská práce se zabývá vývojem aplikace -- webové čtečky určené pro náročnější uživatele.
-Kromě běžné funkcionality, sledování nejrůznějších RSS kanálů, bude v sobě integrovat i několik dalších služeb, které jsou dle našeho názoru čtečkám blízké.
+Bakalářská práce se zabývá vývojem aplikace -- webové čtečky určené pro náročnější uživatele.
+Kromě běžné funkcionality, sledování nejrůznějších RSS kanálů, v sobě bude integrovat i několik dalších služeb, které jsou dle našeho názoru čtečkám blízké.
 Myslíme si, že sjednocením vznikne celek, který bude plnit svoji úlohu lépe, než každá ze služeb odděleně.
 
 \sectiont{Historie projektu}
 
-Jelikož je tato práce silně inspirovaná naší zkušeností s dnes již neexistující čtečkou \href{http://www.google.com/reader/about/}{Google Reader}, popíšeme v této části alespoň stručně její historii, osud a náš vztah k ní.
+Jelikož je tato práce silně inspirovaná naší zkušeností s dnes již neexistující čtečkou \href{http://www.google.com/reader/about/}{Google Reader}, popíšeme v této části alespoň stručně její historii, osud.
 
-\subsectiont{Používání Google Readeru}
+\subsectiont{Používání čtečky Google Reader}
 
 V roce 2005 přišla společnost Google se svojí čtečkou Google Reader.
-O několik let později, když jsme tuto čtečku začali používat, jsme byli s jejími možnostmi spokojení a dlouhou dobu pokrývala veškeré naše potřeby.
+Zpočátku sice obsahovala jen nejnutnější funkcionalitu, nicméně v průběhu následujících několika let se její možnosti postupně rozšířily.
+Čtečku začaly používat miliony lidí a byly s ní spokojeny; pokrývala všechny jejich potřeby.
 
 V roce 2011 byl nahrazen vnitřní mechanismus sdílení položek napojením na sociální síť Google+ od stejné společnosti.
 Tento krok z hlediska společnosti Google dává dobrý smysl.
 Propagují svoji sociální síť mezi uživateli čtečky a naopak, usnadňují používání čtečky uživatelům sociální sítě.
+Mnoho uživatelů ale sociální síť Google+ nechce používat.
+Důsledek změny způsobu sdílení položek se jich tedy citelně dotkl a omezil možnosti užití této čtečky.
 
-Z osobních důvodů ale sociální síť Google+ nechceme používat.
-Důsledek změny způsobu sdílení položek se nás tedy citelně dotkl a omezil nám možnosti užití této čtečky.
-
-Během dlouhé doby používání čtečky jsme si vypěstovali různé návyky, které nám práci s ní zefektivnily.
-Bohužel jsme také narazili na její možnosti; některé operace nešlo provést dostatečně pohodlně, a proto jsme je nepoužívali.
-Příkladem může být funkcionalita štítků, čtečka je sice nabízela, ale k jejich přiřazení bylo nutné vypsat celý jejich název.
-Pro nás to bylo daleko od ideálu: možnost nastavit štítkům klávesové zkratky a přiřazovat je stiskem jediné klávesy.
+Náročnější uživatelé mohli snadno narazit na hranici jejích možností; některé operace nešlo provést dostatečně pohodlně.
+Příkladem může být funkcionalita štítků; čtečka je sice nabízela, ale k jejich přiřazení bylo nutné vypsat celý jejich název.
+To je daleko od ideálu, možnosti nastavit štítkům klávesové zkratky a přiřazovat je stiskem jediné klávesy.
 
 Stiskem klávesy \verb|"s"| bylo možné položce přidat či odebrat hvězdičku a klávesou \verb|"l"| bylo možné si položku oblíbit.
-Nebylo možné přejít na seznam oblíbených položek klávesovou zkratkou, což tento mechanismus pro nás učinilo téměř nepoužitelným.
+Nebylo ale možné přejít na seznam oblíbených položek klávesovou zkratkou, což tento mechanismus učinilo téměř nepoužitelným.
 Oblíbené položky byly úplně zrušeny po změně sdílení na Google+.
-
-Způsob práce se čtečkou v posledním stádiu probíhal následovně.
-Přepnuli jsme se na seznam všech položek, procházeli jej lineárně a těm položkám, které nás zaujaly, jsme přiřadili hvězdičku.
-Pak jsme se přepnuli na seznam položek s hvězdičkou a procházeli je v náhodném pořadí (podle aktuální nálady).
-Jednotlivé články jsme postupně četli a přečteným jsme odebrali hvězdičku.
-Některé články nám v tomto seznamu vydržely dlouhé měsíce, jiné jsme vyřadili po několika málo minutách.
-Nepoužívali jsme žádný mechanismus, který by umožňoval ukládat položky trvale.
 
 \subsectiont{Konec Google Readeru}
 
 V březnu roku 2013 společnost Google vydala prohlášení, že některé služby budou za nedlouho ukončeny.
-Seznam obsahoval i oblíbenou čtečku Google Reader; její provoz bude zrušen k 1. červenci 2013~\cite{google-reader-down}.
+Seznam obsahoval i oblíbenou čtečku Google Reader; její provoz byl zrušen k 1. červenci 2013~\cite{google-reader-down}.
 
 Po tomto prohlášení začaly vznikat petice dovolávající se zachování čtečky; přestože získaly tisíce podpisů, osud čtečky nezměnily.
 Zároveň začaly zaplavovat internet články obsahující seznam alternativ ke Google Readeru, služeb, ke kterým se mohou aktuální uživatelé uchýlit.
-
-Čtečku Google Reader jsme používali do samého jejího konce.
-Nechť odpočívá v pokoji.
 
 \subsectiont{Vznik projektu}
 
@@ -60,18 +49,17 @@ Během jeho odmlky jsme si vybrali téma bakalářské práce; při jeho volbě 
 Zaměřili jsme se na provázání několika služeb, které dle našeho názoru umožní efektivněji používat rozšířené funkcionality čtečky.
 Vycházeli jsme především ze zkušeností s několikaletým používám čtečky od Googlu.
 Chtěli jsme zachovat/rozšířit její dobré vlastnosti a naopak se vyvarovat těch, které nepovažujeme za šťastně řešené.
-Vzhledem k tomu, že naši aplikaci budeme sami používat, navrhli jsme ji především tak, aby nám vyhovovala.
 
 \sectiont{Členění práce}
 
 V tomto textu se snažíme popsat většinu aspektů aplikace, kterou jsme navrhli a vytvořili.
 Aplikaci postupně rozebíráme z několika hledisek.
 
-Nejprve v první kapitole rozčleníme čtečky podle několika kritérií, uvedeme vybrané čtečky a porovnáme je v přehledové tabulce.
+Nejprve v první kapitole rozčleníme čtečky podle několika kritérií, uvedeme několik dostupných čteček a porovnáme je v přehledové tabulce.
 Druhou kapitolu věnujeme vymezení problému, kterým se budeme dále zabývat, a jeho popisu.
 Ve třetí kapitole představíme existující algoritmy doporučování a zvolíme takový, který bude v našem případě nejvhodnější.
 Následující, čtvrtou kapitolu zasvětíme představení technologií a knihoven, jež při implementaci využijeme.
 
 Vlastní návrh aplikace podrobně rozebereme v páté kapitole: její členění z pohledu architektury, s jakými entitami pracuje a jaké procesy v ní probíhají.
-V šesté kapitole přiblížíme vlastní fungování aplikace, popíšeme, jaká důležitá rozhraní obsahuje a jak probíhá komunikace jejích jednotlivých částí.
-Na závěr shrneme výsledky naší práce, uvedeme možná budoucí rozšíření aplikace a svěříme se s problémy, jimž jsme museli při vývoji čelit.
+V šesté kapitole přiblížíme vlastní fungování aplikace, popíšeme, jaká důležitá rozhraní obsahuje a jak probíhá komunikace jejích jednotlivých částí; rovněž prodiskutujeme možná rozšíření a problémy, jimž jsme při vývoji čelili.
+Na závěr krátce shrneme výsledky naší práce.

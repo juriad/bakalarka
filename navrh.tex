@@ -46,13 +46,13 @@ Při kontrole zdrojů využijeme frontu úloh -- pro každý požadavek na kontr
 Úloha kontroly zdrojů vyžaduje stažení dokumentu z webu: buď HTML, nebo XML.
 Pro stažení použijeme knihovnu HttpComponents.
 
-Pokud je zdroj typu RSS/Atom, použijeme knihovnu ROME pro rozparsování dokumentu.
+Pokud je zdroj typu RSS/Atom, použijeme knihovnu ROME pro zpracování obsahu dokumentu.
 Pokud naopak zdroj pracuje s webovými stránkami, vytvoříme pomocí knihovny jsoup její stromovou reprezentaci, se kterou budeme dále pracovat.
 V případě, že zdroj je typu Změna stránky, použijeme knihovnu Diff Match Patch pro výpočet, určení změny.
 
 \paragraph{Zálohování položky}
-Při zálohování položky musíme nejprve stáhnout webovou stránku kterou reprezentuje; využijeme opět knihovnu HttpComponents.
-Strán\-ku následně upravíme (změníme všechny relativní odkazy a cesty k obrázkům) převedením do DOMu pomocí knihovny jsoup a provedením vhodných operací s elementy.
+Při zálohování položky musíme nejprve stáhnout webovou stránku, kterou reprezentuje; využijeme opět knihovnu HttpComponents.
+Stránku následně upravíme (změníme všechny relativní odkazy a cesty k obrázkům) převedením do reprezentace DOM pomocí knihovny jsoup a provedením vhodných operací s elementy.
 Upravenou stránku uložíme do \uv{souboru} pomocí rozhraní poskytovaného službou Google Cloud Storage.
 
 Zálohovanou stránku budeme poskytovat pomocí metod služby Blobstore, které nám umožní její přímé streamování.
@@ -67,7 +67,7 @@ Použijeme modul lineární algebry z knihovny JScience k výpočtům s vektory 
 \subsection{Klientská část}
 
 Klientskou část uvidí uživatel při každé návštěvě webové stránky aplikace.
-Je tvořena drobnou kostrou napsanou v HTML, která je masivně rozšířená \pojem[JavaScriptovým]{JavaScript}{formálně ECMAScript, interpretovaný jazyk běžící v internetovém prohlížeči, který umožňuje tvůrci webové stránky interaktivně manipulovat s jejím obsahem} frameworkem, který zajišťuje dynamičnost a interaktivitu celé stránky.
+Je tvořena drobnou kostrou napsanou v HTML, která je masivně rozšířená JavaScriptovým frameworkem, který zajišťuje dynamičnost a interaktivitu celé stránky.
 Vzhled stránky je definovaný v jazyku CSS.
 
 Klientská část bude obsahovat vrstvu prezentéra a zobrazení.

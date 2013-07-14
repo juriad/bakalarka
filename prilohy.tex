@@ -1,0 +1,26 @@
+\chaptert{Obsah přiloženého CD}
+
+Na přiloženém kompaktním disku je k dispozici v jednotlivých adresářích jak uživatelská a programátorská dokumentace, tak i samotné zdrojové kódy aplikace a doplňku do prohlížeče.
+
+Seznam adresářů a popis jejich obsahu:
+
+\def\comment#1{\hspace*{1ex}\DTcomment{\begin{minipage}[t]{8cm}
+#1
+\end{minipage}
+}}
+
+\dirtree{%
+.1 /.
+.2 doc.
+.3 install.txt\comment{Pokyny k instalaci aplikace}.
+.3 javadoc\comment{Programátorská dokumentace vygenerovaná ze zdrojových kódu aplikace}.
+.3 userdoc\comment{Dokumentace určená uživatelům aplikace}.
+.2 readme.txt\comment{Popis adresářů a členění dat na CD}.
+.2 src.
+.3 artique\comment{Serverová a klientská část aplikace v podobě projektu vývojového prostředí Eclipse}.
+.3 client\comment{Nepovinné rozšíření nejběžnějších prohlížečů}.
+.2 thesis.
+.3 recommendation.py\comment{Skript použitý v příkladu doporučování}.
+.3 thesis.pdf\comment{Elektronická verze této práce}.
+}
+

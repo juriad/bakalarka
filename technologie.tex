@@ -6,7 +6,7 @@ Z povahy aplikace vyplývá, že většina netriviálních úloh bude probíhat 
 
 \section{Poskytovatel platformy}
 Pro běh serverové části potřebujeme server(y), na kterých poběží naše aplikace.
-Na výběr jsme měli možnost pronájmu vlastního (virtuálního) serveru, nebo využít služby některého z poskytovatelů \pojem[Cloudu]{Cloud computing}{model poskytování prostředků založený na internetu; obvykle je zpoplatněno využití služby namísto klasické platby za software}.
+Na výběr jsme měli možnost pronájmu vlastního (virtuálního) serveru, nebo využít služby některého z poskytovatelů \zkratka[Cloudu]{Cloud computing}{model poskytování prostředků založený na internetu; obvykle je zpoplatněno využití služby namísto klasické platby za software}.
 
 Virtuální server sice poskytuje největší svobodu, ale za cenu nutné vlastní konfigurace systému.
 Tomu jsme se chtěli vyhnout a zaměřit své úsilí na samotný vývoj aplikace.
@@ -131,14 +131,14 @@ Knihovna poskytuje znovupoužitelné komponenty pro komunikaci klienta se server
 Je široce využívaná a oblíbená na jedné straně pro jednoduchost svého použití a na druhé pro široké možnosti, které nabízí.
 
 \section{\texorpdfstring{jsoup\footnote{Název knihovny jsoup je tvořen malými písmeny, toto rozhodnutí autora respektujeme.}}{jsoup}}
-Knihovna \href{http://jsoup.org/}{jsoup} umožňuje rozparsovat HTML stránku do \zkratka{DOM}{Document Object Model -- popisuje obsah HTML nebo XML dokumentů pomocí stromové struktury elementů; specifikace~\cite{dom} definuje i metody pro přístup k elementům a manipulaci} struktury.
+Knihovna \href{http://jsoup.org/}{jsoup} umožňuje rozparsovat HTML stránku do \zkratka{DOM}{Document Object Model -- popisuje obsah HTML nebo XML dokumentů pomocí stromové struktury elementů; specifikace~\cite{Isaacson:1998} definuje i metody pro přístup k elementům a manipulaci} struktury.
 Vyvíjí ji \href{mailto:jonathan@hedley.net}{Jonathan Hedley} a poskytuje ji zdarma pod licencí MIT.
 
 Knihovna zvládá zpracování veškerých HTML stránek, i takových stránek, které nevyhovující standardům.
 V možnostech této knihovny je:
 \begin{itemize}
 	\item stáhnout a rozparsovat HTML stránku z URL adresy, souboru či řetězce,
-	\item najít a získat data pomocí metod DOMu či \zkratka{CSS}{Cascading Style Sheets -- jazyk určený pro popis vzhledu a formátování dokumentů } selektorů,
+	\item najít a získat data pomocí metod DOM či \zkratka{CSS}{Cascading Style Sheets -- jazyk určený pro popis vzhledu a formátování dokumentů~\cite{Bos:2011}} selektorů,
 	\item manipulace s HTML elementy, atributy a textem prostřednictvím metod, které poskytuje DOM, či CSS selektorů,
 	\item ošetření dokumentu před nebezpečným obsahem,
 	\item vyčištění HTML dokumentu -- náprava chyb
@@ -181,7 +181,7 @@ Knihovnu vyvíjí společnost Google, poskytuje ji zdarma pod open-sourcovou lic
 
 GWT se skládá z několika komponent:
 \begin{itemize}
-	\item kompilátor z Javy do JavaScriptu,
+	\item kompilátor z Javy do \zkratka[JavaScriptu]{JavaScript}{formálně ECMAScript, interpretovaný jazyk běžící v internetovém prohlížeči, který umožňuje tvůrci webové stránky interaktivně manipulovat s jejím obsahem},
 	\item zjednodušená implementace standardní knihovny Javy,
 	\item vlastní knihovna, která umožňuje tvorbu síťových služeb, lokalizace a správu prostředků,
 	\item knihovna grafických komponent: od jednoduchých obalů prvků HTML po komplexní panely rozložení.

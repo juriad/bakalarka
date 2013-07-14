@@ -4,8 +4,6 @@ Výsledkem naší práce na tomto projektu je aplikace, která je, dle našeho n
 Aplikace v sobě navíc kombinuje několik dalších služeb, díky nimž je unikátní; nejedná se \uv{jen o další čtečku}.
 Z tohoto pohledu považujeme náš cíl za splněný.
 
-\sectiont{Vlastnosti čtečky}
-
 Čtečku jsme navrhli a vytvořili především tak, aby odpovídala našim požadavkům.
 Aplikace nabízí následující možnosti:
 \begin{itemize}
@@ -21,81 +19,3 @@ Aplikace nabízí následující možnosti:
 	\item ovládat většinu aplikace jen pomocí konfigurovatelných klávesových zkratek.
 \end{itemize}
 
-\sectiont{Možná rozšíření}
-
-Vzhledem k šíři problematiky, kterou se naše aplikace snaží pokrýt, je zřejmé, že nemůže v této verzi obsahovat veškeré vlastnosti a funkce, které by nás mohly dále napadnout.
-Aplikace srovnatelného rozsahu vytvářejí celé týmy zkušených vývojářů.
-Snažili jsme se proto především vytvořit pevné základy, na kterých bude možné dále pokračovat.
-
-Uvedeme zde některá témata rozšíření, která by možnosti naší aplikace mohly výrazně posunout dopředu.
-
-\subsectiont{Import a export zdrojů}
-Import by umožnil snazší příchod nových uživatelů.
-Již existuje standardizovaný formát \zkratka{OPML}{Outline Processor Markup Language -- XML formát popisující stromové struktury}, který používají všechny běžné čtečky k usnadnění příchodu nového uživatele či odchodu stávajícího.
-
-\subsectiont{Pravidla přiřazování štítků}
-Jde o rozšíření současného systému; nyní může uživatel nastavit štítky přiřazované ke každé položce některého zdroje.
-Uživatel by měl možnost vytvoření pravidel, která by rozhodovaly o automatickém přiřazení štítku při vytváření položky.
-
-\subsectiont{Přizpůsobení uživatelského rozhraní}
-Umožnilo by to používat naší aplikaci na mobilních telefonech a tabletech.
-Podle velikosti a typu zařízení se zvolí vhodné rozložení uživatelského rozhraní aplikace.
- 
-\subsectiont{Nastavení vzhledu a chování štítku}
-Pokud umožníme nastavit štítek tak, aby byl zobrazený, i když není přiřazený (odlišným stylem) a přidáme možnost nahrazení textu štítku ikonkou, bylo by možné docílit funkcionality známé z konkurenčních čteček: přepínání mezi prázdnou a plnou hvězdičkou.
-
-\subsectiont{Klávesová makra}
-Pokud by bylo možné provést více akcí se štítky najednou, šlo by například přepínat mezi několika štítky jedinou klávesou.
-Mohli bychom tím simulovat prioritu nebo důležitost položky.
-
-\subsectiont{Stav přečtení}
-Během návrhu aplikace jsme zvolili reprezentaci stavu přečtení uživatelské položky jako zvláštního atributu.
-Vzhledem k obecnosti dotazů, které do databáze pokládáme, je možné tento stav reprezentovat lépe dvojicí štítků \uv{přečtená} a \uv{nepřečtená}.
-Výhody plynoucí ze změny by byly dvě: samotné zjednodušení modelu, poskytnutí více možností při definici seznamových filtrů.
-
-\sectiont{Problémy při implementaci}
-
-Během implementace jsme se potýkali s několika problémy, které bychom zde chtěli krátce zmínit.
-
-\subsectiont{Kurzory dotazů do databáze}
-
-Kurzor je ukazatel na poslední záznam seznamu výsledků databázového dotazu.
-Chtěli jsme jej využít při realizaci nekonečného seznamu v situaci, když uživatel odroluje k jeho konci.
-Tehdy se dotazujeme na uživatelské položky v databázi, které následují po položkách získaných minulým dotazem.
-
-Použitá databáze sice umožňuje kurzory při dotazování, ale jejich omezení vylučuje použití v naší aplikaci.
-Fungují jen v případě, že dotaz neobsahuje operátor \verb|OR|, ani operátor výčtu \verb|IN|; dotazy, jež pokládáme však tyto operátory obsahují. 
-
-Naším řešením je využít uspořádání na klíčích položek: novější uživatelské položce přiřadíme vyšší hodnotu klíče, resp. přiřadí ji databáze z rostoucí sekvence.
-Každý náš dotaz bude obsahovat podmínku ostré nerovnosti klíče v databázi a klíče poslední uživatelské položky získané minulým dotazem.
-
-\subsectiont{Nekonečný seznam}
-
-Nekonečného seznamu se týká i druhý problém, se kterým jsme se potýkali.
-Podle přehledu grafických komponent, které knihovna GWT poskytuje, jsme usoudili, že nekonečný seznam můžeme realizovat komponentou \verb|CellList|.
-Neuvědomili jsme si však plně důsledky její implementace -- buňka seznamu není widget, není možné uvnitř buňky mít aktivní prvky, může obsahovat jen prostý kus HTML kódu.
-Náš návrh ale vyžaduje možnost rozbalení a skrytí obsahu uživatelské položky, zobrazení dynamického seznamu štítků.
-
-Z důvodu tohoto omezení jsme museli naprogramovat svoji vlastní komponentu prakticky zcela od začátku.
-Jelikož jsme v té době ještě neměli dostatečné znalosti GWT, strávili jsme tím hodně času, postup naší práce se téměř zastavil.
-Další komponenty, které jsme museli vyvinout, jsme již zvládli vytvořit bez problémů; jednou z nich byla například komponenta nabízející výběr štítku ze seznamu.
-
-GWT nás svojí nabídkou grafických komponent zklamalo, očekávali jsme jich více a kvalitnějších.
-Několikrát jsme objevili chyby a byli jsme nuceni hledat řešení na fórech.
-Často byl problém způsoben podle nás nedostatečným odstíněním programového rozhraní od aspektů webových stránek.
-
-\sectiont{Obsah přiloženého CD}
-
-Na přiloženém kompaktním disku je k dispozici jak uživatelská a programátorská dokumentace, tak i samotné zdrojové kódy aplikace a doplňku do prohlížeče.
-
-FIXME: rozepsat obsah CD během víkendu
-
-\begin{itemize}
-	\item aplikace
-	\item doplněk
-	\item uživatelská dokumentace
-	\item programátorská dokumentace
-	\item instalační příručka
-	\item skript demonstrující algoritmus doporučení
-	\item ???
-\end{itemize}
