@@ -54,11 +54,10 @@ def zhodnot(pr, matice):
     mat = rem(PR, matice)
     for i in range(len(lidi)):
         clovek = lidi[i]
-        print(clovek)
-        print(spojeni[clovek])
+        print(clovek + ": " + str(spojeni[clovek]))
         zd = [(mat[i, j], zdroje[j]) for j in range(len(zdroje))]
         zdr = sorted(zd, key= lambda z: -z[0])
-        print([""+zdr[j][1]+" ("+str(round(zdr[j][0], 1))+")" for j in range(3)])
+        print([zdr[j][1]+" ("+str(round(zdr[j][0], 1))+")" for j in range(3)])
 
 for i in range(10):
     PR = CR * B

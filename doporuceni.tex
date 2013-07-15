@@ -1,4 +1,4 @@
-\chapter{Systém doporučování zdrojů}
+\chapter{Doporučování zdrojů}
 
 Abychom uživatelům nabídli možnost objevovat nové zdroje, které jsou podobné těm, které již sledují, bude aplikace obsahovat systém doporučování zdrojů na základě podobnosti.
 Na tomto místě popíšeme a rozebereme různé způsoby doporučování.
@@ -27,7 +27,7 @@ Všechny systémy doporučování vyžadují prvotní znalost o uživateli -- mo
 Model uživatele může obsahovat nejrůznější informace:
 \begin{itemize}
     \item údaje, které si o sobě vyplní sám uživatel: oblíbený žánr (u hudby), oblíbený autor (u knih),
-    \item hodnocení, které sám vyplnil: klikl na tlačítko \uv{Líbí/nelíbí}, ohodnotil položku na stupnici 1--10,
+    \item hodnocení, které sám vyplnil: klikl na tlačítko \uv{líbí/nelíbí}, ohodnotil položku na stupnici 1--10,
     \item záznam dosavadní interakce se systémem: písničky, jež si uživatel poslechl; knihy, které zakoupil,
 	\item případně podrobněji: kategorie či produkty, které navštívil; čas, který strávil na jednotlivých stránkách.
 \end{itemize}
@@ -86,7 +86,7 @@ Z výše uvedených předpokladů vyplývá, že nejvhodnější volbou algoritm
 Jako největší problém při návrhu doporučování v naší aplikaci považujeme řídkost dat: obáváme se, že uživatelé nebudou dostatečně sdílet své zdroje, aby doporučení dávalo relevantní výsledky.
 
 Zvolili jsme algoritmus, který navrhli Z. Huang, D. Zeng, H. Chen ve svém článku~\cite{huang2004link}.
-Tento algoritmus je do velké míry inspirovaný algoritmy známými z prostředí internetových vyhledávačů, jako je například algoritmus PageRank~\cite{page1999pagerank}.
+Tento algoritmus je do velké míry inspirovaný algoritmy známými z prostředí internetových vyhledávačů, jakým je např. algoritmus PageRank~\cite{page1999pagerank}.
 
 \subsection{Popis algoritmu}
 
@@ -124,12 +124,14 @@ Mohou si vybrat, zda zadají vlastní internetovou adresu zdroje nebo chtějí s
     \label{fig:doporuceni}
 \end{figure}
 
-Abychom přiblížili možnosti algoritmu, uvedeme příklad doporučení zdrojů na příbězích pěti lidí\footnote{Popsané osoby jsou vymyšlené; uvedené zdroje skutečně existují, jsou jimi:
-\href{http://bugemos.com/}{bugemos.com}, \href{http://technet.idnes.cz/}{technet.idnes.cz},
-\href{http://osel.cz/}{osel.cz}, \href{http://xkcd.com/}{xkcd.com}, 
-\href{http://www.abclinuxu.cz/}{abclinuxu.cz}, \href{http://www.root.cz/}{root.cz},
-\href{http://www.zdrojak.cz/}{zdrojak.cz}, \href{http://webylon.info/}{webylon.info} a
-\href{http://interval.cz/}{interval.cz}.
+Abychom přiblížili možnosti algoritmu, uvedeme příklad doporučení zdrojů na příbězích pěti lidí\footnote{
+\raggedright
+Popsané osoby jsou vymyšlené; uvedené zdroje skutečně existují, jsou jimi:
+\nburl{http://bugemos.com/}, \nburl{http://technet.idnes.cz/},
+\nburl{http://osel.cz/}, \nburl{http://xkcd.com/}, 
+\nburl{http://www.abclinuxu.cz/}, \nburl{http://www.root.cz/},
+\nburl{http://www.zdrojak.cz/}, \nburl{http://webylon.info/} a
+\nburl{http://interval.cz/}.
 }.
 
 \begin{itemize}
@@ -154,21 +156,22 @@ Nad každým uživatelem je seznam zdrojů, které mu byly doporučeny.
 \end{vypis}
 
 Doporučení jsme vypočítali skriptem, který je dostupný na přiloženém CD a přesně odpovídá implementaci, kterou používame ve vlastní aplikaci.
-Jeho výstupem (výpis~\ref{vypis:doporuceni}) je trojice řádků pro každého uživatele: jméno; sledované zdroje; doporučené zdroje (jejich váha).
+Jeho výstupem (výpis~\ref{vypis:doporuceni}) je dvojice řádků pro každého uživatele: jméno a sledované zdroje; doporučené zdroje (jejich váha).
 
 \begin{itemize}
 	\item Věře jsou doporučeny zdroje, které sledují její sousedé (Konstantin a Rút).
-		Přednost získaly zdroje, které sledují jen sousedé (osel, abclinuxu), protože se netříští jejich síla (xkcd a root sledují i jiní uživatel, kteří jsou Věře vzdálenější).
+		Přednost získaly zdroje, které sledují jen sousedé (osel, abclinuxu), protože se nerozkládá jejich váha mezi více uživatelů(xkcd a root sledují i jiní uživatel, kteří jsou Věře vzdálenější).
 		Za dobré doporučení můžeme považovat zdroje osel a xkcd.
-	\item Konstantinovi jsou doporučeny opět zdroje jeho sousedů (bugemos, abclinuxu) a root, u kterého se opět dělí jeho síla mezi více uživatelů.
+	\item Konstantinovi jsou doporučeny opět zdroje jeho sousedů (bugemos, abclinuxu) a root, u kterého se opět dělí jeho váha mezi více uživatelů.
 		Dobrým doporučením je jen bugemos.
-	\item Rútina záliba v komixech a technice jí způsobí doporučení osla (s Konstantinem, který ho sleduje má společnou polovinu zdrojů).
-		Rút je si s Konstaninem velice blízká, to je důvodem zvýšení váhy technetu (který sledují oba).
+	\item Rútina záliba v komixech a technice jí způsobí doporučení osla (s Konstantinem, který jej sleduje má společnou polovinu zdrojů).
+		Rút je Konstantinovi velice blízká, to je důvodem zvýšení váhy technetu (který sledují oba).
 		Tedy systém doporučení preferuje Věru před Lindou a doporučí bugemos před zdrojákem.
-		Bugemos a osel jsou doporučení.
+		Bugemos a osel jsou dobrými doporučeními.
 	\item Lindě jsou doporučeny zdroje jejích sousedů (Waldemara a Rút).
 		Waldemarovi zdroje mají větší váhu, protože Waldemar získal doporučením dvou zdrojů větší váhu (projev iterace algoritmu).
-	\item Waldemarovi jsou doporučeny zdroje, které sledují sousedé (Linda, Rút, Konstantin). Abclinuxu a osel mají větší váhu než technet (netříští se jejich síla; $1 > \tfrac{2}{3}$).
+		Všechny doporučené zdroje jsou dobré.
+	\item Waldemarovi jsou doporučeny zdroje, které sledují sousedé (Linda, Rút, Konstantin). Abclinuxu a osel mají větší váhu než technet (nerozkládá se jejich váha; $1 > \tfrac{2}{3}$).
 		Nejvhodnějším zdrojem pro Waldemara je ale root, který je sledovaný všemi jeho sousedy.
 		Waldemarovi není doporučen žádný vhodný zdroj (bugemos, který by jej mohl zajímat, je v grafu příliš daleho).
 \end{itemize}

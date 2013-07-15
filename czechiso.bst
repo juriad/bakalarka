@@ -244,7 +244,7 @@ FUNCTION {bbl.edition}
 { "vydání" }
 
 FUNCTION {bbl.volume}
-{ "ročník" }
+{ "svazek" }
 
 FUNCTION {bbl.of}
 { "" }

@@ -1,21 +1,21 @@
 \chaptert{Úvod}
 
 Bakalářská práce se zabývá vývojem aplikace -- webové čtečky určené pro náročnější uživatele.
-Kromě běžné funkcionality, sledování nejrůznějších RSS kanálů, v sobě bude integrovat i několik dalších služeb, které jsou dle našeho názoru čtečkám blízké.
+Kromě běžné funkcionality, sledování nejrůznějších \zkratka{RSS}{Rich Site Summary -- rodina formátů, které popisují změny, novinky na webových stránkách} kanálů, v sobě bude integrovat i několik dalších služeb, které jsou dle našeho názoru čtečkám blízké.
 Myslíme si, že sjednocením vznikne celek, který bude plnit svoji úlohu lépe, než každá ze služeb odděleně.
 
 \sectiont{Historie projektu}
 
-Jelikož je tato práce silně inspirovaná naší zkušeností s dnes již neexistující čtečkou \href{http://www.google.com/reader/about/}{Google Reader}, popíšeme v této části alespoň stručně její historii, osud.
+Jelikož je tato práce silně inspirovaná naší zkušeností s dnes již neexistující čtečkou \projekt{Google Reader}{http://www.google.com/reader/about/}, popíšeme v této části alespoň stručně její historii a osud.
 
 \subsectiont{Používání čtečky Google Reader}
 
-V roce 2005 přišla společnost Google se svojí čtečkou Google Reader.
+V roce 2005 přišla společnost \projekt{Google}{http://google.com/} se svojí čtečkou Google Reader.
 Zpočátku sice obsahovala jen nejnutnější funkcionalitu, nicméně v průběhu následujících několika let se její možnosti postupně rozšířily.
 Čtečku začaly používat miliony lidí a byly s ní spokojeny; pokrývala všechny jejich potřeby.
 
-V roce 2011 byl nahrazen vnitřní mechanismus sdílení položek napojením na sociální síť Google+ od stejné společnosti.
-Tento krok z hlediska společnosti Google dává dobrý smysl.
+V roce 2011 byl nahrazen vnitřní mechanismus sdílení položek napojením na sociální síť \projekt{Google+}{http://plus.google.com/} od stejné společnosti.
+Tento krok z hlediska společnosti \mbox{Google} dává dobrý smysl.
 Propagují svoji sociální síť mezi uživateli čtečky a naopak, usnadňují používání čtečky uživatelům sociální sítě.
 Mnoho uživatelů ale sociální síť Google+ nechce používat.
 Důsledek změny způsobu sdílení položek se jich tedy citelně dotkl a omezil možnosti užití této čtečky.
@@ -24,30 +24,30 @@ Náročnější uživatelé mohli snadno narazit na hranici jejích možností; 
 Příkladem může být funkcionalita štítků; čtečka je sice nabízela, ale k jejich přiřazení bylo nutné vypsat celý jejich název.
 To je daleko od ideálu, možnosti nastavit štítkům klávesové zkratky a přiřazovat je stiskem jediné klávesy.
 
-Stiskem klávesy \verb|"s"| bylo možné položce přidat či odebrat hvězdičku a klávesou \verb|"l"| bylo možné si položku oblíbit.
+Stiskem klávesy bylo možné položce přidat či odebrat hvězdičku; stejně tak bylo možné si položku oblíbit.
 Nebylo ale možné přejít na seznam oblíbených položek klávesovou zkratkou, což tento mechanismus učinilo téměř nepoužitelným.
 Oblíbené položky byly úplně zrušeny po změně sdílení na Google+.
 
-\subsectiont{Konec Google Readeru}
+\subsectiont{Konec čtečky Google Reader}
 
 V březnu roku 2013 společnost Google vydala prohlášení, že některé služby budou za nedlouho ukončeny.
 Seznam obsahoval i oblíbenou čtečku Google Reader; její provoz byl zrušen k 1. červenci 2013~\cite{google-reader-down}.
 
 Po tomto prohlášení začaly vznikat petice dovolávající se zachování čtečky; přestože získaly tisíce podpisů, osud čtečky nezměnily.
-Zároveň začaly zaplavovat internet články obsahující seznam alternativ ke Google Readeru, služeb, ke kterým se mohou aktuální uživatelé uchýlit.
+Zároveň začaly zaplavovat internet články obsahující seznam alternativních služeb, ke kterým se mohou aktuální uživatelé uchýlit.
 
 \subsectiont{Vznik projektu}
 
-V roce 2012, krátce po změně mechanismu sdílení, jsme zaznamenali vznik projektu \href{http://hiveminedblog.tumblr.com/}{Hivemined}.
-Založil ho bývalý uživatel Google Readeru \href{mailto:apodysophilia@gmail.com}{Francis Cleary}; jeho cílem bylo vyvinout náhradu původního Google Readeru.
+Počátkem roku 2012, krátce po změně mechanismu sdílení, jsme zaznamenali vznik projektu \projekt{Hivemined}{http://hiveminedblog.tumblr.com/}.
+Založil jej bývalý uživatel čtečky Google Reader \email{Francis Cleary}{apodysophilia@gmail.com}, jehož cílem bylo vyvinout plnohodnotnou náhradu se všemi vlastnosti původní verze čtečky od Googlu.
 Postup jeho práce na této náhradě jsme sledovali, nicméně v lednu roku 2012 se odmlčel a nebylo jasné, jestli vývoj dále pokračuje či své snahy zanechal.
-Na svém blogu se znovu ozval v listopadu 2012; vývoji čtečky se aktivně věnuje.
-Během následujícího půlroku, těsně před uzavřením naší práce, se mu podařilo čtečku dokončit pod názvem \href{http://hivereader.com/}{Hive}.
+Na svém blogu se znovu ozval v listopadu 2012~\cite{hivemined-1-year-ago}; vývoji čtečky se aktivně věnuje.
+Během následujícího půlroku, těsně před uzavřením naší práce, se mu podařilo čtečku dokončit pod názvem \projekt{Hive}{http://hivereader.com/}~\cite{hivemined-launched}.
 Poslal nám e-mailem pozvánku k uzavřenému beta testování, bohužel jsme zatím neměli čas čtečku vyzkoušet a zhodnotit.
 
-Během jeho odmlky jsme si vybrali téma bakalářské práce; při jeho volbě jsme se částečně inspirovali zmíněným projektem.
-Zaměřili jsme se na provázání několika služeb, které dle našeho názoru umožní efektivněji používat rozšířené funkcionality čtečky.
-Vycházeli jsme především ze zkušeností s několikaletým používám čtečky od Googlu.
+Během jeho odmlky vzniklo částečně inspirací zmíněným projektem téma této bakalářské práce.
+V něm jsme se zaměřili na provázání několika služeb, které dle našeho názoru umožní efektivněji používat rozšířené funkcionality čtečky.
+Vycházeli jsme především ze zkušeností s několikaletým používám čtečky Google Reader.
 Chtěli jsme zachovat/rozšířit její dobré vlastnosti a naopak se vyvarovat těch, které nepovažujeme za šťastně řešené.
 
 \sectiont{Členění práce}
@@ -55,11 +55,11 @@ Chtěli jsme zachovat/rozšířit její dobré vlastnosti a naopak se vyvarovat 
 V tomto textu se snažíme popsat většinu aspektů aplikace, kterou jsme navrhli a vytvořili.
 Aplikaci postupně rozebíráme z několika hledisek.
 
-Nejprve v první kapitole rozčleníme čtečky podle několika kritérií, uvedeme několik dostupných čteček a porovnáme je v přehledové tabulce.
-Druhou kapitolu věnujeme vymezení problému, kterým se budeme dále zabývat, a jeho popisu.
+Nejprve v první kapitole rozčleníme čtečky podle zvolených kritérií, uvedeme několik dostupných čteček a porovnáme je v přehledové tabulce.
+Druhou kapitolu věnujeme vymezení problému, kterým se budeme dále zabývat, a jeho popisu z pohledu požadavků.
 Ve třetí kapitole představíme existující algoritmy doporučování a zvolíme takový, který bude v našem případě nejvhodnější.
 Následující, čtvrtou kapitolu zasvětíme představení technologií a knihoven, jež při implementaci využijeme.
 
 Vlastní návrh aplikace podrobně rozebereme v páté kapitole: její členění z pohledu architektury, s jakými entitami pracuje a jaké procesy v ní probíhají.
-V šesté kapitole přiblížíme vlastní fungování aplikace, popíšeme, jaká důležitá rozhraní obsahuje a jak probíhá komunikace jejích jednotlivých částí; rovněž prodiskutujeme možná rozšíření a problémy, jimž jsme při vývoji čelili.
+V šesté kapitole přiblížíme vlastní fungování aplikace, popíšeme, jaká důležitá rozhraní obsahuje a jak probíhá komunikace mezi jejími jednotlivými částmi; rovněž prodiskutujeme možná budoucí rozšíření aplikace a problémy, jimž jsme při vývoji čelili.
 Na závěr krátce shrneme výsledky naší práce.

@@ -1,19 +1,19 @@
 \chapter{Webové čtečky}
 
-Na internetu je dnes dostupné poměrně velké množství nejrůznějšího software a nejrůznějších služeb, které poskytují svým uživatelům přehledný výtah z článků, které se objeví na několika webových portálech.
-Takové aplikace bývají často zaměřeny na různé cílové skupiny: některé se zaměřují na uživatele, kteří se chtějí o novém článku dozvědět okamžitě, jakmile je publikován, jiné zaujmou spíše uživatele, kteří mají příliš mnoho zdrojů na to, aby bylo v jejich silách je pravidelně navštěvovat; v neposlední řadě existují aplikace, které se snaží zvýšit komfort čtení článků svým uživatelům.
+Na internetu je dnes dostupné poměrně velké množství nejrůznějšího softwaru a nejrůznějších služeb, které poskytují svým uživatelům přehledný výtah z článků, které se objeví na několika webových portálech.
+Takové aplikace bývají často zaměřeny na různé cílové skupiny: některé se zaměřují na uživatele, kteří se chtějí o novém článku dozvědět okamžitě, jakmile je publikován, jiné zaujmou spíše uživatele, kteří mají příliš mnoho zdrojů na to, aby bylo v jejich silách je pravidelně navštěvovat; v neposlední řadě existují aplikace, které se snaží maximálně zvýšit komfort čtení článků svým uživatelům.
 
-V této kapitole se pokusíme rozebrat charakteristiky jednotlivých aplikací.
+V této kapitole se pokusíme rozebrat charakteristiky jednotlivých typů aplikací.
 
 \section{Typy čteček a jejich uživatelů}
 
-Před vlastním dělením aplikací vyčleníme ty, které obsahují čtečku \zkratka{RSS}{Rich Site Summary -- rodina formátů, které popisují změny, novinky na webových stránkách} jen jako doplněk nebo ho využívají (jen) jako informační kanál o svých změnách.
-Mezi takové aplikace můžeme zařadit například multimediální centrum \href{http://xbmc.org/}{XBMC}, které obsahuje na úvodní obrazovce ve spodní části proužek s běžícím textem: tituly článků na domovské stránce projektu.
+Před vlastním dělením aplikací vyčleníme ty, které obsahují čtečku RSS jen jako doplněk nebo ji využívají jen jako informační kanál o svých změnách.
+Mezi takové aplikace můžeme zařadit například multimediální centrum \projekt{XBMC}{http://xbmc.org/}, které obsahuje na úvodní obrazovce ve spodní části proužek s běžícím textem: tituly článků na domovské stránce projektu.
 Přestože XBMC má editor RSS kanálů a je možné nastavit vlastní kanál, nemůžeme aplikace takového typu považovat za plnohodnotné RSS čtečky.
 
 Touto a podobnými aplikacemi se zabývat nebudeme; nebudou nás zajímat ani služby, které sice umožňují sledovat RSS, ale není to jejich primárním cílem.
-Příkladem takové služby může být titulní stránka vyhledávače \href{http://seznam.cz}{seznam.cz}, kterou si uživatelé mohou upravit a přidat svůj RSS kanál, jehož položky se na stránce budou zobrazovat.
-Další podobnou službou je \href{http://www.google.com/ig}{iGoogle}, který bude ukončený k 1.~listopadu 2013.
+Příkladem takové služby může být titulní stránka vyhledávače \projekt{Seznam.cz}{http://seznam.cz/}, kterou si uživatelé mohou upravit a přidat svoje RSS kanály, jejichž položky se na stránce budou zobrazovat.
+Další podobnou službou je \projekt{iGoogle}{http://www.google.com/ig}, který bude ukončený k 1.~listopadu 2013.
 
 \bigskip
 
@@ -22,16 +22,20 @@ V následujících podkapitolách rozdělíme čtečky podle několika kritéri�
 	\item způsobu integrace do uživatelského prostředí,
 	\item uživatele, na kterého jsou zaměřené.
 \end{itemize}
+
 Bude zřejmé, že výhody jednoho typu čteček jsou často nevýhodami jiného typu.
 
 \subsection{Nativní aplikace}
 
 Pro používání tohoto typu čteček je nutné nainstalovat nativní aplikaci do operačního systému.
-S tím souvisí několik omezení, se kterými musí uživatel počítat, například: aplikace musí být trvale spuštěná, neboť kontroluje zdroje jednotlivých kanálů.
+S tím souvisí několik omezení, se kterými musí uživatel předem počítat:
+\begin{itemize}
+	\item výběr aplikací může být omezený operačním systémem, který uživatel používá,
+	\item v některém prostředí nemusí mít uživatel oprávnění instalovat aplikace (práce, škola),
+	\item aplikace musí být trvale spuštěná, neboť periodicky kontroluje zdroje jednotlivých kanálů.
+\end{itemize}
 
-%TODO rozvést nativní aplikace
-
-Mezi nativní aplikace budeme řadit i samotný internetový prohlížeč, pokud umí sledovat RSS kanály.
+Mezi nativní aplikace budeme řadit i samotný internetový prohlížeč, pokud nabízí možnost sledování RSS kanálů.
 
 \subsubsection{Výhody}
 
@@ -45,11 +49,14 @@ Mezi výhody nativní aplikace patří:
     \item nezávislost na jiném subjektu.
         Uživatel není závislý na provozovateli služby; webové služby mohou skončit nebo mít výpadek.
         U nativní aplikace maximálně hrozí zastavení jejího dalšího vývoje, což zpravidla nemívá zásadní vliv na její dostupnost a funkcionalitu.
+	\item úplná kontrola nad daty.
+		Někteří uživatelé nechtějí svěřit své údaje poskytovateli služby; informace o tom, které zdroje sledují či které články se jim líbí považuje za příliš důvěrné.
+		Jiný druh uživatelů se může chtít aktivně zapojit do vývoje aplikace, přiblížit ji svým přáním.
 \end{itemize}
 
 \subsection{Webová služba}
 
-Přesným opakem nativních aplikací jsou webové služby; pro používání webové služby není vyžadována instalace aplikace, data jsou dostupná na kterémkoli zařízení s internetem.
+Přesným opakem nativních aplikací jsou webové služby (webové aplikace); pro používání webové služby není vyžadována instalace aplikace, data jsou dostupná na kterémkoli zařízení s internetem.
 Největší slabinou těchto čteček je však nutnost neustálého připojení na internet.
 
 \subsubsection{Výhody}
@@ -69,8 +76,6 @@ Mezi výhody aplikací postavených na využití webových služeb patří:
         Uživatel nemusí být stále online, webová služba kontroluje zdroj RSS bez ohledu na stav svých uživatelů.
         Pokud uživatel nativní aplikace nespustí čtečku po dobu několika dnů, může ztratit informace o některých článcích, zejména u frekventovaných zdrojů.
 \end{itemize}
-
-\bigskip
 
 \subsection{Běžný uživatel}
 
@@ -101,7 +106,7 @@ Náročný uživatel klade na čtečku specifické nároky:
     \item vyžaduje kompaktní zobrazení, nesmí se plýtvat místem.
         Obrazovka musí být vyhrazená seznamu položek; každá položka musí zabírat minimální prostor, aby se jich vešlo na obrazovku co nejvíce.
     \item preferuje prostý text před grafickými efekty; nic nesmí rozptylovat jeho pozornost.
-    \item vyžaduje aplikaci, která bude převážně ovladatelná klávesovými zkratkami; pohyb a klikání myši je pomalé.
+    \item vyžaduje aplikaci, která bude zcela či z velké většiny ovladatelná klávesovými zkratkami; pohyb a klikání myši je pomalé.
         Náročný uživatel ve čtečce tráví spoustu času, který musí využít efektivně.
     \item nepotřebuje zjednodušené prostředí, protože investice do podrobné konfigurace se mu časem vyplatí.
 \end{itemize}
@@ -115,15 +120,15 @@ Pokusíme se nalézt její klady a zápory a doporučit ji cílové skupině.
 
 \subsection{RSSOwl}
 
-\href{http://www.rssowl.org/}{RSSOwl} je zástupcem čteček, které si uživatel musí nainstalovat do svého operačního systému; mezi nimi RSSOwl vyniká nezávislostí na konkrétní platformě.
+\projekt{RSSOwl}{http://www.rssowl.org/} je zástupcem čteček, které si uživatel musí nainstalovat do svého operačního systému; mezi nimi RSSOwl vyniká nezávislostí na konkrétní platformě.
 K plnému využití jejích funkcí je však nutné mít tuto aplikaci neustále spuštěnou; aplikace to uživateli vynahradí upozorňováním na nové položky.
 
 Vzhledem k délce vývoje (RSSOwl je velice stará čtečka, její vývoj začal v roce 2003) a způsobu vývoje (je open-source, kdokoli ji může vylepšit) je pochopitelné, že obsahuje všechny vlastnosti, které se od čtečky očekávají.
 Čtečka nabízí několik typů zobrazení seznamů položek a poskytuje bohaté možnosti přizpůsobení: vzhledu, štítků, klávesových zkratek, filtrování.
 
 Při prvním spuštění čtečky jsme zvolili možnost importu seznamu zdrojů; všechny zdroje (přibližně sto) se úspěšně vložily.
-Okamžitě začala jejich kontrola, která vytvořila 2000 položek; následná práce s tímto počtem položek byla svižná a nepozorovali jsme žádné zpomalení.
-Po instalaci nám však nefungovaly žádné klávesové zkratky a nepodařilo se nám je ani zprovoznit.
+Okamžitě začala jejich kontrola, která vytvořila 2000 položek; při následné práce s nimi jsme nepozorovali žádné zpomalení.
+Po instalaci nám však nefungovaly klávesové zkratky a nepodařilo se nám je ani zprovoznit.
 
 Čtečka poskytuje snad každou vlastnost, na kterou uživatel pomyslí.
 To je také důvod, proč ji nepovažujeme za vhodnou pro úplné začátečníky.
@@ -131,23 +136,23 @@ Začátečník, který nemá s tímto typem softwaru větší zkušenost, se mů
 
 \subsection{Opera}
 
-\href{http://www.opera.com/}{Opera} je webový prohlížeč, který nabízí netradiční integraci několika dalších komponent.
-Nás bude především zajímat Opera Mail, která umí sledovat RSS a \zkratka{Atom}{formát určený k popisu změn webových stránek, novější alternativa k RSS~\cite{rfc4287}} kanály.
+\projekt{Opera}{http://www.opera.com/} je webový prohlížeč, který nabízí netradiční integraci několika dalších komponent.
+Nás bude především zajímat Opera Mail, která umí sledovat RSS a \zkratka{Atom}{formát určený k popisu změn webových stránek; je novější alternativou k RSS~\cite{rfc4287}} kanály.
 Možnosti této čtečky jsou značně omezené, umožňuje pouze nastavit interval kontroly každého zdroje a rozložení obrazovky; jednotlivé položky je možné třídit přidáním štítků.
 
 Testování této čtečky pro nás bylo spíše zklamáním, chyběly nám některé z důležitých vlastností.
 Na druhou stranu oceňujeme integraci do prohlížeče, které nemáme co vytknout: kanály je možné do čtečky přidávat kliknutím na ikonku v adresním řádku, celý článek se zobrazuje v novém listu.
 Pokud je uživatel zvyklý na vzhled tohoto prohlížeče, bude spokojený i se vzhledem a chováním čtečky.
 
-Tuto čtečku můžeme doporučit jen uživatelům, kteří prohlížeč Opera již používají; nemyslíme si, že samotná čtečka přiláká jiné uživatele.
-Zároveň se domníváme, že čtečku budou využívat především příležitostní uživatelé, kteří na ní nebudou klást příliš velké nároky.
+Tuto čtečku můžeme doporučit uživatelům, kteří prohlížeč Opera již používají; nemyslíme si, že samotná čtečka přiláká jiné uživatele.
+Zároveň se domníváme, že čtečku budou využívat především příležitostní uživatelé, kteří na ni nebudou klást příliš velké nároky.
 Jakmile začnou vyžadovat pokročilejší vlastnosti čtečky, budou se muset porozhlédnout po jiné.
 Je to prostě jen příjemné rozšíření prohlížeče, které potěší běžné uživatele.
 
 \subsection{Tiny Tiny RSS}
 
-\href{http://tt-rss.org/}{Tiny Tiny RSS} je čtečka na pomezí webové služby a nativní aplikace.
-Neexistuje žádný oficiální poskytovatel služby, ke které by se uživatelé mohli přihlásit, a není doporučené ji instalovat na osobní počítač.
+\projekt{Tiny Tiny RSS}{http://tt-rss.org/} je čtečka na pomezí webové služby a nativní aplikace.
+Neexistuje žádný oficiální poskytovatel služby, u kterého by se uživatelé mohli registrovat, a není doporučené ji instalovat na osobní počítač.
 Obvykle ji provozuje jednotlivec či skupina na vlastním serveru, často jím je domácí \zkratka{NAS}{Network-attached storage -- zařízení v lokální síti, které provozuje souborový server; obvykle je hardware a software takového zařízení uzpůsoben svému účelu}, či pronajatý (virtualizovaný) server.
 Složitější způsob instalace slouží jako filtr potenciálních uživatelů.
 
@@ -156,28 +161,29 @@ Seznam položek je přehledný, lehce ovladatelný; všechny ovládací prvky se
 Na druhou stranu, nefungovala nám taková základní funkcionalita, jakou je navigace v historii (tlačítka zpět a vpřed v prohlížeči).
 Několikrát nám čtečka přestala reagovat, pomohlo až obnovení stránky; nevíme, zda šlo o chybu aplikace nebo problém s konfigurací.
 
-Tiny Tiny RSS můžeme doporučit pokročilým uživatelům technicky zdatným uživatelům, kteří mají rádi svá data pod kontrolou.
+Tiny Tiny RSS můžeme doporučit pokročilým technicky zdatným uživatelům, kteří mají rádi svá data pod kontrolou.
 Pokud zvládnou složitější instalaci a konfiguraci, čtečka jim nabídne všechny vymoženosti, které poskytuje konkurence.
 
 \subsection{Netvibes}
 
-\href{http://www.netvibes.com/}{Netvibes} je webová služba, která je dostupná v základní verzi zdarma; pokročilejší verze je zpoplatněná.
+\projekt{Netvibes}{http://www.netvibes.com/} je webová služba, která je dostupná v základní verzi zdarma; pokročilejší verze jsou zpoplatněné.
 Netvibes se snaží nabídnout uživatelům pohodlné a graficky vyvedené rozhraní; nabízí dva různé pohledy na sledované kanály.
-První z nich má podobu nástěnky -- graficky bohatých bloků na stránce, které zobrazují několik posledních položek z jedno kanálu.
+První z nich má podobu nástěnky -- graficky bohatých bloků na stránce, které zobrazují několik posledních položek z vybraných kanálů.
 Tento pohled je vhodný pro uživatele, kteří potřebují sledovat několik zdrojů najednou, paralelně vedle sebe.
 Druhý z nabízených pohledů je tvořen klasickým seznamem všech položek, lze ho filtrovat podle zdroje, ze kterého položky pochází.
+Tím však jeho možnosti nastavení končí.
 
 Vyzkoušeli jsme do čtečky vložit seznam všech našich zdrojů, čtečka je během několika málo sekund načetla a začala poskytovat položky.
 Potěšila nás dobrá podpora klávesových zkratek a přítomnost kontextové nápovědy zobrazující všechny aktuálně dostupné operace.
 Zklamala nás ale téměř zcela chybějící podpora pro jakékoli ukládání a správu položek; čtečka umožňuje pouze označení položky k pozdějšímu přečtení.
 
-Se čtečkou se nám nepracovalo příliš pohodlně, text přečtených položek je málo kontrastní, ikonky stavu aktuální položky jsou jinde než ikonky nevybraných položek.
+Se čtečkou se nám nepracovalo příliš pohodlně, text přečtených položek je málo kontrastní, ikonky stavu aktuální položky jsou umístěné jinde než ikonky ostatních položek.
 Grafické rozhraní nám občas přišlo pomalé a její dvojakost (nástěnka -- seznam) v nás zanechala silně rozpačité pocity.
 Čtečku můžeme doporučit uživatelům, kterým se líbí vzhled aplikace a nevyžadují od ní pokročilé vlastnosti.
 
 \subsection{Google Reader}
 
-\href{http://www.google.com/reader/about/}{Google Reader} je čtečka vyvinutá společností Google v roce 2005; postupem času získávala podporu jednotlivých vlastností.
+\projekt{Google Reader}{http://www.google.com/reader/about/} je čtečka vyvinutá společností Google v roce 2005; postupem času získávala podporu jednotlivých vlastností.
 V březnu 2013 bylo oznámeno plánované ukončení provozu této čtečky; nyní již není dostupná~\cite{google-reader-down}.
 Zmiňujeme ji především z důvodu, že inspirovala další tvůrce k vytvoření alternativ.
 
@@ -188,9 +194,9 @@ Její výhodou bylo také velké množství aplikací třetích stran, které z 
 
 \subsection{The Old Reader}
 
-\href{http://theoldreader.com/}{The Old Reader} je jednou z náhrad Google Readeru; autoři ji začali vyvíjet v polovině roku 2012.
+\projekt{The Old Reader}{http://theoldreader.com/} je jednou z náhrad čtečky Google Reader; autoři ji začali vyvíjet v polovině roku 2012.
 Důvodem vzniku byl jejich nesouhlas se směrem, kterým se čtečka od Googlu začala ubírat.
-Po březnovém oznámení ukončení Google Readeru začalo čtečku používat mnohonásobně více lidí, to její další vývoj urychlilo.
+Po březnovém oznámení ukončení čtečky Google Reader začalo tuto čtečku používat mnohonásobně více lidí, to její další vývoj urychlilo.
 
 Čtečku jsme vyzkoušeli a vložili do ní všechny naše zdroje.
 Samotný import trval několik minut; již během tohoto importu byla čtečka použitelná; postupně přibývaly všechny zdroje.
@@ -201,29 +207,30 @@ Jediným nedostatkem, který jsme zaznamenali, je nedostatečné odlišení pře
 Pokud naši přátelé také používají tuto čtečku, je možné přímo sledovat položky, které označili ke sdílení.
 Oblíbené položky slouží k ukládání položek, jiný mechanismus aplikace neposkytuje; uložené položky není možné nijak třídit.
 
-Čtečku považujeme za povedenou; je vhodnou volbou pro uživatele hledající nástupce bývalého Google Readeru.
+Čtečku považujeme za povedenou; je vhodnou volbou pro uživatele hledající nástupce zrušené čtečky Google Reader.
 Můžeme ji doporučit i uživatelům, kteří s čtečkami nemají velké zkušenosti; těm se může líbit možnost nalezení uživatelů, kteří mají v \uv{oblíbených} stejné položky.
 Naopak, čtečka nejspíše nebude postačovat náročným uživatelům, kteří si chtějí katalogizovat zajímavé články a budovat si z nich vlastní knihovnu.
 
 \subsection{Feedly}
 
-\href{http://www.feedly.com/}{Feedly} je další z oblíbených náhrad ukončeného Google Readeru; tato čtečka pravděpodobně zaznamenala příliv největší části jeho uživatelů.
-Média tuto čtečku často vyzdvihují a zmiňují, obzvláště v před-červencových článcích informujících o blížícím se ukončení Google Readeru.
+\projekt{Feedly}{http://www.feedly.com/} je další z oblíbených náhrad ukončeného čtečky Google Reader; tato čtečka pravděpodobně zaznamenala příliv největší části jejích bývalých uživatelů.
+Média tuto čtečku často vyzdvihují a zmiňují; obzvláště zřetelné to bylo v před-červencových článcích informujících o blížícím se ukončení čtečky poskytované společností Google.
 
 Stejně jako ostatní, zkusili jsme i tuto čtečku nějakou dobu používat.
 Rozhraní na nás jako celek působilo vlídně a přehledně; problém s používáním jsme zaznamenali u zobrazení položek.
 Příliš velký prostor je vynechaný kolem samotného textu položky; ovládací prvky jsou nelogicky rozházené do několika skupin.
-Obzvláště nás obtěžovala přítomnost ikonek několika sociálních sítí, z nichž ani jednu nepoužíváme, nacházejí se totiž na místě, které by bylo vhodnější pro některé jiné častější akce.
+Velice nás obtěžovala přítomnost ikonek několika sociálních sítí, z nichž ani jednu nepoužíváme, nacházejí se totiž na místě, které by bylo vhodnější pro některé jiné, častější akce.
 Čtečka umožňuje označit položku k pozdějšímu přečtení nevýraznou ikonkou, kterou je snadné přehlédnout.
 Podporované je rovněž přiřazování štítků jednotlivým položkám, bohužel text štítku je špatně čitelný.
 
 Feedly sice nabízí hodně možností, ale celkový dojem jí zhoršují detaily, které uživateli ztěžují běžnou práci.
 Cílovou skupinou této čtečky jsou uživatelé, kteří hledají náhradu za Google Reader.
-Čtečku můžeme doporučit jen těm, kteří nebyli spokojení s konkurenční čtečkou The Old Reader, od kterého se příliš neliší.
+Čtečku můžeme doporučit jen těm, kteří nebyli spokojení s konkurenční čtečkou The Old Reader, od které se příliš neliší.
 
 \section{Srovnání čteček}
 
 V přehledné tabulce~\ref{tab:srovnani-ctecek} stručně shrneme výsledky našeho průzkumu čteček, srovnáváme je v několika kritériích.
+Součástí tabulky je i námi návržená a naprogramovaná čtečka.
 
 %~-
 \begin{sidewaystable}
@@ -253,7 +260,7 @@ V přehledné tabulce~\ref{tab:srovnani-ctecek} stručně shrneme výsledky naš
 		\hline
 		\textbf{Tiny Tiny RSS} & 
 		webová služba, která vyžaduje vlastní server & 
-		náročný uživatel, který chce mít data pod kontrolu & 
+		náročný uživatel, který chce mít data pod kontrolou & 
 		přiřazení štítků, přidání hvězdičky &
 		kompletní \\
 		\hline

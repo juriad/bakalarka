@@ -1,6 +1,6 @@
 \chapter{Použité technologie}
 
-Jako implementační jazyk aplikace jsme zvolili jazyk Java.
+Jako implementační jazyk aplikace jsme zvolili jazyk Java~\cite{gosling05java-langspec-3}.
 Tento výběr ovlivňuje volbu jednotlivých knihoven a frameworků, které nám budou poskytovat a zprostředkovávat různé technologie.
 Z povahy aplikace vyplývá, že většina netriviálních úloh bude probíhat na serverové části, tam také použijeme nejvíce knihoven.
 
@@ -17,11 +17,11 @@ Naopak cloudoví poskytovatelé nabízí hotovou platformu, na níž je možné 
 Serverovou část aplikace tedy budeme provozovat v cloudu, to nám umožní efektivní správu prostředků, možnost trvalé expanze a škálovatelnost aplikace.
 Pro volbu konkrétního cloudového poskytovatele jsme měli (v době zahájení práce) na výběr z následujících možností:
 \begin{itemize}
-	\item \href{http://aws.amazon.com/ec2/}{Amazon EC2}
-	\item \href{http://appengine.google.com/}{Google AppEngine}
+	\item \projekt{Amazon EC2}{http://aws.amazon.com/ec2/}
+	\item \projekt{Google AppEngine}{http://appengine.google.com/}
 \end{itemize}
 
-Jelikož jsme již měli zkušenost s posledním zmíněným a tedy jeho architektura nám byla známá, zvolili jsme jej.
+Jelikož jsme již měli zkušenost s posledním zmíněným, a tedy jeho architektura nám byla známá, zvolili jsme jej.
 
 \section{Platforma Google AppEngine}
 
@@ -36,7 +36,7 @@ AppEngine je platforma, která poskytuje několik spolu vzájemně provázaných
 Čtyři z nich, které jsou pro naši aplikaci důležité, nyní krátce popíšeme.
 
 \subsection{Datastore}
-\href{https://developers.google.com/appengine/docs/java/datastore/}{Datastore} je databáze navržená společností Google s cílem výborné škálovatelnosti a extrémní rychlosti.
+\projekt{Datastore}{http://developers.google.com/appengine/docs/java/datastore/} je databáze navržená společností Google s cílem výborné škálovatelnosti a extrémní rychlosti.
 Těchto dvou požadavků se jim podařilo docílit, nicméně za cenu jistých omezení, která mohou být svazující.
 Nejprve popíšeme, jak databáze funguje, a následně, jaké důsledky to obnáší.
 
@@ -84,15 +84,15 @@ Jak je vidět, není v tomto algoritmu místo pro funkcionalitu, která by řeš
 
 \subsection{Task Queues}
 
-\href{https://developers.google.com/appengine/docs/java/taskqueue/}{Task Queues} realizuje frontu úloh, které jsou postupně vykonávány.
-Uživatel může do fronty vložit najednou mnoho úloh a fronta se postará o to, že budou spuštěny se stejnou frekvencí, například: spustit maximálně pět úloh za sekundu.
+\projekt{Task Queues}{http://developers.google.com/appengine/docs/java/taskqueue/} realizuje frontu úloh, které jsou postupně vykonávány.
+Uživatel může do fronty vložit najednou mnoho úloh a fronta se postará o to, že budou spuštěny se stejnou frekvencí, například spustí maximálně pět úloh za sekundu.
 Toto záměrné zpoždění je vhodné z důvodu snížení aktuální zátěže systému.
 Další výhodou jsou samostatné limity pro každou úlohu; nestane se, že by série úloh selhala z důvodu, že zpracování všech dohromady přesáhlo maximální časový limit.
 
 \subsection{Users}
 
-Platforma AppEngine poskytuje službu \href{https://developers.google.com/appengine/docs/java/users/}{Users}, která umožňuje přebírat informace o aktuálně přihlášeném uživateli; deleguje tak na sebe celou infrastrukturu okolo registrace, přihlašování, odhlašování, zapomenutého hesla.
-Pokud uživatel odsouhlasí, že aplikace má přístup k datům uživatele (ve skutečnosti je to pouze e-mailová adresa), může aplikace zjistit, jaký je aktuálně přihlášený uživatel pro každý webový dotaz.
+Platforma AppEngine poskytuje službu \projekt{Users}{http://developers.google.com/appengine/docs/java/users/}, která umožňuje přebírat informace o aktuálně přihlášeném uživateli; deleguje tak na sebe celou infrastrukturu okolo registrace, přihlašování, odhlašování, zapomenutého hesla.
+Pokud uživatel odsouhlasí, že aplikace má přístup k datům uživatele, může aplikace zjistit, jaký je aktuálně přihlášený uživatel pro každý webový dotaz.
 
 Obvykle, pokud aplikace detekuje nepřihlášeného uživatele, reaguje zobrazením odkazu, který vede na přihlašovací formulář Google účtu.
 Jakmile jej uživatel vyplní,  odešle a úspěšně se přihlásí, je přesměrován zpět do naší aplikace.
@@ -105,34 +105,34 @@ Jelikož AppEngine poskytuje pouze platformu, na níž běží naše aplikace, n
 Není to možné ani technicky: není jasné, na kolika, natož na kterých serverech na celém světě je aplikace právě spuštěná.
 Aby toto omezení platforma obešla, nabízí své rozhraní a abstrakci souborů.
 
-\href{https://developers.google.com/appengine/docs/java/googlecloudstorageclient/}{Google Cloud Storage} umožňuje jak klasické vytváření a mazání souborů, tak poskytuje i rozhraní k přímému uploadu souborů uživateli aplikace.
-Doplňkem tohoto rozhraní je \href{https://developers.google.com/appengine/docs/java/blobstore/}{Blobstore}, který poskytuje přístup k těmto souborům, umožňuje přímé streamování dat z úložiště.
+\projekt{Google Cloud Storage}{http://developers.google.com/appengine/docs/java/googlecloudstorageclient/} umožňuje jak klasické vytváření a mazání souborů, tak poskytuje i rozhraní k přímému uploadu souborů uživateli aplikace.
+Doplňkem tohoto rozhraní je \projekt{Blobstore}{http://developers.google.com/appengine/docs/java/blobstore/}, který poskytuje přístup k těmto souborům, umožňuje přímé streamování dat z úložiště.
 
 \section{Slim3}
 
-\href{https://sites.google.com/site/slim3appengine/}{Slim3} je framework, který zajišťuje mapování databázových bezschématových entit na reálné javové objekty.
-Je vyvíjen japonským vývojářem \href{mailto:higayasuo@gmail.com}{Jasuem Higem} a je poskytován pod open-sourcovou licencí Apache~2.0~\cite{apache20}.
+\projekt{Slim3}{http://sites.google.com/site/slim3appengine/} je framework, který zajišťuje mapování databázových entit postrádajících pevné schéma na reálné javové objekty.
+Je vyvíjen japonským vývojářem \email[Yasuo Higa]{Yasuem Higem}{higayasuo@gmail.com} a je poskytován pod open-sourcovou licencí Apache~2.0~\cite{apache20}.
 
-Na rozdíl od jiných \zkratka{ORM}{Object-relational mapping -- slouží k převádění dat mezi dvěma nekompatibilními systémy uložení; tradičně mezi objekty tříd a záznamy v relační databázi} frameworků typu \href{http://www.hibernate.org/}{Hibernate}, které mapování provádějí za běhu aplikace rozborem atributů objektu za pomoci javové reflexe, Slim3 předem vygeneruje meta třídy ke všem třídám modelu.
+Na rozdíl od jiných \zkratka{ORM}{Object-relational mapping -- slouží k převádění dat mezi dvěma nekompatibilními systémy uložení; tradičně mezi objekty tříd a záznamy v relační databázi} frameworků typu \projekt{Hibernate}{http://www.hibernate.org/}, které mapování provádějí za běhu aplikace rozborem atributů objektu za pomoci javové reflexe, Slim3 předem vygeneruje meta třídy ke všem třídám modelu.
 Tyto třídy slouží k převádění reprezentace dat mezi objekty modelových tříd a Datastore entitami, poskytují metody \verb|modelToEntity| a \verb|entityToModel| a konstanty, které reprezentují atributy používané během dotazování.
 
 \section{ROME}
-\href{https://rometools.jira.com/wiki/display/ROME/Home}{ROME} je knihovna, která poskytuje sadu parserů a generátorů pro různé typy formátů zpravujících o novinkách na webovém zdroji.
+\projekt{ROME}{http://rometools.jira.com/wiki/display/ROME/Home} je knihovna, která poskytuje sadu parserů a generátorů pro různé typy formátů zpravujících o novinkách na webovém zdroji.
 Jedná se o starší knihovnu, která se nezdá být aktivně vyvíjena, nicméně je běžně používaná a pro nás dostatečně robustní a stabilní; je dostupná pod open-sourcovou licencí Apache~2.0~\cite{apache20}.
 
 Knihovna umí pracovat s většinou variant RSS a Atom dokumentů, umožňuje jejich stahování po síti, rozparsování i generování.
 Poskytuje jednotné rozhraní, přes které je možné dokumenty číst a vytvářet bez ohledu na jejich původní či výsledný formát.
 
 \section{Apache HttpComponents}
-\href{http://hc.apache.org/}{Apache HttpComponents} je široce rozšířená knihovna určená pro zajištění komunikace přes \zkratka{HTTP}{Hypertext Transfer Protocol -- bezstavový protokol určený ke komunikaci klienta se serverem při poskytování webových stránek}.
+\projekt{Apache HttpComponents}{http://hc.apache.org/} je široce rozšířená knihovna určená pro zajištění komunikace přes \zkratka{HTTP}{Hypertext Transfer Protocol -- bezestavový protokol určený ke komunikaci klienta se serverem při poskytování webových stránek}.
 Knihovna je vyvíjena Apache Software Foundation a je zdarma poskytovaná pod open-sourcovou licencí Apache~2.0~\cite{apache20}.
 
 Knihovna poskytuje znovupoužitelné komponenty pro komunikaci klienta se serverem, řeší nejčastější požadavky, jako jsou autentikace, stavový management (Cookies), řízení spojení.
 Je široce využívaná a oblíbená na jedné straně pro jednoduchost svého použití a na druhé pro široké možnosti, které nabízí.
 
 \section{\texorpdfstring{jsoup\footnote{Název knihovny jsoup je tvořen malými písmeny, toto rozhodnutí autora respektujeme.}}{jsoup}}
-Knihovna \href{http://jsoup.org/}{jsoup} umožňuje rozparsovat HTML stránku do \zkratka{DOM}{Document Object Model -- popisuje obsah HTML nebo XML dokumentů pomocí stromové struktury elementů; specifikace~\cite{Isaacson:1998} definuje i metody pro přístup k elementům a manipulaci} struktury.
-Vyvíjí ji \href{mailto:jonathan@hedley.net}{Jonathan Hedley} a poskytuje ji zdarma pod licencí MIT.
+Knihovna \projekt{jsoup}{http://jsoup.org/} umožňuje rozparsovat HTML stránku do \zkratka{DOM}{Document Object Model -- popisuje obsah HTML nebo XML dokumentů pomocí stromové struktury elementů; specifikace~\cite{Isaacson:1998} definuje i metody pro přístup k elementům a manipulaci} struktury.
+Vyvíjí ji \email{Jonathan Hedley}{jonathan@hedley.net} a poskytuje ji zdarma pod licencí MIT.
 
 Knihovna zvládá zpracování veškerých HTML stránek, i takových stránek, které nevyhovující standardům.
 V možnostech této knihovny je:
@@ -146,8 +146,8 @@ V možnostech této knihovny je:
 Seznam vlastností jsme převzali ze stránek projektu~\cite{jsoup}.
 
 \section{JScience}
-Knihovna \href{http://jscience.org/}{JScience} poskytuje implementaci nejrůznějších výpočetních algoritmů používaných v matematice a fyzice.
-Knihovna je vyvíjena pod vedením vývojáře \href{mailto:jean-marie@dautelle.com}{Jean-Marie Dautellem} a je poskytována zdarma pod vlastní open-sourcovou licencí.
+Knihovna \projekt{JScience}{http://jscience.org/} poskytuje implementaci různých výpočetních algoritmů používaných v matematice a fyzice.
+Knihovna je vyvíjena pod vedením vývojáře \email[Jean-Marie Deutelle]{Jean-Marie Dautellem}{jean-marie@dautelle.com} a je poskytována zdarma pod vlastní open-sourcovou licencí.
 
 Knihovna se skládá z několika modulů, které se zabývají efektivními algoritmy v následujících oblastech:
 \begin{itemize}
@@ -160,8 +160,8 @@ Knihovna se skládá z několika modulů, které se zabývají efektivními algo
 Seznam vlastností jsme převzali ze stránek projektu~\cite{jscience}.
 
 \section{Diff Match Patch}
-\href{http://code.google.com/p/google-diff-match-patch/}{Diff match patch} je malá knihovna, která nabízí robustní algoritmy pro synchronizaci textu.
-Knihovnu vyvíjí \href{mailto:root@neil.fraser.name}{Neil Fraser} a nabízí ji zdarma pod licencí Apache~2.0~\cite{apache20}.
+\projekt[]{Diff Match Patch}{http://code.google.com/p/google-diff-match-patch/} je malá knihovna, která nabízí robustní algoritmy pro synchronizaci textu.
+Knihovnu vyvíjí \email{Neil Fraser}{root@neil.fraser.name} a nabízí ji zdarma pod licencí Apache~2.0~\cite{apache20}.
 
 Knihovna poskytuje tři základní algoritmy:
 \begin{itemize}
@@ -176,12 +176,12 @@ Knihovna poskytuje tři základní algoritmy:
 \section{Google Web Toolkit}
 
 \nomenclature{GWT}{Google Web Toolkit -- knihovna a nástroj pro vývoj klientské části webových stránek v jazyku Java} %
-\href{http://www.gwtproject.org/}{GWT} je nástroj, který umožňuje vytvářet klientskou část aplikace ve stejném jazyku jako serverovou část.
+\projekt{GWT}{http://www.gwtproject.org/} je nástroj, který umožňuje vytvářet klientskou část aplikace ve stejném jazyku jako serverovou část.
 Knihovnu vyvíjí společnost Google, poskytuje ji zdarma pod open-sourcovou licencí Apache~2.0~\cite{apache20}.
 
 GWT se skládá z několika komponent:
 \begin{itemize}
-	\item kompilátor z Javy do \zkratka[JavaScriptu]{JavaScript}{formálně ECMAScript, interpretovaný jazyk běžící v internetovém prohlížeči, který umožňuje tvůrci webové stránky interaktivně manipulovat s jejím obsahem},
+	\item kompilátor z Javy do \zkratka[JavaScriptu]{JavaScript}{formálně ECMAScript~\cite{ECMA-262}, interpretovaný jazyk běžící v internetovém prohlížeči, který umožňuje tvůrci webové stránky interaktivně manipulovat s jejím obsahem},
 	\item zjednodušená implementace standardní knihovny Javy,
 	\item vlastní knihovna, která umožňuje tvorbu síťových služeb, lokalizace a správu prostředků,
 	\item knihovna grafických komponent: od jednoduchých obalů prvků HTML po komplexní panely rozložení.
@@ -201,20 +201,20 @@ Mezi výhody použití GWT v projektu patří:
 
 \subsection{Vaadin}
 GWT není jedinou knihovnou zaměřenou na prezentační vrstvu aplikace v prohlížeči.
-Nejbližší alternativou se nám jeví \href{https://vaadin.com/home}{Vaadin}~\cite{Vaadin}, který jsme také z počátku zvažovali.
+Nejbližší alternativou se nám jeví \projekt{Vaadin}{http://vaadin.com/home}~\cite{Vaadin}, který jsme také z počátku zvažovali.
 Je taktéž dostupný zdarma pod stejnou licencí: Apache~2.0~\cite{apache20}.
 
 Nakonec jsme vybrali GWT, které nám přišlo jednodušší a pro naše účely vhodnější.
 
 \section{GWT Eye Candy}
-\href{http://code.google.com/p/gwt-eye-candy/}{GWT Eye Candy} je drobná knihovna, která nabízí kolekci ovládacích prvků do uživatelského prostředí aplikace.
+\projekt{GWT Eye Candy}{http://code.google.com/p/gwt-eye-candy/} je drobná knihovna, která nabízí kolekci ovládacích prvků do uživatelského prostředí aplikace.
 Knihovna je určena jako rozšíření GWT, samostatně není použitelná.
-Vyvíjí ji \href{mailto:guznik@gmail.com}{Gabriel Axel} a poskytuje ji pod open-sourcovou licencí Apache~2.0~\cite{apache20}.
+Vyvíjí ji \email{Gabriel Axel}{guznik@gmail.com} a poskytuje ji pod open-sourcovou licencí Apache~2.0~\cite{apache20}.
 
 Knihovna obsahuje následující grafické prvky: tlačítka, přepínací tlačítka, nástrojovou lištu, titulek, výběr barev.
 
 \section{Crossrider}
-Platforma \href{http://crossrider.com/}{Crossrider} umožňuje vytvořit jediný doplněk, který bude fungovat shodně v nejrozšířenějších prohlížečích (Internet Explorer 7 a novější, Chrome, Firefox 3.6 a novější)~\cite{crossrider-faq}.
+Platforma \projekt{Crossrider}{http://crossrider.com/} umožňuje vytvořit jediný doplněk, který bude fungovat shodně v nejrozšířenějších prohlížečích (Internet Explorer 7 a novější, Chrome, Firefox 3.6 a novější)~\cite{crossrider-faq}.
 Platforma nabízí vlastní API, které poskytuje následující vlastnosti:
 \begin{itemize}
 	\item trvalou databázi klíč -- hodnota,
@@ -222,23 +222,22 @@ Platforma nabízí vlastní API, které poskytuje následující vlastnosti:
 	\item procházet a vytvářet záložky (bookmarks),
 	\item umístit do prohlížeče na lištu tlačítko s ikonou,
 	\item reagovat na klávesové zkratky,
-	\item obsahuje knihovnu jQuery.
+	\item obsahuje knihovnu \projekt{jQuery}{http://jquery.com/}.
 \end{itemize}
 
 Tvorba rozšíření probíhá v online editoru na stránkách projektu; výstupem práce jsou doplňky instalovatelné do zmíněných prohlížečů.
 
 \section{TextExt}
 
-\href{http://textextjs.com/}{TextExt} je plugin do knihovny jQuery, poskytuje textovou komponentu, kterou lze přizpůsobit mnoha způsoby.
-TextExt je vyvíjen \href{mailto:alex.gorbatchev@gmail.com}{Alexem Gorbatchevem} a je poskytován pod open-sourcovou licencí MIT.
+\projekt{TextExt}{http://textextjs.com/} je plugin do knihovny jQuery, poskytuje textovou komponentu, kterou lze přizpůsobit mnoha způsoby.
+TextExt vyvíjí \email[Alex Gorbatchev]{Alexem Gorbatchevem}{alex.gorbatchev@gmail.com} a je poskytován pod open-sourcovou licencí MIT.
 
 Knihovna obsahuje jako jádro standardní HTML textové pole, které je obalené vrstvou JavaScriptu, která je zodpovědná za rozšiřující možnosti.
-Textové pole lze rozšířit několika funkcionalitami:
+Textové pole lze rozšířit několika funkcionalitami, například:
 \begin{itemize}
 	\item vkládání štítků -- umožňuje vkládat jednoslovné popisky, které jsou graficky zvýrazněné; ve výsledku budou oddělené čárkami,
 	\item automatické doplňování -- umožňuje nabízení vhodných doplnění textu na základě předem známého seznamu možností,
 	\item zobrazení výzvy -- zobrazí text na pozadí pole, který upozorňuje uživatele na možnost akce,
-	\item tlačítko rozbalit -- zobrazí všechny nabízené možnosti k doplnění,
-	\item AJAX -- nabízené možnosti doplnění jsou výsledkem dotazu na server.
+	\item tlačítko rozbalit -- zobrazí všechny nabízené možnosti k doplnění.
 \end{itemize}
 

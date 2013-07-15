@@ -1,35 +1,37 @@
 \chapter{Analýza aplikace}
 
-V této kapitole nejprve identifikujeme vlastní problémy čteček, jimiž se budeme dále zabývat, a popíšeme požadavky na aplikaci, která bude dané problémy řešit.
+V této kapitole nejprve identifikujeme vlastní problematiku čteček, jíž se budeme dále zabývat, a popíšeme požadavky na aplikaci, která bude dané problémy řešit.
 
 \section{Identifikace problému}
 
 Naší snahou je pokrýt jedinou aplikací několik příbuzných problémů, kterým čelí náročný uživatel.
-Náročný uživatel má podle nás především následující potřeby:
+Náročný uživatel má podle nás především následující potřeby.
 
 \subsection{Přístup odkudkoli}
 Z vlastní zkušenosti víme, že náročný uživatel často střídá zařízení, na kterých prochází internet.
 Může to být domácí počítač, notebook, mobilní telefon, tablet; uživatel chce mít přístup ke čtečce odkudkoli.
-Vyžaduje, aby bylo možné přejít z jednoho zařízení na druhé a tam pokračovat ve čtení článků.
+Vyžaduje, aby bylo možné přejít z jednoho zařízení na druhé a na něm pokračovat ve čtení článků.
 
 Hledáme tedy webovou službu, která bude zajišťovat synchronizaci a dostupnost bez ohledu na zařízení, které uživatel aktuálně používá.
 
 \subsection{Kanály RSS, Atom}
 Náročný uživatel chce/musí sledovat několik desítek různých webových stránek, blogů, portálů.
-Naštěstí, většina z nich poskytuje informace o novinkách (nových článcích, které byly publikovány) pomocí kanálů RSS nebo novější Atom.
+Naštěstí, většina z nich poskytuje informace o novinkách (nových článcích, které byly publikovány) pomocí kanálů RSS nebo Atom.
 Toto je také nejčastější využití hledané čtečky; vyhovuje mu téměř každá čtečka, kterou jsme popsali v minulé kapitole.
 
 Čtečka musí podporovat získáváni informací z kanálů RSS a Atom.
 
 \subsection{Stránky bez RSS a Atomu}
 Mnoho webových stránek neposkytuje kanály RSS ani Atom; jedná se často o různé blogy, z akademického prostředí jsou to například stránky přednášek nebo cvičení.
-Existují služby, které umožňují sledovat webovou stránku a v případě detekování její změny nás informují e-mailem; takovou službou je například \href{http://www.changedetection.com/}{ChangeDetection}.
+Existují služby, které umožňují sledovat webovou stránku a v případě detekování její změny nás informují e-mailem; takovou službou je například \projekt{\mbox{ChangeDetection}}{http://www.changedetection.com/}.
 Přestože tato služba může svoji úlohu vykonávat dobře, neumožňuje integraci s jinými systémy.
-Zmíníme ještě snahu studentů, kteří si často píší drobné prográmky, které periodicky stahují webovou stránku cvičení a porovnávají její obsah s minulou verzí.
 
-Často nás nezajímá samotná změna stránky, ale její důvod.
-Pokud publikujeme nový článek na webu, vytvoříme tedy novou stránku, dáme o něm vědět (přidáme odkaz) většinou v seznamu nejnovějších článků na úvodní stránce.
-Pokud vyjdeme z tohoto předpokladu, nezajímá nás, že je na stránce nový odstavec, ale že obsahuje odkaz na samotný nový článek, který je v odstavci zmíněn.
+Zmíníme ještě snahu studentů, kteří si často píší jednoúčelové skripty, které periodicky stahují webovou stránku cvičení a porovnávají její obsah s minulou verzí.
+Jejich přístup ale trpí stejným problémem jako výše zmíněná služba.
+
+Často nás nezajímá samotná změna stránky, ale důvod, proč k ní došlo.
+Pokud publikujeme nový článek na webu (vytvoříme tedy novou stránku), dáme o něm vědět (přidáme odkaz) většinou v seznamu nejnovějších článků na úvodní stránce.
+Pokud vyjdeme z tohoto předpokladu, nezajímá nás přítomnost nového odstavce na stránce, ale odkaz na samotný nový článek, který je v odstavci zmíněn.
 
 Nejsme si vědomi, že by existovala služba, která by umožňovala detekci nově publikovaných článků pomocí rozboru samotných odkazů na webové stránce.
 
@@ -38,15 +40,15 @@ Nejsme si vědomi, že by existovala služba, která by umožňovala detekci nov
 Pokud si uživatel chce uložit nějaký článek, resp. jeho internetovou adresu, typicky má na výběr několik různých služeb.
 
 Uživatel si může uložit adresu webové stránky do záložek v prohlížeči, nicméně jejich synchronizace je problematická.
-Výrobci prohlížečů často umožňují synchronizaci záložek, ale ta je podmíněná tím, že všechny používané prohlížeče jsou od stejného výrobce.
+Výrobci prohlížečů sice často umožňují jejich synchronizaci, ale ta je podmíněná tím, že uživatel používá všude prohlížeč od stejného výrobce.
 Synchronizaci záložek umožňují také různé služby, které nabízejí doplňky do prohlížečů.
 Některé z nich fungují dokonce nezávisle na konkrétním prohlížeči, nicméně je třeba je mít nainstalované, jinak pohodlí používání těchto služeb dramaticky klesá.
-Příkladem je služba \href{https://delicious.com/}{Delicious}.
+Příkladem je služba \projekt{Delicious}{http://delicious.com/}.
 
-S těmito službami souvisí tlačítka, která najdeme všude na internetu obvykle pod názvy share button.
-Jejich příkladem může být plugin \href{http://wordpress.org/plugins/add-to-any/}{AddToAny} do redakčního systému \href{http://wordpress.org/}{Wordpress}.
+S těmito službami souvisí tlačítka, která najdeme všude na internetu obvykle pod názvy \uv{share button}.
+Jejich příkladem může být plugin \projekt{AddToAny}{http://wordpress.org/plugins/add-to-any/} do redakčního systému \projekt{Wordpress}{http://wordpress.org/}.
 Použitím těchto tlačítek je možné odeslat články do některé z rozšířenějších služeb; často je jejich seznam omezený na dvě nejznámější sociální sítě.
-Počet webových portálů, které ukládání článků tímto způsobem umožňují, je značně omezený, určitě na tuto vlastnost nelze spoléhat.
+Počet webových portálů, které ukládání článků tímto způsobem umožňují, je značně omezený, určitě na tuto vlastnost nelze obecně spoléhat.
 
 Čtečky RSS tuto problematiku také částečně řeší, umožňují k položkám přidávat hvězdičky a štítky.
 Problémem ale stále zůstává fakt, že štítek je možné přidat pouze k článku, který je ve čtečce dostupný.
@@ -63,7 +65,7 @@ V takových případech si chtějí uživatelé článek uložit/poznamenat k po
 Jednou z možností je využít některou ze služeb zmíněných v minulém bodu.
 Další možností, které uživatelé využívají, jsou specializované služby.
 Tyto služby se často snaží přeformátovat článek do podoby vhodnější ke čtení (odstraňují rušivé elementy).
-Zástupcem je například \href{http://www.instapaper.com/}{Instapaper} či \href{http://getpocket.com/}{Pocket}.
+Zástupcem je například \projekt{Instapaper}{http://www.instapaper.com/} či \projekt{Pocket}{http://getpocket.com/}.
 
 \subsection{Efektivní ovládání}
 
@@ -72,7 +74,7 @@ Nároky, které na toto prostředí uživatel klade, jsme již uvedli v části~
 Zjistili jsme, že efektivního ovládání aplikace může uživatel docílit používáním klávesových zkratek.
 
 Ke klávesovým zkratkám ještě zmíníme několik poznámek.
-Nejčastější operace musí být snadno vyvolatelné, ideálně pomocí stisku jediného tlačítka.
+Nejčastější operace musí být snadno vyvolatelné, ideálně stisknutím jediného tlačítka.
 Uživatel by měl mít možnost nastavit si své vlastní schéma klávesových zkratek.
 
 \bigskip
@@ -91,7 +93,7 @@ Služba, kterou hledáme, by měla umožnit zazálohovat konkrétní webovou str
 
 \subsection{Sdílení článků}
 
-Uživatelé mezi sebou nejčastěji sdílejí odkazy na zajímavé články pomocí sociálních sítí; ku příkladu \href{https://twitter.com/}{Twitter} je na tomto principu prakticky založen.
+Uživatelé mezi sebou nejčastěji sdílejí odkazy na zajímavé články pomocí sociálních sítí; ku příkladu \projekt{Twitter}{http://twitter.com/} je na tomto principu prakticky založen.
 Sociální sítě umožňují sledovat několik zajímavých osob a zobrazovat obsah, který se jim líbí či jej doporučují.
 
 Těmto službám nechceme konkurovat, chceme nabídnout odlišný přístup ke sdílení.
@@ -99,7 +101,7 @@ Nabídnout uživatelům možnost nenásilně si vytvořit několik vlastních ka
 
 \bigskip
 
-Přestože existuje mnoho aplikací, které naplňují jednotlivé potřeby, tak jak jsme je zde popsali, nepodařilo se nám najít žádnou existující aplikaci, která by komplexně řešila celou výše zmíněnou problematiku.
+Přestože existuje mnoho aplikací, které naplňují jednotlivé potřeby, tak jak jsme je zde popsali, nepodařilo se nám najít žádnou takovou, která by komplexně řešila celou výše zmíněnou problematiku.
 
 \section{Zavedení pojmů}
 
@@ -109,10 +111,10 @@ Jednotlivým termínům bude později odpovídat jedna entita.
 \begin{description}
     \item[Uživatel] Osoba, která používá naši aplikaci.
 		Musíme být schopni rozlišit jednotlivé uživatele a poskytnout jim různý obsah.
-	\item[Zdroj] Zdroj je reprezentací jednoho dokumentu (\zkratka{HTML}{HyperText Markup Language -- hlavní značkovací jazyk používaný při tvorbě webových stránek~\cite{Raggett:1999}} či \zkratka{XML}{Extensible Markup Language -- univerzální strojově i lidsky čitelný značkovací jazyk určený pro ukládání a výměnu dat~\cite{Bray:1998}}) v síti internet, který naše aplikace používá k získávání položek.
+	\item[Zdroj] Zdroj je reprezentací jednoho dokumentu (\zkratka{HTML}{HyperText Markup Language -- hlavní značkovací jazyk používaný při tvorbě webových stránek~\cite{Raggett:1999}}, \zkratka{XML}{Extensible Markup Language -- univerzální strojově i lidsky čitelný značkovací jazyk určený pro ukládání a výměnu dat~\cite{Bray:1998}}) v síti internet, který naše aplikace používá k získávání položek.
 		Zdrojem může být webová stránka nebo některý ze systémů poskytování informací o novinkách.
 	\item[Kontrola zdroje] Úkon provedený k zjištění, zda zdroj obsahuje nové položky.
-		Obvykle je kontrola realizovaná stáhnutím dokumentu reprezentovaného zdrojem a porovnáním s minulou verzí.
+		Obvykle je kontrola realizovaná stáhnutím dokumentu reprezentovaného zdrojem a porovnáním s jeho minulou verzí.
     \item[Položka] Položka reprezentuje odkaz na jeden článek nebo stránku v síti internet.
 		Každá položka je vázaná právě k jednomu zdroji.
     \item[Štítek] Popisek, který může uživatel přidat k položce.
@@ -125,15 +127,15 @@ Identifikované problémy popíšeme z různých pohledů vlastními požadavky,
 
 \subsection{Funkční požadavky}
 
-Mezi požadavky na funkcionalitu, které musí aplikace splňovat patří následující:
+Mezi požadavky na funkcionalitu, které musí aplikace splňovat, patří následující:
 
 \begin{itemize}
-    \item Každý uživatel aplikace si může zaregistrovat své zdroje, které bude sledovat.
-    \item Existuje několik typů zdrojů: Zdroje, které přebírají položky z kanálu RSS nebo Atom a zdroje, které parsují informace o novinkách přímo z webových stránek.
-    \item Každý uživatel si bude moci do aplikace přidat své položky.
+    \item Každý uživatel aplikace si může zaregistrovat svoje zdroje, které bude sledovat.
+    \item Existuje několik typů zdrojů: zdroje, které přebírají položky z kanálu RSS nebo Atom a zdroje, které parsují informace o novinkách přímo z webových stránek.
+    \item Každý uživatel si bude moci do aplikace přidávat svoje položky.
     \item Seznam všech položek bude možné filtrovat podle několika kritérií.
 	\item Uživatel může zazálohovat jakoukoli webovou stránku.
-	\item Uživatel má možnost sdílet své články.
+	\item Uživatel má možnost sdílet svoje články.
 \end{itemize}
 
 \subsection{Požadavky na použitelnost}
@@ -170,12 +172,12 @@ Serverová část aplikace bude zodpovědná za získávání nových položek z
 
 \subsection{Klientská část}
 
-Klientská část bude zobrazovat data získaná ze serverové části a bude interagovat s uživatelem, který pomocí ni aplikaci ovládá.
+Klientská část bude zobrazovat data získaná ze serverové části a bude interagovat s uživatelem, který pomocí ní aplikaci ovládá.
 Půjde o standardní webové stránky fungující v běžných prohlížečích.
 
 \subsection{Doplněk do prohlížeče}
 
 Doplněk bude tvořit nepovinné rozšíření do nejběžnějších prohlížečů; bude mít za cíl zjednodušit práci s aplikací.
 Tento doplněk nebude poskytovat žádnou vyšší funkcionalitu, které by nešlo docílit klientskou částí.
-Bude umožňovat uživateli přidat novou položku do svého manuálního zdroje pouhými dvěma kliknutími myši.
+Bude umožňovat uživateli přidat novou položku do svého manuálního zdroje pouhými dvěma kliknutími myší.
 

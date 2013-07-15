@@ -1,6 +1,6 @@
 \chapter{Návrh}
 
-V této kapitole popíšeme návrh realizace požadavků, které jsme uvedli v kapitole analýza.
+V této kapitole popíšeme návrh realizace požadavků, které jsme uvedli v kapitole Analýza.
 
 \section{Architektura aplikace}
 
@@ -13,7 +13,7 @@ Celek tvořený serverovou a klientskou části bude rozdělen do několika vrst
 Serverovou část postavíme na platformě Google AppEngine; využijeme mnoho možností, které nabízí.
 Pro realizaci některých specifických částí použijeme volně dostupné knihovny.
 
-Serverová část bude obsahovat vrstvu modelu a prezentéra.
+Serverová část bude obsahovat vrstvy: model a presenter.
 
 \subsubsection{Úloha serverové části}
 
@@ -327,7 +327,7 @@ Poslední uvedené kritérium je zásadní pro funkčnost celé aplikace a všec
 	\item seznam všech položek -- filtr je prázdný
 	\item položky mající konkrétní štítek -- filtr obsahuje právě ten štítek,
 	\item položky konkrétního uživatelského zdroje -- filtr obsahuje štítek patřící uživatelskému zdroji,
-	\item složitější filtry -- předchozí dvě možnosti spojené pomocí operátorů \verb|AND| a \verb|OR|\footnote{Databáze má stanovené omezení na složitost dotazu: dotaz může obsahovat maximálně 30 větví disjunkce.}.
+	\item složitější filtry -- předchozí dvě možnosti spojené pomocí logických operátorů \verb|AND| a \verb|OR|\footnote{Databáze má stanovené omezení na složitost dotazu: dotaz může obsahovat maximálně 30 větví disjunkce.}.
 \end{itemize}
 
 \paragraph{Typy filtrů}

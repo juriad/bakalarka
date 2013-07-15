@@ -1,5 +1,4 @@
 \chapter{Dokumentace}
-% TODO dokumentace je prý nudná
 
 V této části práce popíšeme funkci/implementaci nejdůležitějších částí aplikace.
 Tento popis je určen programátorům; má za cíl poskytnout dostatečný přehled o všech částech aplikace před tím, než se setká se zdrojovým kódem.
@@ -215,7 +214,7 @@ Do této skupiny jsme zařadili služby, které jsou spouštěny:
 \subsubsection{Kontrola zdrojů}
 
 Naše aplikace vyžaduje pro získávání nového obsahu periodické spouštění kontroly zdrojů.
-Cronem spouštěná služba nejprve zjistí seznam zdrojů, které je třeba zkontrolovat: to jsou takové, jejichž plánovaný čas kontroly je menší než aktuální čas, nenastalo u nich příliš mnoho chyb během poslední kontroly a zároveň nejsou právě kontrolovány.
+Plánovačem Cron spouštěná služba nejprve zjistí seznam zdrojů, které je třeba zkontrolovat: to jsou takové, jejichž plánovaný čas kontroly je menší než aktuální čas, nenastalo u nich příliš mnoho chyb během poslední kontroly a zároveň nejsou právě kontrolovány.
 Pro každý nalezený zdroj se vytvoří úloha, která je následně vložena do fronty.
 Fronta úloh se stará o to, aby byly jednotlivé úlohy spouštěny postupně s určitou frekvencí, což snižuje okamžitou zátěž.
 Dalšími výhodami naplánování úloh oproti okamžitému spuštění kontroly zdroje jsou:
@@ -231,7 +230,7 @@ Takový zdroj bude kontrolován v chybovém režimu, méně často, jen jednou z
 \subsubsection{Výpočet doporučení}
 
 Seznam zdrojů doporučovaných jednotlivým uživatelům přepočítáváme z důvodů, které jsme zmínili v kapitole~\ref{sec:volba-systemu-doporucovani}, jen jednou za den.
-O pravidelné spouštění procesu se stará Cron poskytovaný platformou Google AppEngine.
+O pravidelné spouštění procesu se stará plánovač Cron poskytovaný platformou Google AppEngine.
 
 Výpočet probíhá v několika krocích:
 \begin{enumerate}
@@ -297,9 +296,8 @@ Přesto můžeme klientskou část rozčlenit do několika částí (spíše pod
 \end{itemize}
 
 \subsection{Hierarchie}
-% FIXME lépe popsat hierarchie
-
-Vzhledem ke způsobu uložení hierarchie v databázi: popisujeme cestu ke kořeni, je nutné pro zobrazení stromu primárně vlastní hierarchii vybudovat.
+U objektů, které jsou součástí hierarchie, ukládáme v databázi cestu ke kořeni.
+Z toho důvodu je nutné pro zobrazení stromu primárně vlastní stromovou strukturu rekonstruovat.
 Všichni správci, kteří poskytují hierarchii, musejí každý objekt, který spravují, zpracovat a vložit do uměle vytvořené hierarchie.
 Postup vypadá následovně:
 \begin{enumerate}
@@ -545,7 +543,7 @@ Uvedeme zde některá témata rozšíření, která by možnosti naší aplikace
 
 \subsubsection{Import a export zdrojů}
 Import by umožnil snazší příchod nových uživatelů.
-Již existuje standardizovaný formát \zkratka{OPML}{Outline Processor Markup Language -- XML formát popisující stromové struktury}, který používají všechny běžné čtečky k usnadnění příchodu nového uživatele či odchodu stávajícího.
+Již existuje standardizovaný formát \zkratka{OPML}{Outline Processor Markup Language -- XML formát popisující stromové struktury~\cite{opml-spec}}, který používají všechny běžné čtečky k usnadnění příchodu nového uživatele či odchodu stávajícího.
 
 \subsubsection{Pravidla přiřazování štítků}
 Jde o rozšíření současného systému; nyní může uživatel nastavit štítky přiřazované ke každé položce některého zdroje.
